@@ -15,7 +15,7 @@ export type ModuleComponentProps<
   data: TData;
   callDispatch: (action: TActions, value?: any) => void;
   actions: { [action in TActions]: TActions };
-  navigation: NavigationProp<any>;
+  navigation: NavigationProp<any> & { openDrawer: () => void };
 };
 
 export type ModuleComponent<
