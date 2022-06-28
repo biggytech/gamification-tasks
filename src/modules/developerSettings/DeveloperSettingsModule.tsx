@@ -44,6 +44,7 @@ const DeveloperSettingsModule: ModuleComponent<
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
+            title: 'Developer Settings',
           }}>
           {props => (
             <DeveloperSettings

@@ -38,3 +38,16 @@ export interface ILabelData {
 export interface ILabel extends ILabelData {
   id: Key;
 }
+
+export type Point = number;
+
+export type LevelSize = Point;
+
+export interface IRepetitiveTaskData {
+  title: string;
+  value: Point;
+}
+
+export interface IRepetitiveTask extends IRepetitiveTaskData {
+  id: Key;
+}

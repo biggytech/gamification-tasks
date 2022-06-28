@@ -1,13 +1,14 @@
 import React, { memo, useCallback, useState } from 'react';
 import { Stack, TextInput, Button } from '@react-native-material/core';
+import { LevelSize } from '../../lib/types';
 
 interface IEditLevelSizeFormProps {
-  levelSize: number;
-  onSubmit: (levelSize: number) => void;
+  levelSize: LevelSize;
+  onSubmit: (levelSize: LevelSize) => void;
 }
 
 interface IEditLevelSizeFormInternalState {
-  levelSize: number;
+  levelSize: LevelSize;
 }
 
 const EditLevelSizeForm: React.FC<IEditLevelSizeFormProps> = ({

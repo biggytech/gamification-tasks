@@ -59,6 +59,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
+            title: 'Labels',
           }}>
           {props => (
             <LabelsList
@@ -69,7 +70,9 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
             />
           )}
         </Stack.Screen>
-        <Stack.Screen name={screens.AddLabelForm}>
+        <Stack.Screen
+          name={screens.AddLabelForm}
+          options={{ title: 'Add a Label' }}>
           {props => <AddLabelForm {...props} onSubmit={handleLabelAdd} />}
         </Stack.Screen>
       </Stack.Navigator>

@@ -1,4 +1,10 @@
-import { ILabel, ILabelData } from '../../../lib/types';
+import {
+  ILabel,
+  ILabelData,
+  IRepetitiveTask,
+  IRepetitiveTaskData,
+  LevelSize,
+} from '../../../lib/types';
 import SQLite from 'react-native-sqlite-storage';
 import sqLiteConfig from '../../../config/sqlLite';
 import dbScripts from './dbScripts';
@@ -88,7 +94,7 @@ class SQLiteProvider {
     )[0];
   }
 
-  async changeLevelSize(levelSize: number) {
+  async changeLevelSize(levelSize: LevelSize) {
     return (
       await this.executeQuery(
         `UPDATE settings
@@ -96,6 +102,19 @@ class SQLiteProvider {
         WHERE
             id = ? RETURNING *`,
         [levelSize, defaults.settings.id],
+      )
+    )[0];
+  }
+
+  async getRepetitiveTasks(): Promise<IRepetitiveTask[]> {
+    return await this.executeQuery('SELECT * from repetitiveTasks');
+  }
+
+  async addRepetitiveTask(task: IRepetitiveTaskData) {
+    return (
+      await this.executeQuery(
+        'INSERT INTO repetitiveTasks (title, value) VALUES (?, ?) RETURNING *',
+        [task.title, task.value],
       )
     )[0];
   }

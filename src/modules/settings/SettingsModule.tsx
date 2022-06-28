@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import { ModuleComponent } from '../../lib/types';
+import { LevelSize, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
@@ -33,7 +33,7 @@ const SettingsModule: ModuleComponent<
   );
 
   const handleLevelSizeChange = useCallback(
-    async (levelSize: number) => {
+    async (levelSize: LevelSize) => {
       await callDispatch(actions.CHANGE_LEVEL_SIZE, levelSize);
       navigation.navigate(screens.Settings);
     },
@@ -53,6 +53,7 @@ const SettingsModule: ModuleComponent<
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
+            title: 'Settings',
           }}>
           {props => (
             <Settings
@@ -62,7 +63,9 @@ const SettingsModule: ModuleComponent<
             />
           )}
         </Stack.Screen>
-        <Stack.Screen name={screens.EditLevelSizeForm}>
+        <Stack.Screen
+          name={screens.EditLevelSizeForm}
+          options={{ title: 'Edit Level Size' }}>
           {props => (
             <EditLevelSizeForm
               {...props}
