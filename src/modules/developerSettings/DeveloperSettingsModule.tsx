@@ -64,7 +64,8 @@ export default asModule<
 >(
   DeveloperSettingsModule,
   {
-    name: 'Developer Settings',
+    title: 'Developer Settings',
+    name: 'DeveloperSettingsModule',
   },
   developerSettingsDataSource,
 );

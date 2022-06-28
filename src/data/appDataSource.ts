@@ -68,6 +68,14 @@ async function appActionHandler(
           settings,
         };
       }
+      case ACTIONS.CHANGE_LEVEL_SIZE: {
+        const settings = await appRepository.changeLevelSize(value);
+
+        return {
+          ...data,
+          settings,
+        };
+      }
       default:
         return data;
     }

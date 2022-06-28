@@ -45,7 +45,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
   const handleLabelAdd = useCallback(
     async (label: ILabelData) => {
       await callDispatch(actions.ADD_LABEL, label);
-      navigation.goBack();
+      navigation.navigate(screens.LabelsList);
     },
     [actions.ADD_LABEL, callDispatch, navigation],
   );
@@ -80,7 +80,8 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
 export default asModule<LabelsModuleData, LabelsModuleActions>(
   LabelsModule,
   {
-    name: 'Labels',
+    title: 'Labels',
+    name: 'LabelsModule',
   },
   labelsDataSource,
 );

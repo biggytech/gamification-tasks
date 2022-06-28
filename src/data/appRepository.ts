@@ -15,6 +15,8 @@ const appRepository = {
   addLabel: async (label: ILabelData) => await SQLiteProvider.addLabel(label),
   deleteDatabase: async () => await SQLiteProvider.deleteDatabase(),
   getSettings: async () => await SQLiteProvider.getSettings(),
+  changeLevelSize: async (levelSize: number) =>
+    await SQLiteProvider.changeLevelSize(levelSize),
 };
 
 export default appRepository;

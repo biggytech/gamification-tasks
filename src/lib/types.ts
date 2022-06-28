@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationProp } from '@react-navigation/native';
 
 export interface IModule<TData, TActions extends string | number | symbol> {
+  title: string;
   name: string;
   Component: React.ComponentType<ModuleComponentProps<TData, TActions>>;
 }

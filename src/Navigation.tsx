@@ -16,8 +16,13 @@ const Navigation: React.FC<NavigationProps> = ({ modules }) => {
         screenOptions={{
           headerShown: false,
         }}>
-        {modules.map(({ name, Component }) => (
-          <Drawer.Screen key={name} name={name} component={Component} />
+        {modules.map(({ name, title, Component }) => (
+          <Drawer.Screen
+            options={{ title }}
+            key={name}
+            name={name}
+            component={Component}
+          />
         ))}
       </Drawer.Navigator>
     </NavigationContainer>

@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { IDataSource, IModule, ModuleComponentProps } from '../types';
 
 interface Options {
+  title: string;
   name: string;
 }
 
@@ -31,6 +32,7 @@ function asModule<TData extends {}, TActions extends string | number | symbol>(
   };
 
   return {
+    title: options.title,
     name: options.name,
     Component: ModuleComponent,
   };

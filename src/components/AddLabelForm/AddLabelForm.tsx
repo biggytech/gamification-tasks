@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import { ILabelData } from '../../lib/types';
 import { Stack, TextInput, Button } from '@react-native-material/core';
 import ColorPicker from 'react-native-wheel-color-picker';
@@ -16,7 +16,6 @@ const AddLabelForm: React.FC<IAddLabelFormProps> = ({ onSubmit }) => {
     name: 'Label',
     color: '#ffffff',
   });
-  const colorPicker = useRef(null);
 
   const handleNameChange = useCallback((text: string) => {
     setState(st => ({ ...st, name: text }));
@@ -41,7 +40,6 @@ const AddLabelForm: React.FC<IAddLabelFormProps> = ({ onSubmit }) => {
       />
       <Stack>
         <ColorPicker
-          ref={colorPicker}
           color={state.color}
           onColorChangeComplete={handleColorChange}
         />
@@ -52,4 +50,4 @@ const AddLabelForm: React.FC<IAddLabelFormProps> = ({ onSubmit }) => {
   );
 };
 
-export default AddLabelForm;
+export default memo(AddLabelForm);

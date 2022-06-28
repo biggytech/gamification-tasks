@@ -87,6 +87,18 @@ class SQLiteProvider {
       ])
     )[0];
   }
+
+  async changeLevelSize(levelSize: number) {
+    return (
+      await this.executeQuery(
+        `UPDATE settings
+        SET levelSize = ?
+        WHERE
+            id = ? RETURNING *`,
+        [levelSize, defaults.settings.id],
+      )
+    )[0];
+  }
 }
 
 export default new SQLiteProvider();

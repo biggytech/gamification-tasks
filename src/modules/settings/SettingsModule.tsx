@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
 import Settings from '../../components/Settings';
+import EditLevelSizeForm from '../../components/EditLevelSizeForm';
 
 const Stack = createNativeStackNavigator();
 
@@ -13,6 +14,7 @@ const settingsDataSource = appDataSource;
 
 const screens = {
   Settings: 'Settings',
+  EditLevelSizeForm: 'EditLevelSizeForm',
 };
 
 type SettingsModuleData = Pick<IAppData, 'settings'>;
@@ -30,6 +32,18 @@ const SettingsModule: ModuleComponent<
     }, [actions.LOAD_SETTINGS, callDispatch]),
   );
 
+  const handleLevelSizeChange = useCallback(
+    async (levelSize: number) => {
+      await callDispatch(actions.CHANGE_LEVEL_SIZE, levelSize);
+      navigation.navigate(screens.Settings);
+    },
+    [actions.CHANGE_LEVEL_SIZE, callDispatch, navigation],
+  );
+
+  const handleLevelSizePress = useCallback(() => {
+    navigation.navigate(screens.EditLevelSizeForm);
+  }, [navigation]);
+
   return (
     <>
       <Stack.Navigator>
@@ -40,7 +54,22 @@ const SettingsModule: ModuleComponent<
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
           }}>
-          {props => <Settings {...props} settings={settings} />}
+          {props => (
+            <Settings
+              {...props}
+              settings={settings}
+              onLevelSizePress={handleLevelSizePress}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name={screens.EditLevelSizeForm}>
+          {props => (
+            <EditLevelSizeForm
+              {...props}
+              levelSize={settings.levelSize}
+              onSubmit={handleLevelSizeChange}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </>
@@ -50,7 +79,8 @@ const SettingsModule: ModuleComponent<
 export default asModule<SettingsModuleData, SettingsModuleActions>(
   SettingsModule,
   {
-    name: 'Settings',
+    title: 'Settings',
+    name: 'SettingsModule',
   },
   settingsDataSource,
 );
