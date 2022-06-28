@@ -3,6 +3,7 @@ package com.gamificationtasks;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
+import android.os.Bundle; // @react-navigation/native
 
 public class MainActivity extends ReactActivity {
 
@@ -13,6 +14,12 @@ public class MainActivity extends ReactActivity {
   @Override
   protected String getMainComponentName() {
     return "GamificationTasks";
+  }
+
+// @react-navigation/native
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(null);
   }
 
   /**
