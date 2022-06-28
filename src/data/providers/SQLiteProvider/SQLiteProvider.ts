@@ -2,6 +2,7 @@ import { ILabel, ILabelData } from '../../../lib/types';
 import SQLite from 'react-native-sqlite-storage';
 import sqLiteConfig from '../../../config/sqlLite';
 import dbScripts from './dbScripts';
+import defaults from '../../../config/defaults';
 
 SQLite.enablePromise(true);
 
@@ -36,6 +37,7 @@ class SQLiteProvider {
       name: sqLiteConfig.filename,
     });
     await this.createTables();
+    await this.fillTables();
   }
 
   async createTables() {
@@ -43,6 +45,16 @@ class SQLiteProvider {
       if (versionScripts.version <= sqLiteConfig.version) {
         for (const createScript of versionScripts.createScripts) {
           await this.executeQuery(createScript);
+        }
+      }
+    }
+  }
+
+  async fillTables() {
+    for (const versionScripts of dbScripts) {
+      if (versionScripts.version <= sqLiteConfig.version) {
+        for (const upsertScript of versionScripts.upsertScripts) {
+          await this.executeQuery(upsertScript.sql, upsertScript.values);
         }
       }
     }
@@ -65,6 +77,14 @@ class SQLiteProvider {
         'INSERT INTO labels (name, color) VALUES (?, ?) RETURNING *',
         [label.name, label.color],
       )
+    )[0];
+  }
+
+  async getSettings() {
+    return (
+      await this.executeQuery('SELECT * from settings WHERE id = ?', [
+        defaults.settings.id,
+      ])
     )[0];
   }
 }

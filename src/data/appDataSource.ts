@@ -1,3 +1,4 @@
+import defaults from '../config/defaults';
 import DataSource from '../lib/data/DataSource';
 import { ILabel } from '../lib/types';
 import ACTIONS from './actions';
@@ -9,12 +10,18 @@ export interface IAppData {
   error: string | null;
   labels: ILabel[];
   dbSize: number;
+  settings: {
+    levelSize: number;
+  };
 }
 
 const intialData: IAppData = {
   error: null,
   labels: [],
   dbSize: 0,
+  settings: {
+    levelSize: defaults.settings.levelSize,
+  },
 };
 
 async function appActionHandler(
@@ -53,6 +60,14 @@ async function appActionHandler(
           dbSize: 0,
         };
       }
+      case ACTIONS.LOAD_SETTINGS: {
+        const settings = await appRepository.getSettings();
+
+        return {
+          ...data,
+          settings,
+        };
+      }
       default:
         return data;
     }
@@ -67,7 +82,7 @@ async function appActionHandler(
 const appDataSource = new DataSource<IAppData, AppActions>(
   intialData,
   appActionHandler,
-  ACTIONS,
+  ACTIONS as { [action in AppActions]: AppActions },
 );
 
 export default appDataSource;

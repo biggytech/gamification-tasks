@@ -35,5 +35,5 @@ export interface ILabelData {
 }
 
 export interface ILabel extends ILabelData {
-  key: Key;
+  id: Key;
 }
