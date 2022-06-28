@@ -1,26 +1,22 @@
 import React, { memo } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { IRepetitiveTask } from '../../lib/types';
+import { ITask } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
 
-interface RepetitiveTasksListProps {
-  items: IRepetitiveTask[];
+interface TasksListProps {
+  items: ITask[];
   onAddPress: () => void;
   error: null | string;
 }
 
-const RepetitiveTasksList: React.FC<RepetitiveTasksListProps> = ({
-  items,
-  onAddPress,
-  error,
-}) => {
+const TasksList: React.FC<TasksListProps> = ({ items, onAddPress, error }) => {
   return (
     <>
       {error ? <Text>{error}</Text> : null}
       {!error ? (
         <>
-          <Button title="Add a repetitive task" onPress={onAddPress} />
+          <Button title="Add a task" onPress={onAddPress} />
           <FlatList
             data={items}
             renderItem={({ item }) => (
@@ -40,4 +36,4 @@ const RepetitiveTasksList: React.FC<RepetitiveTasksListProps> = ({
   );
 };
 
-export default memo(RepetitiveTasksList);
+export default memo(TasksList);

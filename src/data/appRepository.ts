@@ -1,4 +1,12 @@
-import { ILabelData, IRepetitiveTaskData, LevelSize } from '../lib/types';
+import {
+  ILabel,
+  ILabelData,
+  IRepetitiveTask,
+  IRepetitiveTaskData,
+  ITask,
+  ITaskData,
+  LevelSize,
+} from '../lib/types';
 import SQLiteProvider from './providers/SQLiteProvider';
 
 const appRepository = {
@@ -12,14 +20,18 @@ const appRepository = {
     }
   },
   getLabels: async () => await SQLiteProvider.getLabels(),
-  addLabel: async (label: ILabelData) => await SQLiteProvider.addLabel(label),
+  addLabel: async (label: ILabelData): Promise<ILabel> =>
+    await SQLiteProvider.addLabel(label),
   deleteDatabase: async () => await SQLiteProvider.deleteDatabase(),
   getSettings: async () => await SQLiteProvider.getSettings(),
   changeLevelSize: async (levelSize: LevelSize) =>
     await SQLiteProvider.changeLevelSize(levelSize),
-  getRepetitiveTasks: async () => await SQLiteProvider.getRepetitiveTasks(),
+  getRepetitiveTasks: async (): Promise<IRepetitiveTask[]> =>
+    await SQLiteProvider.getRepetitiveTasks(),
   addRepetitiveTask: async (task: IRepetitiveTaskData) =>
     await SQLiteProvider.addRepetitiveTask(task),
+  getTasks: async (): Promise<ITask[]> => await SQLiteProvider.getTasks(),
+  addTask: async (task: ITaskData) => await SQLiteProvider.addTask(task),
 };
 
 export default appRepository;

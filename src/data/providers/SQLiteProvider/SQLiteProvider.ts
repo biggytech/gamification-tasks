@@ -3,6 +3,8 @@ import {
   ILabelData,
   IRepetitiveTask,
   IRepetitiveTaskData,
+  ITask,
+  ITaskData,
   LevelSize,
 } from '../../../lib/types';
 import SQLite from 'react-native-sqlite-storage';
@@ -114,6 +116,19 @@ class SQLiteProvider {
     return (
       await this.executeQuery(
         'INSERT INTO repetitiveTasks (title, value) VALUES (?, ?) RETURNING *',
+        [task.title, task.value],
+      )
+    )[0];
+  }
+
+  async getTasks(): Promise<ITask[]> {
+    return await this.executeQuery('SELECT * from tasks');
+  }
+
+  async addTask(task: ITaskData) {
+    return (
+      await this.executeQuery(
+        'INSERT INTO tasks (title, value) VALUES (?, ?) RETURNING *',
         [task.title, task.value],
       )
     )[0];

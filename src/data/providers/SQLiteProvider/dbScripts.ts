@@ -14,6 +14,7 @@ const dbScripts: DbScripts = [
     version: 1,
     createScripts: [
       'CREATE TABLE IF NOT EXISTS labels (id integer PRIMARY KEY AUTOINCREMENT, name text NOT NULL, color text NOT NULL)',
+      'CREATE TABLE IF NOT EXISTS tasks (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, value integer NOT NULL)',
       'CREATE TABLE IF NOT EXISTS repetitiveTasks (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, value integer NOT NULL)',
       'CREATE TABLE IF NOT EXISTS settings (id integer PRIMARY KEY AUTOINCREMENT, levelSize integer NOT NULL)',
     ],
