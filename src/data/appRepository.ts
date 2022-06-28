@@ -32,6 +32,7 @@ const appRepository = {
     await SQLiteProvider.addRepetitiveTask(task),
   getTasks: async (): Promise<ITask[]> => await SQLiteProvider.getTasks(),
   addTask: async (task: ITaskData) => await SQLiteProvider.addTask(task),
+  getUnusedLabels: async () => await SQLiteProvider.getUnusedLabels(),
 };
 
 export default appRepository;

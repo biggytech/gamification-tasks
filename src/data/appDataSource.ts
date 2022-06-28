@@ -15,6 +15,7 @@ export interface IAppData {
   };
   repetitiveTasks: IRepetitiveTask[];
   tasks: ITask[];
+  unusedLabels: ILabel[];
 }
 
 const intialData: IAppData = {
@@ -26,6 +27,7 @@ const intialData: IAppData = {
   },
   repetitiveTasks: [],
   tasks: [],
+  unusedLabels: [],
 };
 
 async function appActionHandler(
@@ -120,6 +122,13 @@ async function appActionHandler(
         return {
           ...data,
           tasks: data.tasks.concat(task),
+        };
+      }
+      case ACTIONS.LOAD_UNUSED_LABELS: {
+        const unusedLabels = await appRepository.getUnusedLabels();
+        return {
+          ...data,
+          unusedLabels,
         };
       }
       default:

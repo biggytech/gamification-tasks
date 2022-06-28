@@ -44,6 +44,7 @@ class SQLiteProvider {
     this.db = await SQLite.openDatabase({
       name: sqLiteConfig.filename,
     });
+    this.executeQuery('PRAGMA foreign_keys = ON');
     await this.createTables();
     await this.fillTables();
   }
@@ -128,10 +129,19 @@ class SQLiteProvider {
   async addTask(task: ITaskData) {
     return (
       await this.executeQuery(
-        'INSERT INTO tasks (title, value) VALUES (?, ?) RETURNING *',
-        [task.title, task.value],
+        'INSERT INTO tasks (title, value, labelId) VALUES (?, ?, ?) RETURNING *',
+        [task.title, task.value, task.labelId],
       )
     )[0];
+  }
+
+  async getUnusedLabels(): Promise<ILabel[]> {
+    const tasks = await this.getTasks();
+    const usedLabelsIds = Array.from(new Set(tasks.map(task => task.labelId)));
+    const query = `SELECT * from labels WHERE id NOT in (${usedLabelsIds
+      .map(_ => '?')
+      .join(',')})`;
+    return await this.executeQuery(query, usedLabelsIds);
   }
 }
 

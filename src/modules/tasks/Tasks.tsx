@@ -17,7 +17,10 @@ const screens = {
   AddTaskForm: 'AddTaskForm',
 };
 
-type TasksModuleData = Pick<IAppData, 'tasks' | 'error'>;
+type TasksModuleData = Pick<
+  IAppData,
+  'tasks' | 'labels' | 'unusedLabels' | 'error'
+>;
 type TasksModuleActions = keyof typeof tasksDataSource.actions;
 
 const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
@@ -26,16 +29,28 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
   actions,
   navigation,
 }) => {
-  const { tasks, error } = data;
+  const { tasks, labels, unusedLabels, error } = data;
 
   useFocusEffect(
     useCallback(() => {
-      callDispatch(actions.LOAD_TASKS);
+      (async () => {
+        await callDispatch(actions.LOAD_LABELS);
+        await callDispatch(actions.LOAD_UNUSED_LABELS);
+        await callDispatch(actions.LOAD_TASKS);
+      })();
 
-      return () => {
-        callDispatch(actions.CLEAR_TASKS);
+      return async () => {
+        await callDispatch(actions.CLEAR_TASKS);
+        await callDispatch(actions.CLEAR_LABELS);
       };
-    }, [actions.CLEAR_TASKS, actions.LOAD_TASKS, callDispatch]),
+    }, [
+      callDispatch,
+      actions.LOAD_LABELS,
+      actions.LOAD_UNUSED_LABELS,
+      actions.LOAD_TASKS,
+      actions.CLEAR_TASKS,
+      actions.CLEAR_LABELS,
+    ]),
   );
 
   const handleAddPress = useCallback(() => {
@@ -45,9 +60,11 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
   const handleTaskAdd = useCallback(
     async (label: ITaskData) => {
       await callDispatch(actions.ADD_TASK, label);
+
       navigation.navigate(screens.TasksList);
+      await callDispatch(actions.LOAD_UNUSED_LABELS);
     },
-    [actions.ADD_TASK, callDispatch, navigation],
+    [actions.ADD_TASK, actions.LOAD_UNUSED_LABELS, callDispatch, navigation],
   );
 
   return (
@@ -64,16 +81,24 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
           {props => (
             <TasksList
               {...props}
-              error={error}
+              error={error ?? (labels.length === 0 ? 'Add labels first' : null)}
               items={tasks}
               onAddPress={handleAddPress}
+              labels={labels}
+              canAdd={unusedLabels.length > 0}
             />
           )}
         </Stack.Screen>
         <Stack.Screen
           name={screens.AddTaskForm}
           options={{ title: 'Add a Task' }}>
-          {props => <AddTaskForm {...props} onSubmit={handleTaskAdd} />}
+          {props => (
+            <AddTaskForm
+              {...props}
+              onSubmit={handleTaskAdd}
+              labels={unusedLabels}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </>

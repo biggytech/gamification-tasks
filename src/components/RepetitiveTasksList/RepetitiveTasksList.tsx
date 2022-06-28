@@ -26,7 +26,7 @@ const RepetitiveTasksList: React.FC<RepetitiveTasksListProps> = ({
             renderItem={({ item }) => (
               <ListItem
                 title={item.title}
-                leading={
+                trailing={
                   <View>
                     <Text>{item.value}</Text>
                   </View>

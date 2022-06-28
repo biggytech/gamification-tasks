@@ -55,6 +55,7 @@ export interface IRepetitiveTask extends IRepetitiveTaskData {
 export interface ITaskData {
   title: string;
   value: Point;
+  labelId: Key;
 }
 
 export interface ITask extends ITaskData {

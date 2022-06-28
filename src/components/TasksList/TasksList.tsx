@@ -1,34 +1,63 @@
 import React, { memo } from 'react';
-import { FlatList, Text, View } from 'react-native';
-import { ITask } from '../../lib/types';
+import { FlatList, Text, View, StyleSheet } from 'react-native';
+import { ILabel, ITask } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
+
+const styles = StyleSheet.create({
+  labelColor: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+  },
+});
 
 interface TasksListProps {
   items: ITask[];
   onAddPress: () => void;
   error: null | string;
+  labels: ILabel[];
+  canAdd: boolean;
 }
 
-const TasksList: React.FC<TasksListProps> = ({ items, onAddPress, error }) => {
+const TasksList: React.FC<TasksListProps> = ({
+  items,
+  onAddPress,
+  error,
+  labels,
+  canAdd,
+}) => {
   return (
     <>
       {error ? <Text>{error}</Text> : null}
       {!error ? (
         <>
-          <Button title="Add a task" onPress={onAddPress} />
+          {canAdd ? <Button title="Add a task" onPress={onAddPress} /> : null}
           <FlatList
             data={items}
-            renderItem={({ item }) => (
-              <ListItem
-                title={item.title}
-                leading={
-                  <View>
-                    <Text>{item.value}</Text>
-                  </View>
-                }
-              />
-            )}
+            renderItem={({ item }) => {
+              const label = labels.find(_label => _label.id === item.labelId);
+
+              return (
+                <ListItem
+                  title={item.title}
+                  leading={
+                    <View
+                      style={[
+                        styles.labelColor,
+                        label?.color ? { backgroundColor: label.color } : {},
+                      ]}
+                    />
+                  }
+                  trailing={
+                    <View>
+                      <Text>{item.value}</Text>
+                    </View>
+                  }
+                  secondaryText={label?.name}
+                />
+              );
+            }}
           />
         </>
       ) : null}
