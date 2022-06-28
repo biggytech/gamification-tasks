@@ -3,9 +3,9 @@ import asModule from '../../lib/utils/asModule';
 import { ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button } from '@react-native-material/core';
 import DeveloperSettings from '../../components/DeveloperSettings';
 import { useFocusEffect } from '@react-navigation/native';
+import DrawerButton from '../../components/common/DrawerButton';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,11 +42,7 @@ const DeveloperSettingsModule: ModuleComponent<
           name={screens.DeveloperSettings}
           options={{
             headerLeft: () => (
-              <Button
-                title="Menu"
-                variant="text"
-                onPress={() => navigation.openDrawer()}
-              />
+              <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
           }}>
           {props => (

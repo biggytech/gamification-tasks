@@ -5,8 +5,8 @@ import { ILabelData, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import AddLabelForm from '../../components/AddLabelForm';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button } from '@react-native-material/core';
 import { useFocusEffect } from '@react-navigation/native';
+import DrawerButton from '../../components/common/DrawerButton';
 
 const Stack = createNativeStackNavigator();
 
@@ -57,11 +57,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
           name={screens.LabelsList}
           options={{
             headerLeft: () => (
-              <Button
-                title="Menu"
-                variant="text"
-                onPress={() => navigation.openDrawer()}
-              />
+              <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
           }}>
           {props => (
