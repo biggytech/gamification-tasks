@@ -9,7 +9,7 @@ class DataSource<TData, TActions extends string | number | symbol>
     action: TActions,
     value: any,
   ) => Promise<TData>;
-  actions: { [action in TActions]: string };
+  actions: { [action in TActions]: TActions };
 
   constructor(
     initialData: TData,
@@ -18,7 +18,7 @@ class DataSource<TData, TActions extends string | number | symbol>
       action: TActions,
       value: any,
     ) => Promise<TData>,
-    actions: { [action in TActions]: string },
+    actions: { [action in TActions]: TActions },
   ) {
     this.data = initialData;
     this.actionHandler = actionHandler;
