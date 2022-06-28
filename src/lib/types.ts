@@ -26,7 +26,7 @@ export type ModuleComponent<
 export interface IDataSource<TData, TActions extends string | number | symbol> {
   getData: () => TData;
   callAction: (action: TActions, value?: any) => void;
-  actions: { [action in TActions]: string };
+  actions: { [action in TActions]: TActions };
 }
 
 export interface ILabelData {
