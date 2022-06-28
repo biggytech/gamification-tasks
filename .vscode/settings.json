@@ -1,0 +1,6 @@
+{
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+  "prettier.configPath": ".prettierrc.js",
+  "editor.tabSize": 2
+}
