@@ -61,3 +61,17 @@ export interface ITaskData {
 export interface ITask extends ITaskData {
   id: Key;
 }
+
+export interface ISubtaskData {
+  title: string;
+  value: Point;
+  taskId: Key;
+}
+
+export interface ISubtask extends ISubtaskData {
+  id: Key;
+}
+
+export interface ITaskWithAdditions extends ITask {
+  subtasks: ISubtask[];
+}

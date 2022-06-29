@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
-import { ILabel, ITask } from '../../lib/types';
+import { ILabel, ITask, Key } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
 
@@ -18,6 +18,7 @@ interface TasksListProps {
   error: null | string;
   labels: ILabel[];
   canAdd: boolean;
+  onTaskItemPress: (id: Key) => void;
 }
 
 const TasksList: React.FC<TasksListProps> = ({
@@ -26,6 +27,7 @@ const TasksList: React.FC<TasksListProps> = ({
   error,
   labels,
   canAdd,
+  onTaskItemPress,
 }) => {
   return (
     <>
@@ -54,7 +56,8 @@ const TasksList: React.FC<TasksListProps> = ({
                       <Text>{item.value}</Text>
                     </View>
                   }
-                  secondaryText={label?.name}
+                  secondaryText={`Label: ${label?.name}`}
+                  onPress={() => onTaskItemPress(item.id)}
                 />
               );
             }}

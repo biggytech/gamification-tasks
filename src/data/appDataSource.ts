@@ -1,6 +1,12 @@
 import defaults from '../config/defaults';
 import DataSource from '../lib/data/DataSource';
-import { ILabel, IRepetitiveTask, ITask, LevelSize } from '../lib/types';
+import {
+  ILabel,
+  IRepetitiveTask,
+  ITask,
+  ITaskWithAdditions,
+  LevelSize,
+} from '../lib/types';
 import ACTIONS from './actions';
 import appRepository from './appRepository';
 
@@ -16,6 +22,7 @@ export interface IAppData {
   repetitiveTasks: IRepetitiveTask[];
   tasks: ITask[];
   unusedLabels: ILabel[];
+  selectedTask: ITaskWithAdditions | null;
 }
 
 const intialData: IAppData = {
@@ -28,6 +35,7 @@ const intialData: IAppData = {
   repetitiveTasks: [],
   tasks: [],
   unusedLabels: [],
+  selectedTask: null,
 };
 
 async function appActionHandler(
@@ -129,6 +137,26 @@ async function appActionHandler(
         return {
           ...data,
           unusedLabels,
+        };
+      }
+      case ACTIONS.LOAD_SELECTED_TASK: {
+        const selectedTask = await appRepository.getTaskWithAdditions(value);
+        return {
+          ...data,
+          selectedTask,
+        };
+      }
+      case ACTIONS.ADD_SUBTASK: {
+        const subtask = await appRepository.addSubtask(value);
+
+        return {
+          ...data,
+          selectedTask: data.selectedTask
+            ? {
+                ...data.selectedTask,
+                subtasks: data.selectedTask.subtasks.concat(subtask),
+              }
+            : null,
         };
       }
       default:

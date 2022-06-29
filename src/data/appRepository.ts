@@ -3,8 +3,11 @@ import {
   ILabelData,
   IRepetitiveTask,
   IRepetitiveTaskData,
+  ISubtaskData,
   ITask,
   ITaskData,
+  ITaskWithAdditions,
+  Key,
   LevelSize,
 } from '../lib/types';
 import SQLiteProvider from './providers/SQLiteProvider';
@@ -33,6 +36,10 @@ const appRepository = {
   getTasks: async (): Promise<ITask[]> => await SQLiteProvider.getTasks(),
   addTask: async (task: ITaskData) => await SQLiteProvider.addTask(task),
   getUnusedLabels: async () => await SQLiteProvider.getUnusedLabels(),
+  getTaskWithAdditions: async (id: Key): Promise<ITaskWithAdditions | null> =>
+    await SQLiteProvider.getTaskWithAdditions(id),
+  addSubtask: async (subtask: ISubtaskData) =>
+    await SQLiteProvider.addSubtask(subtask),
 };
 
 export default appRepository;

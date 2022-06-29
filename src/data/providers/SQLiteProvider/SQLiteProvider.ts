@@ -3,8 +3,12 @@ import {
   ILabelData,
   IRepetitiveTask,
   IRepetitiveTaskData,
+  ISubtask,
+  ISubtaskData,
   ITask,
   ITaskData,
+  ITaskWithAdditions,
+  Key,
   LevelSize,
 } from '../../../lib/types';
 import SQLite from 'react-native-sqlite-storage';
@@ -142,6 +146,50 @@ class SQLiteProvider {
       .map(_ => '?')
       .join(',')})`;
     return await this.executeQuery(query, usedLabelsIds);
+  }
+
+  async getTaskWithAdditions(id: Key): Promise<ITaskWithAdditions | null> {
+    const tasksRawData = await this.executeQuery(
+      `SELECT tasks.id, tasks.title, tasks.value, tasks.labelId,
+      subtasks.id as subtaskId,
+      subtasks.title as subtaskTitle,
+      subtasks.value as subtaskValue
+      from tasks LEFT JOIN subtasks ON tasks.id = subtasks.taskId WHERE tasks.id = ?`,
+      [id],
+    );
+    if (tasksRawData.length === 0) {
+      return null;
+    }
+
+    const task: ITaskWithAdditions = {
+      id,
+      title: tasksRawData[0].title,
+      value: tasksRawData[0].value,
+      labelId: tasksRawData[0].labelId,
+      subtasks: [],
+    };
+
+    tasksRawData.forEach(taskRawData => {
+      if (taskRawData.subtaskId) {
+        task.subtasks.push({
+          id: taskRawData.subtaskId,
+          title: taskRawData.subtaskTitle,
+          value: taskRawData.subtaskValue,
+          taskId: id,
+        });
+      }
+    });
+
+    return task;
+  }
+
+  async addSubtask(subtask: ISubtaskData): Promise<ISubtask> {
+    return (
+      await this.executeQuery(
+        'INSERT INTO subtasks (title, value, taskId) VALUES (?, ?, ?) RETURNING *',
+        [subtask.title, subtask.value, subtask.taskId],
+      )
+    )[0];
   }
 }
 
