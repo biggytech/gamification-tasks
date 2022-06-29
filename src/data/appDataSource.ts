@@ -2,6 +2,7 @@ import defaults from '../config/defaults';
 import DataSource from '../lib/data/DataSource';
 import {
   IHistory,
+  IHistoryData,
   ILabel,
   IRepetitiveTask,
   IReward,
@@ -226,6 +227,36 @@ async function appActionHandler(
           ...data,
           history,
         };
+      }
+      case ACTIONS.COMPLETE_REPETITIVE_TASK: {
+        const task = await appRepository.getRepetitiveTask(value);
+        if (task) {
+          const history: IHistoryData = {
+            message: `Completed repetitive task "${task?.title}"`,
+            points: task.value,
+            timestamp: Date.now() / 1000,
+          };
+          await appRepository.addHistory(history);
+
+          const prevStats = await appRepository.getStats();
+          const settings = await appRepository.getSettings();
+          const newPoints = prevStats.points + task.value;
+          const shouldBumpLevel = newPoints > prevStats.nextLevelSize;
+
+          const stats = await appRepository.changeStats({
+            level: shouldBumpLevel ? prevStats.level + 1 : prevStats.level,
+            points: newPoints,
+            nextLevelSize: shouldBumpLevel
+              ? prevStats.nextLevelSize + settings.levelSize
+              : prevStats.nextLevelSize,
+            prevLevelSize: shouldBumpLevel
+              ? newPoints
+              : prevStats.prevLevelSize,
+          });
+          await appRepository.changeStats(stats);
+        }
+
+        return data;
       }
       default:
         return data;

@@ -1,4 +1,4 @@
-import { ListItem, Stack, Text } from '@react-native-material/core';
+import { Flex, ListItem, Stack, Text } from '@react-native-material/core';
 import React, { memo } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { IHistory, IStats } from '../../lib/types';
@@ -36,49 +36,49 @@ const Progress: React.FC<IProgressProps> = ({ error, stats, history }) => {
     100;
 
   return (
-    <>
+    <Flex fill>
       {error ? <Text>{error}</Text> : null}
       {!error ? (
-        <Stack spacing={4} m={4}>
-          <ListItem title="Level" secondaryText={stats.level.toString()} />
-          <ListItem
-            title="Experience points (XP)"
-            secondaryText={stats.points.toString()}
-          />
-          <View style={styles.progressBar}>
-            <View
-              style={[
-                styles.progressBarInternal,
-                { width: `${levelProgress}%` },
-              ]}
+        <>
+          <Stack spacing={4} m={4}>
+            <ListItem title="Level" secondaryText={stats.level.toString()} />
+            <ListItem
+              title="Experience points (XP)"
+              secondaryText={stats.points.toString()}
             />
-            {PROGRESS_BAR_DIVIDERS.map(divider => (
+            <View style={styles.progressBar}>
               <View
-                style={[styles.progressBarDivider, { left: `${divider}%` }]}
+                style={[
+                  styles.progressBarInternal,
+                  { width: `${levelProgress}%` },
+                ]}
               />
-            ))}
-          </View>
-          <FlatList
-            data={history}
-            renderItem={({ item }) => (
-              <ListItem
-                title={item.message}
-                trailing={
-                  <View>
-                    <Text>{item.points}</Text>
-                  </View>
-                }
-                leading={
-                  <View>
-                    <Text>{formatDate(item.timestamp)}</Text>
-                  </View>
-                }
-              />
-            )}
-          />
-        </Stack>
+              {PROGRESS_BAR_DIVIDERS.map(divider => (
+                <View
+                  style={[styles.progressBarDivider, { left: `${divider}%` }]}
+                />
+              ))}
+            </View>
+          </Stack>
+          <Flex fill>
+            <FlatList
+              data={history}
+              renderItem={({ item }) => (
+                <ListItem
+                  title={item.message}
+                  trailing={
+                    <View>
+                      <Text>{item.points}</Text>
+                    </View>
+                  }
+                  secondaryText={formatDate(item.timestamp)}
+                />
+              )}
+            />
+          </Flex>
+        </>
       ) : null}
-    </>
+    </Flex>
   );
 };
 

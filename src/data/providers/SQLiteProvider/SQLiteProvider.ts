@@ -7,6 +7,7 @@ import {
   IRepetitiveTaskData,
   IReward,
   IRewardData,
+  ISettings,
   IStats,
   ISubtask,
   ISubtaskData,
@@ -98,7 +99,7 @@ class SQLiteProvider {
     )[0];
   }
 
-  async getSettings() {
+  async getSettings(): Promise<ISettings> {
     return (
       await this.executeQuery('SELECT * from settings WHERE id = ?', [
         defaults.settings.id,
@@ -246,7 +247,9 @@ class SQLiteProvider {
   }
 
   async getHistory(): Promise<IHistory[]> {
-    return await this.executeQuery('SELECT * FROM history');
+    return await this.executeQuery(
+      'SELECT * FROM history ORDER BY timestamp DESC',
+    );
   }
 
   async addHistory(history: IHistoryData): Promise<IHistory> {
@@ -272,6 +275,16 @@ class SQLiteProvider {
           .join(',')})`,
       );
     }
+  }
+
+  async getRepetitiveTask(id: Key): Promise<IRepetitiveTask | null> {
+    return (
+      (
+        await this.executeQuery('SELECT * from repetitiveTasks WHERE id = ?', [
+          id,
+        ])
+      )[0] ?? null
+    );
   }
 }
 

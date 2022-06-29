@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import { IRepetitiveTaskData, ModuleComponent } from '../../lib/types';
+import { IRepetitiveTaskData, Key, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
 import RepetitiveTasksList from '../../components/RepetitiveTasksList';
 import AddRepetitiveTaskForm from '../../components/AddRepetitiveTaskForm';
+import Toast from 'react-native-toast-message';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,18 @@ const RepetitiveTasksModule: ModuleComponent<
     [actions.ADD_REPETITIVE_TASK, callDispatch, navigation],
   );
 
+  const handleRepetitiveTaskComplete = useCallback(
+    async (taskId: Key) => {
+      await callDispatch(actions.COMPLETE_REPETITIVE_TASK, taskId);
+      console.log('Toast.show');
+      Toast.show({
+        type: 'success',
+        text1: 'Completed!',
+      });
+    },
+    [actions.COMPLETE_REPETITIVE_TASK, callDispatch],
+  );
+
   return (
     <>
       <Stack.Navigator>
@@ -70,6 +83,7 @@ const RepetitiveTasksModule: ModuleComponent<
               error={error}
               items={repetitiveTasks}
               onAddPress={handleAddPress}
+              onItemCheckPress={handleRepetitiveTaskComplete}
             />
           )}
         </Stack.Screen>

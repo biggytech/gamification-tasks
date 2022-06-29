@@ -7,6 +7,7 @@ import {
   IRepetitiveTaskData,
   IReward,
   IRewardData,
+  ISettings,
   IStats,
   ISubtaskData,
   ITask,
@@ -31,7 +32,8 @@ const appRepository = {
   addLabel: async (label: ILabelData): Promise<ILabel> =>
     await SQLiteProvider.addLabel(label),
   deleteDatabase: async () => await SQLiteProvider.deleteDatabase(),
-  getSettings: async () => await SQLiteProvider.getSettings(),
+  getSettings: async (): Promise<ISettings> =>
+    await SQLiteProvider.getSettings(),
   changeLevelSize: async (levelSize: LevelSize) =>
     await SQLiteProvider.changeLevelSize(levelSize),
   getRepetitiveTasks: async (): Promise<IRepetitiveTask[]> =>
@@ -59,6 +61,8 @@ const appRepository = {
     await SQLiteProvider.addHistory(history),
   clearOldestHistoryItems: async (countToPreserve: number): Promise<void> =>
     await SQLiteProvider.clearOldestHistoryItems(countToPreserve),
+  getRepetitiveTask: async (id: Key): Promise<IRepetitiveTask | null> =>
+    await SQLiteProvider.getRepetitiveTask(id),
 };
 
 export default appRepository;
