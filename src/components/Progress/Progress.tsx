@@ -1,11 +1,13 @@
 import { ListItem, Stack, Text } from '@react-native-material/core';
 import React, { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { IStats } from '../../lib/types';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { IHistory, IStats } from '../../lib/types';
+import formatDate from '../../lib/utils/formatDate';
 
 interface IProgressProps {
   error: string | null;
   stats: IStats;
+  history: IHistory[];
 }
 
 const styles = StyleSheet.create({
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
 
 const PROGRESS_BAR_DIVIDERS = [10, 20, 30, 40, 50, 60, 70, 80, 90];
 
-const Progress: React.FC<IProgressProps> = ({ error, stats }) => {
+const Progress: React.FC<IProgressProps> = ({ error, stats, history }) => {
   const levelProgress =
     ((stats.points - stats.prevLevelSize) /
       (stats.nextLevelSize - stats.prevLevelSize)) *
@@ -56,6 +58,24 @@ const Progress: React.FC<IProgressProps> = ({ error, stats }) => {
               />
             ))}
           </View>
+          <FlatList
+            data={history}
+            renderItem={({ item }) => (
+              <ListItem
+                title={item.message}
+                trailing={
+                  <View>
+                    <Text>{item.points}</Text>
+                  </View>
+                }
+                leading={
+                  <View>
+                    <Text>{formatDate(item.timestamp)}</Text>
+                  </View>
+                }
+              />
+            )}
+          />
         </Stack>
       ) : null}
     </>

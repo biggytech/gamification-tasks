@@ -15,7 +15,7 @@ const screens = {
   StatsScreen: 'StatsScreen',
 };
 
-type StatsModuleData = Pick<IAppData, 'stats' | 'error'>;
+type StatsModuleData = Pick<IAppData, 'stats' | 'history' | 'error'>;
 type StatsModuleActions = keyof typeof statsDataSource.actions;
 
 const StatsModule: ModuleComponent<StatsModuleData, StatsModuleActions> = ({
@@ -24,14 +24,17 @@ const StatsModule: ModuleComponent<StatsModuleData, StatsModuleActions> = ({
   actions,
   navigation,
 }) => {
-  const { stats, error } = data;
+  const { stats, error, history } = data;
 
   useFocusEffect(
     useCallback(() => {
-      callDispatch(actions.LOAD_STATS);
+      (async () => {
+        await callDispatch(actions.LOAD_STATS);
+        await callDispatch(actions.LOAD_HISTORY);
+      })();
 
       return () => {};
-    }, [actions.LOAD_STATS, callDispatch]),
+    }, [actions.LOAD_HISTORY, actions.LOAD_STATS, callDispatch]),
   );
 
   return (
@@ -45,7 +48,14 @@ const StatsModule: ModuleComponent<StatsModuleData, StatsModuleActions> = ({
             ),
             title: 'Progress',
           }}>
-          {props => <Progress {...props} error={error} stats={stats} />}
+          {props => (
+            <Progress
+              {...props}
+              error={error}
+              stats={stats}
+              history={history}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </>

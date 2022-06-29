@@ -1,6 +1,7 @@
 import defaults from '../config/defaults';
 import DataSource from '../lib/data/DataSource';
 import {
+  IHistory,
   ILabel,
   IRepetitiveTask,
   IReward,
@@ -26,6 +27,7 @@ export interface IAppData {
   rewards: IReward[];
   nextRewardLevel: number;
   stats: IStats;
+  history: IHistory[];
 }
 
 const intialData: IAppData = {
@@ -47,6 +49,7 @@ const intialData: IAppData = {
     nextLevelSize: defaults.settings.levelSize,
     prevLevelSize: defaults.stats.points,
   },
+  history: [],
 };
 
 async function appActionHandler(
@@ -214,6 +217,14 @@ async function appActionHandler(
         return {
           ...data,
           stats,
+        };
+      }
+      case ACTIONS.LOAD_HISTORY: {
+        const history = await appRepository.getHistory();
+
+        return {
+          ...data,
+          history,
         };
       }
       default:

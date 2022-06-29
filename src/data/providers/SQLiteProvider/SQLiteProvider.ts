@@ -1,4 +1,6 @@
 import {
+  IHistory,
+  IHistoryData,
   ILabel,
   ILabelData,
   IRepetitiveTask,
@@ -241,6 +243,35 @@ class SQLiteProvider {
         ],
       )
     )[0];
+  }
+
+  async getHistory(): Promise<IHistory[]> {
+    return await this.executeQuery('SELECT * FROM history');
+  }
+
+  async addHistory(history: IHistoryData): Promise<IHistory> {
+    return (
+      await this.executeQuery(
+        'INSERT INTO history (message, points, timestamp) VALUES (?, ?, ?) RETURNING *',
+        [history.message, history.points, history.timestamp],
+      )
+    )[0];
+  }
+
+  async clearOldestHistoryItems(countToPreserve: number): Promise<void> {
+    const newestHistory: IHistory[] = await this.executeQuery(
+      'SELECT id FROM history ORDER BY timestamp DESC LIMIT ?',
+      [countToPreserve],
+    );
+
+    if (newestHistory.length > 0) {
+      const newestHistoryIds = newestHistory.map(history => history.id);
+      await this.executeQuery(
+        `DELETE FROM history WHERE id NOT in (${newestHistoryIds
+          .map(_ => '?')
+          .join(',')})`,
+      );
+    }
   }
 }
 

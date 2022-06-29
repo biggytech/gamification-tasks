@@ -95,3 +95,13 @@ export interface IStats {
 export interface ISettings {
   levelSize: LevelSize;
 }
+
+export interface IHistoryData {
+  message: string;
+  points: number;
+  timestamp: number;
+}
+
+export interface IHistory extends IHistoryData {
+  id: Key;
+}

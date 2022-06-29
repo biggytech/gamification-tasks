@@ -22,6 +22,7 @@ const dbScripts: DbScripts = [
       `CREATE TABLE IF NOT EXISTS stats 
       (id integer PRIMARY KEY AUTOINCREMENT, level integer NOT NULL, points integer NOT NULL, 
         nextLevelSize integer NOT NULL, prevLevelSize integer NOT NULL)`,
+      'CREATE TABLE IF NOT EXISTS history (id integer PRIMARY KEY AUTOINCREMENT, message text NOT NULL, points integer NOT NULL, timestamp integer NOT NULL)',
     ],
     upsertScripts: [
       {

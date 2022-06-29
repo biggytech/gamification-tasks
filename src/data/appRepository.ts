@@ -1,4 +1,6 @@
 import {
+  IHistory,
+  IHistoryData,
   ILabel,
   ILabelData,
   IRepetitiveTask,
@@ -51,6 +53,12 @@ const appRepository = {
   getStats: async (): Promise<IStats> => await SQLiteProvider.getStats(),
   changeStats: async (stats: IStats): Promise<IStats> =>
     await SQLiteProvider.changeStats(stats),
+  getHistory: async (): Promise<IHistory[]> =>
+    await SQLiteProvider.getHistory(),
+  addHistory: async (history: IHistoryData): Promise<IHistory> =>
+    await SQLiteProvider.addHistory(history),
+  clearOldestHistoryItems: async (countToPreserve: number): Promise<void> =>
+    await SQLiteProvider.clearOldestHistoryItems(countToPreserve),
 };
 
 export default appRepository;
