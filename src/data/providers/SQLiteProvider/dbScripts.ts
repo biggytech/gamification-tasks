@@ -19,6 +19,9 @@ const dbScripts: DbScripts = [
       'CREATE TABLE IF NOT EXISTS repetitiveTasks (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, value integer NOT NULL)',
       'CREATE TABLE IF NOT EXISTS settings (id integer PRIMARY KEY AUTOINCREMENT, levelSize integer NOT NULL)',
       'CREATE TABLE IF NOT EXISTS rewards (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, level integer NOT NULL)',
+      `CREATE TABLE IF NOT EXISTS stats 
+      (id integer PRIMARY KEY AUTOINCREMENT, level integer NOT NULL, points integer NOT NULL, 
+        nextLevelSize integer NOT NULL, prevLevelSize integer NOT NULL)`,
     ],
     upsertScripts: [
       {
@@ -29,6 +32,19 @@ const dbScripts: DbScripts = [
           defaults.settings.id,
           defaults.settings.levelSize,
           defaults.settings.id,
+        ],
+      },
+      {
+        sql: `INSERT INTO stats(id, level, points, nextLevelSize, prevLevelSize) 
+        SELECT ?, ?, ?, ?, ?
+        WHERE NOT EXISTS(SELECT id FROM stats WHERE id = ?);`,
+        values: [
+          defaults.stats.id,
+          defaults.stats.level,
+          defaults.stats.points,
+          defaults.settings.levelSize,
+          defaults.stats.points,
+          defaults.stats.id,
         ],
       },
     ],

@@ -5,6 +5,7 @@ import {
   IRepetitiveTaskData,
   IReward,
   IRewardData,
+  IStats,
   ISubtask,
   ISubtaskData,
   ITask,
@@ -215,6 +216,14 @@ class SQLiteProvider {
         )
       )[0]?.level ?? null
     );
+  }
+
+  async getStats(): Promise<IStats> {
+    return (
+      await this.executeQuery('SELECT * from stats WHERE id = ?', [
+        defaults.stats.id,
+      ])
+    )[0];
   }
 }
 

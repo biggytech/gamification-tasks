@@ -4,6 +4,7 @@ import {
   ILabel,
   IRepetitiveTask,
   IReward,
+  IStats,
   ITask,
   ITaskWithAdditions,
   LevelSize,
@@ -26,6 +27,7 @@ export interface IAppData {
   selectedTask: ITaskWithAdditions | null;
   rewards: IReward[];
   nextRewardLevel: number;
+  stats: IStats;
 }
 
 const intialData: IAppData = {
@@ -40,7 +42,13 @@ const intialData: IAppData = {
   unusedLabels: [],
   selectedTask: null,
   rewards: [],
-  nextRewardLevel: 1,
+  nextRewardLevel: defaults.stats.level,
+  stats: {
+    level: defaults.stats.level,
+    points: defaults.stats.points,
+    nextLevelSize: defaults.settings.levelSize,
+    prevLevelSize: defaults.stats.points,
+  },
 };
 
 async function appActionHandler(
@@ -189,7 +197,17 @@ async function appActionHandler(
         const maxRewardsLevel = await appRepository.getMaxRewardsLevel();
         return {
           ...data,
-          nextRewardLevel: maxRewardsLevel ? maxRewardsLevel + 1 : 1,
+          nextRewardLevel: maxRewardsLevel
+            ? maxRewardsLevel + 1
+            : defaults.stats.level,
+        };
+      }
+      case ACTIONS.LOAD_STATS: {
+        const stats = await appRepository.getStats();
+
+        return {
+          ...data,
+          stats,
         };
       }
       default:

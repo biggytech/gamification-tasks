@@ -5,6 +5,7 @@ import {
   IRepetitiveTaskData,
   IReward,
   IRewardData,
+  IStats,
   ISubtaskData,
   ITask,
   ITaskData,
@@ -47,6 +48,7 @@ const appRepository = {
     await SQLiteProvider.addReward(reward),
   getMaxRewardsLevel: async (): Promise<number | null> =>
     await SQLiteProvider.getMaxRewardsLevel(),
+  getStats: async (): Promise<IStats> => await SQLiteProvider.getStats(),
 };
 
 export default appRepository;

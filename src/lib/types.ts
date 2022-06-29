@@ -84,3 +84,10 @@ export interface IRewardData {
 export interface IReward extends IRewardData {
   id: Key;
 }
+
+export interface IStats {
+  level: number;
+  points: Point;
+  nextLevelSize: Point;
+  prevLevelSize: Point;
+}
