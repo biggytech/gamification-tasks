@@ -4,10 +4,10 @@ import {
   ILabel,
   IRepetitiveTask,
   IReward,
+  ISettings,
   IStats,
   ITask,
   ITaskWithAdditions,
-  LevelSize,
 } from '../lib/types';
 import ACTIONS from './actions';
 import appRepository from './appRepository';
@@ -18,9 +18,7 @@ export interface IAppData {
   error: string | null;
   labels: ILabel[];
   dbSize: number;
-  settings: {
-    levelSize: LevelSize;
-  };
+  settings: ISettings;
   repetitiveTasks: IRepetitiveTask[];
   tasks: ITask[];
   unusedLabels: ILabel[];
@@ -97,10 +95,18 @@ async function appActionHandler(
       }
       case ACTIONS.CHANGE_LEVEL_SIZE: {
         const settings = await appRepository.changeLevelSize(value);
+        const prevStats = await appRepository.getStats();
+        const stats = await appRepository.changeStats({
+          level: prevStats.level,
+          points: prevStats.points,
+          nextLevelSize: prevStats.points + value,
+          prevLevelSize: prevStats.points,
+        });
 
         return {
           ...data,
           settings,
+          stats,
         };
       }
       case ACTIONS.LOAD_REPETITIVE_TASKS: {

@@ -225,6 +225,23 @@ class SQLiteProvider {
       ])
     )[0];
   }
+
+  async changeStats(stats: IStats): Promise<IStats> {
+    return (
+      await this.executeQuery(
+        `UPDATE stats 
+        SET level = ?, points = ?, nextLevelSize = ?, prevLevelSize = ? 
+        WHERE id = ? RETURNING *`,
+        [
+          stats.level,
+          stats.points,
+          stats.nextLevelSize,
+          stats.prevLevelSize,
+          defaults.stats.id,
+        ],
+      )
+    )[0];
+  }
 }
 
 export default new SQLiteProvider();

@@ -28,7 +28,10 @@ const styles = StyleSheet.create({
 const PROGRESS_BAR_DIVIDERS = [10, 20, 30, 40, 50, 60, 70, 80, 90];
 
 const Progress: React.FC<IProgressProps> = ({ error, stats }) => {
-  const levelProgress = (stats.prevLevelSize / stats.nextLevelSize) * 100;
+  const levelProgress =
+    ((stats.points - stats.prevLevelSize) /
+      (stats.nextLevelSize - stats.prevLevelSize)) *
+    100;
 
   return (
     <>

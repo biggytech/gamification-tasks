@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
 import Settings from '../../components/Settings';
 import EditLevelSizeForm from '../../components/EditLevelSizeForm';
+import { Alert } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +42,22 @@ const SettingsModule: ModuleComponent<
   );
 
   const handleLevelSizePress = useCallback(() => {
-    navigation.navigate(screens.EditLevelSizeForm);
+    Alert.alert(
+      'Caution!',
+      `Changing this setting will reset your current level progress. 
+    Your level and gained XP will stay the same, but the level progress bar will be set to zero. Are you sure to proceed?`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate(screens.EditLevelSizeForm),
+        },
+      ],
+    );
   }, [navigation]);
 
   return (

@@ -91,3 +91,7 @@ export interface IStats {
   nextLevelSize: Point;
   prevLevelSize: Point;
 }
+
+export interface ISettings {
+  levelSize: LevelSize;
+}

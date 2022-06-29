@@ -49,6 +49,8 @@ const appRepository = {
   getMaxRewardsLevel: async (): Promise<number | null> =>
     await SQLiteProvider.getMaxRewardsLevel(),
   getStats: async (): Promise<IStats> => await SQLiteProvider.getStats(),
+  changeStats: async (stats: IStats): Promise<IStats> =>
+    await SQLiteProvider.changeStats(stats),
 };
 
 export default appRepository;
