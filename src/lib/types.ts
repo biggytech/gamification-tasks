@@ -75,3 +75,12 @@ export interface ISubtask extends ISubtaskData {
 export interface ITaskWithAdditions extends ITask {
   subtasks: ISubtask[];
 }
+
+export interface IRewardData {
+  title: string;
+  level: number;
+}
+
+export interface IReward extends IRewardData {
+  id: Key;
+}

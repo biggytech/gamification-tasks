@@ -4,11 +4,13 @@ import DeveloperSettingsModule from '../modules/developerSettings';
 import SettingsModule from '../modules/settings';
 import RepetitiveTasksModule from '../modules/repetitiveTasks';
 import TasksModule from '../modules/tasks';
+import RewardsModule from '../modules/rewards';
 
 const modules: IModule<any, any>[] = [
   TasksModule,
   RepetitiveTasksModule,
   LabelsModule,
+  RewardsModule,
   SettingsModule,
   DeveloperSettingsModule,
 ];

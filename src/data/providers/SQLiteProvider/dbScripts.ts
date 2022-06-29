@@ -18,6 +18,7 @@ const dbScripts: DbScripts = [
       'CREATE TABLE IF NOT EXISTS subtasks (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, value integer NOT NULL, taskId integer NOT NULL, FOREIGN KEY(taskId) REFERENCES tasks(id))',
       'CREATE TABLE IF NOT EXISTS repetitiveTasks (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, value integer NOT NULL)',
       'CREATE TABLE IF NOT EXISTS settings (id integer PRIMARY KEY AUTOINCREMENT, levelSize integer NOT NULL)',
+      'CREATE TABLE IF NOT EXISTS rewards (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, level integer NOT NULL)',
     ],
     upsertScripts: [
       {

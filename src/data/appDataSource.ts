@@ -3,6 +3,7 @@ import DataSource from '../lib/data/DataSource';
 import {
   ILabel,
   IRepetitiveTask,
+  IReward,
   ITask,
   ITaskWithAdditions,
   LevelSize,
@@ -23,6 +24,8 @@ export interface IAppData {
   tasks: ITask[];
   unusedLabels: ILabel[];
   selectedTask: ITaskWithAdditions | null;
+  rewards: IReward[];
+  nextRewardLevel: number;
 }
 
 const intialData: IAppData = {
@@ -36,6 +39,8 @@ const intialData: IAppData = {
   tasks: [],
   unusedLabels: [],
   selectedTask: null,
+  rewards: [],
+  nextRewardLevel: 1,
 };
 
 async function appActionHandler(
@@ -157,6 +162,34 @@ async function appActionHandler(
                 subtasks: data.selectedTask.subtasks.concat(subtask),
               }
             : null,
+        };
+      }
+      case ACTIONS.LOAD_REWARDS: {
+        const rewards = await appRepository.getRewards();
+        return {
+          ...data,
+          rewards,
+        };
+      }
+      case ACTIONS.CLEAR_REWARDS: {
+        return {
+          ...data,
+          rewards: intialData.rewards,
+        };
+      }
+      case ACTIONS.ADD_REWARD: {
+        const reward = await appRepository.addReward(value);
+
+        return {
+          ...data,
+          rewards: data.rewards.concat(reward),
+        };
+      }
+      case ACTIONS.LOAD_NEXT_REWARD_LEVEL: {
+        const maxRewardsLevel = await appRepository.getMaxRewardsLevel();
+        return {
+          ...data,
+          nextRewardLevel: maxRewardsLevel ? maxRewardsLevel + 1 : 1,
         };
       }
       default:

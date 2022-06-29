@@ -3,6 +3,8 @@ import {
   ILabelData,
   IRepetitiveTask,
   IRepetitiveTaskData,
+  IReward,
+  IRewardData,
   ISubtaskData,
   ITask,
   ITaskData,
@@ -40,6 +42,11 @@ const appRepository = {
     await SQLiteProvider.getTaskWithAdditions(id),
   addSubtask: async (subtask: ISubtaskData) =>
     await SQLiteProvider.addSubtask(subtask),
+  getRewards: async (): Promise<IReward[]> => await SQLiteProvider.getRewards(),
+  addReward: async (reward: IRewardData): Promise<IReward> =>
+    await SQLiteProvider.addReward(reward),
+  getMaxRewardsLevel: async (): Promise<number | null> =>
+    await SQLiteProvider.getMaxRewardsLevel(),
 };
 
 export default appRepository;

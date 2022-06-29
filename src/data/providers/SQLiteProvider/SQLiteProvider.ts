@@ -3,6 +3,8 @@ import {
   ILabelData,
   IRepetitiveTask,
   IRepetitiveTaskData,
+  IReward,
+  IRewardData,
   ISubtask,
   ISubtaskData,
   ITask,
@@ -190,6 +192,29 @@ class SQLiteProvider {
         [subtask.title, subtask.value, subtask.taskId],
       )
     )[0];
+  }
+
+  async getRewards(): Promise<IReward[]> {
+    return await this.executeQuery('SELECT * FROM rewards');
+  }
+
+  async addReward(reward: IRewardData): Promise<IReward> {
+    return (
+      await this.executeQuery(
+        'INSERT INTO rewards (title, level) VALUES (?, ?) RETURNING *',
+        [reward.title, reward.level],
+      )
+    )[0];
+  }
+
+  async getMaxRewardsLevel(): Promise<number | null> {
+    return (
+      (
+        await this.executeQuery(
+          'SELECT level FROM rewards ORDER BY level DESC LIMIT 1',
+        )
+      )[0]?.level ?? null
+    );
   }
 }
 
