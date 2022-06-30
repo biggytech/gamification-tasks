@@ -17,6 +17,7 @@
     "@types/react-native-vector-icons": "^6.4.11",
     "react": "18.0.0",
     "react-native": "0.69.0",
+    "react-native-draggable-flatlist": "^3.1.2",
     "react-native-dropdown-picker": "^5.4.2",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-reanimated": "^2.8.0",

@@ -159,8 +159,10 @@ class SQLiteProvider {
       `SELECT tasks.id, tasks.title, tasks.value, tasks.labelId,
       subtasks.id as subtaskId,
       subtasks.title as subtaskTitle,
-      subtasks.value as subtaskValue
-      from tasks LEFT JOIN subtasks ON tasks.id = subtasks.taskId WHERE tasks.id = ?`,
+      subtasks.value as subtaskValue,
+      subtasks.position as subTaskPosition
+      from tasks LEFT JOIN subtasks ON tasks.id = subtasks.taskId WHERE tasks.id = ? 
+      ORDER BY subtasks.position ASC`,
       [id],
     );
     if (tasksRawData.length === 0) {
@@ -182,6 +184,7 @@ class SQLiteProvider {
           title: taskRawData.subtaskTitle,
           value: taskRawData.subtaskValue,
           taskId: id,
+          position: taskRawData.subTaskPosition,
         });
       }
     });
@@ -189,11 +192,39 @@ class SQLiteProvider {
     return task;
   }
 
+  async getMaxSubtasksPosition(taskId: Key): Promise<number | null> {
+    return (
+      (
+        await this.executeQuery(
+          'SELECT taskId, position FROM subtasks WHERE taskId = ? ORDER BY position DESC LIMIT 1',
+          [taskId],
+        )
+      )[0]?.position ?? null
+    );
+  }
+
   async addSubtask(subtask: ISubtaskData): Promise<ISubtask> {
     return (
       await this.executeQuery(
-        'INSERT INTO subtasks (title, value, taskId) VALUES (?, ?, ?) RETURNING *',
-        [subtask.title, subtask.value, subtask.taskId],
+        'INSERT INTO subtasks (title, value, taskId, position) VALUES (?, ?, ?, ?) RETURNING *',
+        [subtask.title, subtask.value, subtask.taskId, subtask.position],
+      )
+    )[0];
+  }
+
+  async changeSubtask(subtask: ISubtask): Promise<ISubtask> {
+    return (
+      await this.executeQuery(
+        `UPDATE subtasks 
+        SET title = ?, value = ?, taskId = ?, position = ? 
+        WHERE id = ? RETURNING *`,
+        [
+          subtask.title,
+          subtask.value,
+          subtask.taskId,
+          subtask.position,
+          subtask.id,
+        ],
       )
     )[0];
   }

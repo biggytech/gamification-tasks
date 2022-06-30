@@ -84,11 +84,26 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
   }, [navigation]);
 
   const handleAddSubtask = useCallback(
-    async (subtask: ISubtaskData, goBack: () => void) => {
+    async (subtask: Omit<ISubtaskData, 'position'>, goBack: () => void) => {
       await callDispatch(actions.ADD_SUBTASK, subtask);
       goBack();
     },
     [actions.ADD_SUBTASK, callDispatch],
+  );
+
+  const handleSubtasksOrderChange = useCallback(
+    async (from: number, to: number) => {
+      await callDispatch(actions.CHANGE_SUBTASKS_ORDER, { from, to });
+      if (selectedTask) {
+        await callDispatch(actions.LOAD_SELECTED_TASK, selectedTask.id);
+      }
+    },
+    [
+      actions.CHANGE_SUBTASKS_ORDER,
+      actions.LOAD_SELECTED_TASK,
+      callDispatch,
+      selectedTask,
+    ],
   );
 
   return (
@@ -135,6 +150,7 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
               error={selectedTask ? null : 'Not Found'}
               labels={labels}
               onAddSubtaskPress={handleAddSubtaskPress}
+              onSubtasksOrderChange={handleSubtasksOrderChange}
             />
           )}
         </Stack.Screen>

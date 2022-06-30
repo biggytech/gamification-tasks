@@ -8,6 +8,9 @@ const defaults = {
     level: 1,
     points: 0,
   },
+  subtasks: {
+    position: 1,
+  },
 };
 
 export default defaults;

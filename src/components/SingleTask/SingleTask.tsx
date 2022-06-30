@@ -1,13 +1,17 @@
 import { Button, ListItem, Stack, Text } from '@react-native-material/core';
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ILabel, ITaskWithAdditions } from '../../lib/types';
+import { ILabel, ISubtask, ITaskWithAdditions } from '../../lib/types';
+import DraggableFlatList, {
+  OpacityDecorator,
+} from 'react-native-draggable-flatlist';
 
 interface ISingleTaskProps {
   task: ITaskWithAdditions | null;
   error: string | null;
   labels: ILabel[];
   onAddSubtaskPress: () => void;
+  onSubtasksOrderChange: (from: number, to: number) => void;
 }
 
 const styles = StyleSheet.create({
@@ -23,21 +27,39 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
   error,
   labels,
   onAddSubtaskPress,
+  onSubtasksOrderChange,
 }) => {
+  // internal state to avoid blinking subtasks when reordering
+  const [internalTask, setInternalTask] = useState<ITaskWithAdditions | null>(
+    task,
+  );
+
+  useEffect(() => {
+    setInternalTask(task);
+  }, [task]);
+
   const label = useMemo(
-    () => labels.find(_label => _label.id === task?.labelId),
-    [labels, task?.labelId],
+    () => labels.find(_label => _label.id === internalTask?.labelId),
+    [labels, internalTask?.labelId],
+  );
+
+  const handleSubtasksReorder = useCallback(
+    ({ from, to, data }: { from: number; to: number; data: ISubtask[] }) => {
+      setInternalTask(st => (st ? { ...st, subtasks: data } : st));
+      onSubtasksOrderChange(from, to);
+    },
+    [onSubtasksOrderChange],
   );
 
   return (
     <>
       {error ? <Text>{error}</Text> : null}
-      {!error && task ? (
+      {!error && internalTask ? (
         <Stack spacing={4} m={4}>
-          <ListItem title="Title" secondaryText={task.title} />
+          <ListItem title="Title" secondaryText={internalTask.title} />
           <ListItem
             title="Value (in experience points)"
-            secondaryText={task.value.toString()}
+            secondaryText={internalTask.value.toString()}
           />
           {label ? (
             <ListItem
@@ -53,17 +75,26 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
 
           <Text variant="h4">Subtasks</Text>
 
-          {task.subtasks.map(subtask => (
-            <ListItem
-              key={subtask.id}
-              title={subtask.title}
-              trailing={
-                <View>
-                  <Text>{subtask.value}</Text>
-                </View>
-              }
-            />
-          ))}
+          <DraggableFlatList
+            data={internalTask.subtasks}
+            keyExtractor={item => item.id.toString()}
+            onDragEnd={handleSubtasksReorder}
+            renderItem={({ item, drag, isActive }) => (
+              <OpacityDecorator>
+                <ListItem
+                  key={item.id}
+                  title={item.title}
+                  trailing={
+                    <View>
+                      <Text>{item.value}</Text>
+                    </View>
+                  }
+                  onLongPress={drag}
+                  disabled={isActive}
+                />
+              </OpacityDecorator>
+            )}
+          />
 
           <Button title="Add a subtask" onPress={onAddSubtaskPress} />
         </Stack>

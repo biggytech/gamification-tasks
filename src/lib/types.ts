@@ -66,6 +66,7 @@ export interface ISubtaskData {
   title: string;
   value: Point;
   taskId: Key;
+  position: number;
 }
 
 export interface ISubtask extends ISubtaskData {

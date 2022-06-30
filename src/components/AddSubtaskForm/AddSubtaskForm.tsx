@@ -4,11 +4,12 @@ import { Stack, TextInput, Button, Text } from '@react-native-material/core';
 
 interface IAddSubtaskFormProps {
   taskId: Key | null;
-  onSubmit: (task: ISubtaskData) => void;
+  onSubmit: (task: Omit<ISubtaskData, 'position'>) => void;
   error: string | null;
 }
 
-interface IAddSubtaskFormInternalState extends Omit<ISubtaskData, 'taskId'> {
+interface IAddSubtaskFormInternalState
+  extends Omit<ISubtaskData, 'taskId' | 'position'> {
   taskId: Key | null;
 }
 

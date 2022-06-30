@@ -8,6 +8,7 @@ import {
   IReward,
   ISettings,
   IStats,
+  ISubtask,
   ITask,
   ITaskWithAdditions,
 } from '../lib/types';
@@ -170,7 +171,15 @@ async function appActionHandler(
         };
       }
       case ACTIONS.ADD_SUBTASK: {
-        const subtask = await appRepository.addSubtask(value);
+        const prevPosition = await appRepository.getMaxSubtasksPosition(
+          value.taskId,
+        );
+        const subtask = await appRepository.addSubtask({
+          ...value,
+          position: prevPosition
+            ? prevPosition + 1
+            : defaults.subtasks.position,
+        });
 
         return {
           ...data,
@@ -257,6 +266,39 @@ async function appActionHandler(
         }
 
         return data;
+      }
+      case ACTIONS.CHANGE_SUBTASKS_ORDER: {
+        if (data.selectedTask && value.from !== value.to) {
+          const changesSubtasks = data.selectedTask.subtasks.concat([]);
+          // change items places
+          const [movedItem] = changesSubtasks.splice(value.from, 1);
+          changesSubtasks.splice(value.to, 0, movedItem);
+
+          const subtasks = await Promise.all(
+            changesSubtasks.map(async (subtask: ISubtask, i: number) => {
+              if (subtask.position !== i + 1) {
+                return await appRepository.changeSubtask({
+                  ...subtask,
+                  position: i + 1,
+                });
+              }
+
+              return subtask;
+            }),
+          );
+
+          return {
+            ...data,
+            selectedTask: data.selectedTask
+              ? {
+                  ...data.selectedTask,
+                  subtasks,
+                }
+              : data.selectedTask,
+          };
+        } else {
+          return data;
+        }
       }
       default:
         return data;

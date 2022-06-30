@@ -9,6 +9,7 @@ import {
   IRewardData,
   ISettings,
   IStats,
+  ISubtask,
   ISubtaskData,
   ITask,
   ITaskData,
@@ -63,6 +64,10 @@ const appRepository = {
     await SQLiteProvider.clearOldestHistoryItems(countToPreserve),
   getRepetitiveTask: async (id: Key): Promise<IRepetitiveTask | null> =>
     await SQLiteProvider.getRepetitiveTask(id),
+  getMaxSubtasksPosition: async (taskId: Key): Promise<number | null> =>
+    await SQLiteProvider.getMaxSubtasksPosition(taskId),
+  changeSubtask: async (subtask: ISubtask): Promise<ISubtask> =>
+    await SQLiteProvider.changeSubtask(subtask),
 };
 
 export default appRepository;
