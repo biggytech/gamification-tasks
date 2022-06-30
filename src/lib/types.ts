@@ -106,3 +106,9 @@ export interface IHistoryData {
 export interface IHistory extends IHistoryData {
   id: Key;
 }
+
+export interface IGlobalMessage {
+  type: string;
+  title: string;
+  message?: string;
+}

@@ -1,6 +1,12 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import { IRepetitiveTaskData, Key, ModuleComponent } from '../../lib/types';
+import {
+  IGlobalMessage,
+  IRepetitiveTaskData,
+  Key,
+  ModuleComponent,
+  ModuleComponentProps,
+} from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
@@ -8,10 +14,13 @@ import DrawerButton from '../../components/common/DrawerButton';
 import RepetitiveTasksList from '../../components/RepetitiveTasksList';
 import AddRepetitiveTaskForm from '../../components/AddRepetitiveTaskForm';
 import Toast from 'react-native-toast-message';
+import asSubscriber from '../../lib/hoc/asSubscriber';
+import eventsProvider from '../../data/providers/EventsProvider/eventsProvider';
 
 const Stack = createNativeStackNavigator();
 
 const repetitiveTasksDataSource = appDataSource;
+const repetitiveTasksEventsProvider = eventsProvider;
 
 const screens = {
   RepetitiveTasksList: 'RepetitiveTasksList',
@@ -57,11 +66,6 @@ const RepetitiveTasksModule: ModuleComponent<
   const handleRepetitiveTaskComplete = useCallback(
     async (taskId: Key) => {
       await callDispatch(actions.COMPLETE_REPETITIVE_TASK, taskId);
-      console.log('Toast.show');
-      Toast.show({
-        type: 'success',
-        text1: 'Completed!',
-      });
     },
     [actions.COMPLETE_REPETITIVE_TASK, callDispatch],
   );
@@ -106,7 +110,28 @@ export default asModule<
   RepetitiveTasksModuleData,
   RepetitiveTasksModuleActions
 >(
-  RepetitiveTasksModule,
+  asSubscriber<
+    ModuleComponentProps<
+      RepetitiveTasksModuleData,
+      RepetitiveTasksModuleActions
+    >,
+    typeof repetitiveTasksEventsProvider.actions
+  >(
+    RepetitiveTasksModule,
+    [
+      {
+        name: repetitiveTasksEventsProvider.actions.SHOW_TOAST,
+        handler: (globalMessage: IGlobalMessage) => {
+          Toast.show({
+            type: globalMessage.type,
+            text1: globalMessage.title,
+            text2: globalMessage.message,
+          });
+        },
+      },
+    ],
+    repetitiveTasksEventsProvider,
+  ),
   {
     title: 'Repetitive Tasks',
     name: 'RepetitiveTasksModule',

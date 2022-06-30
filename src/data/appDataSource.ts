@@ -14,6 +14,7 @@ import {
 } from '../lib/types';
 import ACTIONS from './actions';
 import appRepository from './appRepository';
+import eventsProvider from './providers/EventsProvider/eventsProvider';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -263,6 +264,19 @@ async function appActionHandler(
               : prevStats.prevLevelSize,
           });
           await appRepository.changeStats(stats);
+          eventsProvider.emit(
+            eventsProvider.actions.SHOW_TOAST,
+            shouldBumpLevel
+              ? {
+                  type: 'success',
+                  title: 'Completed!',
+                  message: 'You have reached new level',
+                }
+              : {
+                  type: 'success',
+                  title: 'Completed!',
+                },
+          );
         }
 
         return data;
