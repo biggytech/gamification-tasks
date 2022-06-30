@@ -1,6 +1,7 @@
 import defaults from '../config/defaults';
 import DataSource from '../lib/data/DataSource';
 import {
+  IGlobalMessage,
   IHistory,
   IHistoryData,
   ILabel,
@@ -15,6 +16,7 @@ import {
 import ACTIONS from './actions';
 import appRepository from './appRepository';
 import appEventsProvider from './appEventsProvider';
+import updateStats from './handlers/common/updateStats';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -53,6 +55,12 @@ const intialData: IAppData = {
     prevLevelSize: defaults.stats.points,
   },
   history: [],
+};
+
+const newLevelMessage: IGlobalMessage = {
+  type: 'success',
+  title: 'New level reached!',
+  message: "It's time to pick your reward",
 };
 
 async function appActionHandler(
@@ -241,6 +249,8 @@ async function appActionHandler(
       case ACTIONS.COMPLETE_REPETITIVE_TASK: {
         const task = await appRepository.getRepetitiveTask(value);
         if (task) {
+          const shouldBumpLevel = await updateStats(task.value);
+
           const history: IHistoryData = {
             message: `Completed repetitive task "${task?.title}"`,
             points: task.value,
@@ -248,30 +258,10 @@ async function appActionHandler(
           };
           await appRepository.addHistory(history);
 
-          const prevStats = await appRepository.getStats();
-          const settings = await appRepository.getSettings();
-          const newPoints = prevStats.points + task.value;
-          const shouldBumpLevel = newPoints > prevStats.nextLevelSize;
-
-          const stats = await appRepository.changeStats({
-            level: shouldBumpLevel ? prevStats.level + 1 : prevStats.level,
-            points: newPoints,
-            nextLevelSize: shouldBumpLevel
-              ? prevStats.nextLevelSize + settings.levelSize
-              : prevStats.nextLevelSize,
-            prevLevelSize: shouldBumpLevel
-              ? newPoints
-              : prevStats.prevLevelSize,
-          });
-          await appRepository.changeStats(stats);
           appEventsProvider.emit(
             appEventsProvider.actions.SHOW_TOAST,
             shouldBumpLevel
-              ? {
-                  type: 'success',
-                  title: 'New level reached!',
-                  message: "It's time to pick your reward",
-                }
+              ? newLevelMessage
               : {
                   type: 'success',
                   title: 'Completed!',
@@ -344,6 +334,8 @@ async function appActionHandler(
             newSubtasks = newSubtasks.concat([]);
             newSubtasks.splice(index, 1, subtask);
 
+            const shouldBumpLevel = await updateStats(subtask.value);
+
             const history: IHistoryData = {
               message: `Completed subtask "${subtask.title}"`,
               points: subtask.value,
@@ -351,31 +343,10 @@ async function appActionHandler(
             };
             await appRepository.addHistory(history);
 
-            const prevStats = await appRepository.getStats();
-            const settings = await appRepository.getSettings();
-            const newPoints = prevStats.points + subtask.value;
-            const shouldBumpLevel = newPoints > prevStats.nextLevelSize;
-
-            const stats = await appRepository.changeStats({
-              level: shouldBumpLevel ? prevStats.level + 1 : prevStats.level,
-              points: newPoints,
-              nextLevelSize: shouldBumpLevel
-                ? prevStats.nextLevelSize + settings.levelSize
-                : prevStats.nextLevelSize,
-              prevLevelSize: shouldBumpLevel
-                ? newPoints
-                : prevStats.prevLevelSize,
-            });
-            await appRepository.changeStats(stats);
-
             appEventsProvider.emit(
               appEventsProvider.actions.SHOW_TOAST,
               shouldBumpLevel
-                ? {
-                    type: 'success',
-                    title: 'New level reached!',
-                    message: "It's time to pick your reward",
-                  }
+                ? newLevelMessage
                 : {
                     type: 'success',
                     title: 'Completed!',
@@ -393,6 +364,48 @@ async function appActionHandler(
         } else {
           return data;
         }
+      }
+      case ACTIONS.COMPLETE_TASK: {
+        if (data.selectedTask) {
+          await appRepository.changeTask({
+            id: data.selectedTask.id,
+            title: data.selectedTask.title,
+            value: data.selectedTask.value,
+            labelId: data.selectedTask.labelId,
+            completed: true,
+          });
+          const task = await appRepository.getTaskWithAdditions(
+            data.selectedTask.id,
+          );
+
+          if (task) {
+            const shouldBumpLevel = await updateStats(task.value);
+
+            const history: IHistoryData = {
+              message: `Completed task "${task.title}"`,
+              points: task.value,
+              timestamp: Date.now() / 1000,
+            };
+            await appRepository.addHistory(history);
+
+            appEventsProvider.emit(
+              appEventsProvider.actions.SHOW_TOAST,
+              shouldBumpLevel
+                ? newLevelMessage
+                : {
+                    type: 'success',
+                    title: 'Completed!',
+                  },
+            );
+
+            return {
+              ...data,
+              selectedTask: task,
+            };
+          }
+        }
+
+        return data;
       }
       default:
         return data;

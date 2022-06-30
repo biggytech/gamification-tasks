@@ -18,6 +18,7 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
     title: 'Task',
     value: 5,
     labelId: labels[0].id,
+    completed: false,
   });
 
   const handleTitleChange = useCallback((text: string) => {
@@ -29,8 +30,9 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
       title: state.title,
       value: state.value,
       labelId: state.labelId,
+      completed: state.completed,
     });
-  }, [onSubmit, state.labelId, state.title, state.value]);
+  }, [onSubmit, state.completed, state.labelId, state.title, state.value]);
 
   const handleValueChange = useCallback((value: string) => {
     setState(st => ({ ...st, value: Number(value) }));

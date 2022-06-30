@@ -6,7 +6,7 @@ import {
   Text,
 } from '@react-native-material/core';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { ILabel, ISubtask, ITaskWithAdditions, Key } from '../../lib/types';
 import DraggableFlatList, {
   OpacityDecorator,
@@ -20,6 +20,7 @@ interface ISingleTaskProps {
   onAddSubtaskPress: () => void;
   onSubtasksOrderChange: (from: number, to: number) => void;
   onSubtaskCompletePress: (id: Key) => void;
+  onCompletePress: () => void;
 }
 
 const styles = StyleSheet.create({
@@ -37,6 +38,7 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
   onAddSubtaskPress,
   onSubtasksOrderChange,
   onSubtaskCompletePress,
+  onCompletePress,
 }) => {
   // internal state to avoid blinking subtasks when reordering
   const [internalTask, setInternalTask] = useState<ITaskWithAdditions | null>(
@@ -81,15 +83,17 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
               secondaryText={label.name}
             />
           ) : null}
+          {!internalTask.completed ? (
+            <Button title="Complete" onPress={onCompletePress} />
+          ) : null}
 
           <Text variant="h4">Subtasks</Text>
 
-          <DraggableFlatList
-            data={internalTask.subtasks}
-            keyExtractor={item => item.id.toString()}
-            onDragEnd={handleSubtasksReorder}
-            renderItem={({ item, drag, isActive }) => (
-              <OpacityDecorator>
+          {internalTask.completed ? (
+            <FlatList
+              data={internalTask.subtasks}
+              keyExtractor={item => item.id.toString()}
+              renderItem={({ item }) => (
                 <ListItem
                   key={item.id}
                   title={item.title}
@@ -100,8 +104,7 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
                   }
                   trailing={
                     <IconButton
-                      disabled={item.completed}
-                      onPress={() => onSubtaskCompletePress(item.id)}
+                      disabled
                       icon={props =>
                         item.completed ? (
                           <Icon name="check-outline" {...props} />
@@ -111,14 +114,48 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
                       }
                     />
                   }
-                  onLongPress={drag}
-                  disabled={isActive}
                 />
-              </OpacityDecorator>
-            )}
-          />
+              )}
+            />
+          ) : (
+            <>
+              <DraggableFlatList
+                data={internalTask.subtasks}
+                keyExtractor={item => item.id.toString()}
+                onDragEnd={handleSubtasksReorder}
+                renderItem={({ item, drag, isActive }) => (
+                  <OpacityDecorator>
+                    <ListItem
+                      key={item.id}
+                      title={item.title}
+                      leading={
+                        <View>
+                          <Text>{item.value}</Text>
+                        </View>
+                      }
+                      trailing={
+                        <IconButton
+                          disabled={item.completed}
+                          onPress={() => onSubtaskCompletePress(item.id)}
+                          icon={props =>
+                            item.completed ? (
+                              <Icon name="check-outline" {...props} />
+                            ) : (
+                              <Icon name="check-bold" {...props} />
+                            )
+                          }
+                        />
+                      }
+                      onLongPress={drag}
+                      disabled={isActive}
+                    />
+                  </OpacityDecorator>
+                )}
+              />
 
-          <Button title="Add a subtask" onPress={onAddSubtaskPress} />
+              <Button title="Add a subtask" onPress={onAddSubtaskPress} />
+            </>
+          )}
         </Stack>
       ) : null}
     </>

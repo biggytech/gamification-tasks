@@ -1,8 +1,9 @@
 import React, { memo } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
 import { ILabel, ITask, Key } from '../../lib/types';
-import { ListItem } from '@react-native-material/core';
+import { IconButton, ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const styles = StyleSheet.create({
   labelColor: {
@@ -52,9 +53,14 @@ const TasksList: React.FC<TasksListProps> = ({
                     />
                   }
                   trailing={
-                    <View>
+                    item.completed ? (
+                      <IconButton
+                        disabled
+                        icon={props => <Icon name="check-outline" {...props} />}
+                      />
+                    ) : (
                       <Text>{item.value}</Text>
-                    </View>
+                    )
                   }
                   secondaryText={`Category: ${label?.name}`}
                   onPress={() => onTaskItemPress(item.id)}

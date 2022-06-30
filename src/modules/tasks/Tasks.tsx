@@ -62,8 +62,8 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
   }, [navigation]);
 
   const handleTaskAdd = useCallback(
-    async (label: ITaskData) => {
-      await callDispatch(actions.ADD_TASK, label);
+    async (task: ITaskData) => {
+      await callDispatch(actions.ADD_TASK, task);
 
       navigation.navigate(screens.TasksList);
       await callDispatch(actions.LOAD_UNUSED_LABELS);
@@ -113,6 +113,17 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
     [actions.COMPLETE_SUBTASK, callDispatch],
   );
 
+  const handleTaskComplete = useCallback(async () => {
+    await callDispatch(actions.COMPLETE_TASK);
+    await callDispatch(actions.LOAD_TASKS);
+    await callDispatch(actions.LOAD_UNUSED_LABELS);
+  }, [
+    actions.COMPLETE_TASK,
+    actions.LOAD_TASKS,
+    actions.LOAD_UNUSED_LABELS,
+    callDispatch,
+  ]);
+
   return (
     <>
       <Stack.Navigator>
@@ -161,6 +172,7 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
               onAddSubtaskPress={handleAddSubtaskPress}
               onSubtasksOrderChange={handleSubtasksOrderChange}
               onSubtaskCompletePress={handleSubtaskComplete}
+              onCompletePress={handleTaskComplete}
             />
           )}
         </Stack.Screen>

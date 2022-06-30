@@ -133,20 +133,30 @@ class SQLiteProvider {
   }
 
   async getTasks(): Promise<ITask[]> {
-    return await this.executeQuery('SELECT * from tasks');
+    const tasks = await this.executeQuery(
+      'SELECT * from tasks ORDER BY completed ASC',
+    );
+    return tasks.map(task => ({ ...task, completed: Boolean(task.completed) }));
+  }
+
+  async getNotCompletedTasks(): Promise<ITask[]> {
+    const tasks = await this.executeQuery(
+      'SELECT * from tasks WHERE completed = 0',
+    );
+    return tasks.map(task => ({ ...task, completed: Boolean(task.completed) }));
   }
 
   async addTask(task: ITaskData) {
     return (
       await this.executeQuery(
-        'INSERT INTO tasks (title, value, labelId) VALUES (?, ?, ?) RETURNING *',
-        [task.title, task.value, task.labelId],
+        'INSERT INTO tasks (title, value, labelId, completed) VALUES (?, ?, ?, ?) RETURNING *',
+        [task.title, task.value, task.labelId, Number(task.completed)],
       )
     )[0];
   }
 
   async getUnusedLabels(): Promise<ILabel[]> {
-    const tasks = await this.getTasks();
+    const tasks = await this.getNotCompletedTasks();
     const usedLabelsIds = Array.from(new Set(tasks.map(task => task.labelId)));
     const query = `SELECT * from labels WHERE id NOT in (${usedLabelsIds
       .map(_ => '?')
@@ -156,7 +166,7 @@ class SQLiteProvider {
 
   async getTaskWithAdditions(id: Key): Promise<ITaskWithAdditions | null> {
     const tasksRawData = await this.executeQuery(
-      `SELECT tasks.id, tasks.title, tasks.value, tasks.labelId,
+      `SELECT tasks.id, tasks.title, tasks.value, tasks.labelId, tasks.completed, 
       subtasks.id as subtaskId,
       subtasks.title as subtaskTitle,
       subtasks.value as subtaskValue,
@@ -174,6 +184,7 @@ class SQLiteProvider {
       id,
       title: tasksRawData[0].title,
       value: tasksRawData[0].value,
+      completed: Boolean(tasksRawData[0].completed),
       labelId: tasksRawData[0].labelId,
       subtasks: [],
     };
@@ -186,7 +197,7 @@ class SQLiteProvider {
           value: taskRawData.subtaskValue,
           taskId: id,
           position: taskRawData.subTaskPosition,
-          completed: taskRawData.subTaskCompleted,
+          completed: Boolean(taskRawData.subTaskCompleted),
         });
       }
     });
@@ -231,9 +242,20 @@ class SQLiteProvider {
           subtask.value,
           subtask.taskId,
           subtask.position,
-          subtask.completed,
+          Number(subtask.completed),
           subtask.id,
         ],
+      )
+    )[0];
+  }
+
+  async changeTask(task: ITask): Promise<ITask> {
+    return (
+      await this.executeQuery(
+        `UPDATE tasks 
+        SET title = ?, value = ?, labelId = ?, completed = ? 
+        WHERE id = ? RETURNING *`,
+        [task.title, task.value, task.labelId, Number(task.completed), task.id],
       )
     )[0];
   }

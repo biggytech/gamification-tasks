@@ -70,6 +70,8 @@ const appRepository = {
     await SQLiteProvider.changeSubtask(subtask),
   pickReward: async (id: Key): Promise<IReward> =>
     await SQLiteProvider.pickReward(id),
+  changeTask: async (task: ITask): Promise<ITask> =>
+    await SQLiteProvider.changeTask(task),
 };
 
 export default appRepository;

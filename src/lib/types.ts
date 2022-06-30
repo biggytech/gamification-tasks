@@ -56,6 +56,7 @@ export interface ITaskData {
   title: string;
   value: Point;
   labelId: Key;
+  completed: boolean;
 }
 
 export interface ITask extends ITaskData {
