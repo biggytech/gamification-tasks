@@ -106,6 +106,13 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
     ],
   );
 
+  const handleSubtaskComplete = useCallback(
+    (id: Key) => {
+      callDispatch(actions.COMPLETE_SUBTASK, id);
+    },
+    [actions.COMPLETE_SUBTASK, callDispatch],
+  );
+
   return (
     <>
       <Stack.Navigator>
@@ -120,7 +127,9 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
           {props => (
             <TasksList
               {...props}
-              error={error ?? (labels.length === 0 ? 'Add labels first' : null)}
+              error={
+                error ?? (labels.length === 0 ? 'Add categories first' : null)
+              }
               items={tasks}
               onAddPress={handleAddPress}
               labels={labels}
@@ -151,6 +160,7 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
               labels={labels}
               onAddSubtaskPress={handleAddSubtaskPress}
               onSubtasksOrderChange={handleSubtasksOrderChange}
+              onSubtaskCompletePress={handleSubtaskComplete}
             />
           )}
         </Stack.Screen>

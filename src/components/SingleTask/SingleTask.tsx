@@ -1,10 +1,17 @@
-import { Button, ListItem, Stack, Text } from '@react-native-material/core';
+import {
+  Button,
+  IconButton,
+  ListItem,
+  Stack,
+  Text,
+} from '@react-native-material/core';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ILabel, ISubtask, ITaskWithAdditions } from '../../lib/types';
+import { ILabel, ISubtask, ITaskWithAdditions, Key } from '../../lib/types';
 import DraggableFlatList, {
   OpacityDecorator,
 } from 'react-native-draggable-flatlist';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface ISingleTaskProps {
   task: ITaskWithAdditions | null;
@@ -12,6 +19,7 @@ interface ISingleTaskProps {
   labels: ILabel[];
   onAddSubtaskPress: () => void;
   onSubtasksOrderChange: (from: number, to: number) => void;
+  onSubtaskCompletePress: (id: Key) => void;
 }
 
 const styles = StyleSheet.create({
@@ -28,6 +36,7 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
   labels,
   onAddSubtaskPress,
   onSubtasksOrderChange,
+  onSubtaskCompletePress,
 }) => {
   // internal state to avoid blinking subtasks when reordering
   const [internalTask, setInternalTask] = useState<ITaskWithAdditions | null>(
@@ -84,10 +93,23 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
                 <ListItem
                   key={item.id}
                   title={item.title}
-                  trailing={
+                  leading={
                     <View>
                       <Text>{item.value}</Text>
                     </View>
+                  }
+                  trailing={
+                    <IconButton
+                      disabled={item.completed}
+                      onPress={() => onSubtaskCompletePress(item.id)}
+                      icon={props =>
+                        item.completed ? (
+                          <Icon name="check-outline" {...props} />
+                        ) : (
+                          <Icon name="check-bold" {...props} />
+                        )
+                      }
+                    />
                   }
                   onLongPress={drag}
                   disabled={isActive}

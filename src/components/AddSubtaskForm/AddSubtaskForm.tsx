@@ -22,6 +22,7 @@ const AddSubtaskForm: React.FC<IAddSubtaskFormProps> = ({
     title: 'Subtask',
     value: 5,
     taskId,
+    completed: false,
   });
 
   const handleTitleChange = useCallback((text: string) => {
@@ -34,9 +35,10 @@ const AddSubtaskForm: React.FC<IAddSubtaskFormProps> = ({
         title: state.title,
         value: state.value,
         taskId: state.taskId,
+        completed: state.completed,
       });
     }
-  }, [onSubmit, state.taskId, state.title, state.value]);
+  }, [onSubmit, state.completed, state.taskId, state.title, state.value]);
 
   const handleValueChange = useCallback((value: string) => {
     setState(st => ({ ...st, value: Number(value) }));

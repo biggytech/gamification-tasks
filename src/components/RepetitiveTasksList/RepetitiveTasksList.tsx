@@ -35,13 +35,8 @@ const RepetitiveTasksList: React.FC<RepetitiveTasksListProps> = ({
                       <Text>{item.value}</Text>
                     </View>
                     <IconButton
-                      icon={props => (
-                        <Icon
-                          name="check-bold"
-                          {...props}
-                          onPress={() => onItemCheckPress(item.id)}
-                        />
-                      )}
+                      onPress={() => onItemCheckPress(item.id)}
+                      icon={props => <Icon name="check-bold" {...props} />}
                     />
                   </Stack>
                 }

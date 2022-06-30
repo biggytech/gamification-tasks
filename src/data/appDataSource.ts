@@ -14,7 +14,7 @@ import {
 } from '../lib/types';
 import ACTIONS from './actions';
 import appRepository from './appRepository';
-import eventsProvider from './providers/EventsProvider/eventsProvider';
+import appEventsProvider from './appEventsProvider';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -264,8 +264,8 @@ async function appActionHandler(
               : prevStats.prevLevelSize,
           });
           await appRepository.changeStats(stats);
-          eventsProvider.emit(
-            eventsProvider.actions.SHOW_TOAST,
+          appEventsProvider.emit(
+            appEventsProvider.actions.SHOW_TOAST,
             shouldBumpLevel
               ? {
                   type: 'success',
@@ -328,6 +328,71 @@ async function appActionHandler(
           ...data,
           rewards: newRewards,
         };
+      }
+      case ACTIONS.COMPLETE_SUBTASK: {
+        if (data.selectedTask) {
+          const index = data.selectedTask.subtasks.findIndex(
+            _subtask => _subtask.id === value,
+          );
+          let newSubtasks = data.selectedTask.subtasks;
+
+          if (index !== -1) {
+            const subtask = await appRepository.changeSubtask({
+              ...data.selectedTask.subtasks[index],
+              completed: true,
+            });
+            newSubtasks = newSubtasks.concat([]);
+            newSubtasks.splice(index, 1, subtask);
+
+            const history: IHistoryData = {
+              message: `Completed subtask "${subtask.title}"`,
+              points: subtask.value,
+              timestamp: Date.now() / 1000,
+            };
+            await appRepository.addHistory(history);
+
+            const prevStats = await appRepository.getStats();
+            const settings = await appRepository.getSettings();
+            const newPoints = prevStats.points + subtask.value;
+            const shouldBumpLevel = newPoints > prevStats.nextLevelSize;
+
+            const stats = await appRepository.changeStats({
+              level: shouldBumpLevel ? prevStats.level + 1 : prevStats.level,
+              points: newPoints,
+              nextLevelSize: shouldBumpLevel
+                ? prevStats.nextLevelSize + settings.levelSize
+                : prevStats.nextLevelSize,
+              prevLevelSize: shouldBumpLevel
+                ? newPoints
+                : prevStats.prevLevelSize,
+            });
+            await appRepository.changeStats(stats);
+
+            appEventsProvider.emit(
+              appEventsProvider.actions.SHOW_TOAST,
+              shouldBumpLevel
+                ? {
+                    type: 'success',
+                    title: 'New level reached!',
+                    message: "It's time to pick your reward",
+                  }
+                : {
+                    type: 'success',
+                    title: 'Completed!',
+                  },
+            );
+          }
+
+          return {
+            ...data,
+            selectedTask: {
+              ...data.selectedTask,
+              subtasks: newSubtasks,
+            },
+          };
+        } else {
+          return data;
+        }
       }
       default:
         return data;

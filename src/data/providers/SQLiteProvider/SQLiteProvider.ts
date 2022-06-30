@@ -160,7 +160,8 @@ class SQLiteProvider {
       subtasks.id as subtaskId,
       subtasks.title as subtaskTitle,
       subtasks.value as subtaskValue,
-      subtasks.position as subTaskPosition
+      subtasks.position as subTaskPosition,
+      subtasks.completed as subTaskCompleted
       from tasks LEFT JOIN subtasks ON tasks.id = subtasks.taskId WHERE tasks.id = ? 
       ORDER BY subtasks.position ASC`,
       [id],
@@ -185,6 +186,7 @@ class SQLiteProvider {
           value: taskRawData.subtaskValue,
           taskId: id,
           position: taskRawData.subTaskPosition,
+          completed: taskRawData.subTaskCompleted,
         });
       }
     });
@@ -206,8 +208,14 @@ class SQLiteProvider {
   async addSubtask(subtask: ISubtaskData): Promise<ISubtask> {
     return (
       await this.executeQuery(
-        'INSERT INTO subtasks (title, value, taskId, position) VALUES (?, ?, ?, ?) RETURNING *',
-        [subtask.title, subtask.value, subtask.taskId, subtask.position],
+        'INSERT INTO subtasks (title, value, taskId, position, completed) VALUES (?, ?, ?, ?, ?) RETURNING *',
+        [
+          subtask.title,
+          subtask.value,
+          subtask.taskId,
+          subtask.position,
+          Number(subtask.completed),
+        ],
       )
     )[0];
   }
@@ -216,13 +224,14 @@ class SQLiteProvider {
     return (
       await this.executeQuery(
         `UPDATE subtasks 
-        SET title = ?, value = ?, taskId = ?, position = ? 
+        SET title = ?, value = ?, taskId = ?, position = ?, completed = ?  
         WHERE id = ? RETURNING *`,
         [
           subtask.title,
           subtask.value,
           subtask.taskId,
           subtask.position,
+          subtask.completed,
           subtask.id,
         ],
       )
