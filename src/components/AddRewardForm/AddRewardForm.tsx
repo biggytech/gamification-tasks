@@ -18,6 +18,7 @@ const AddRewardForm: React.FC<IAddRewardFormProps> = ({ onSubmit, level }) => {
   const [state, setState] = useState<IAddRewardFormInternalState>({
     title: 'Reward',
     level,
+    picked: false,
   });
 
   const handleTitleChange = useCallback((text: string) => {
@@ -25,8 +26,8 @@ const AddRewardForm: React.FC<IAddRewardFormProps> = ({ onSubmit, level }) => {
   }, []);
 
   const handleSubmitPress = useCallback(() => {
-    onSubmit({ title: state.title, level: state.level });
-  }, [onSubmit, state.title, state.level]);
+    onSubmit({ title: state.title, level: state.level, picked: state.picked });
+  }, [onSubmit, state.title, state.level, state.picked]);
 
   return (
     <Stack spacing={4} m={4}>

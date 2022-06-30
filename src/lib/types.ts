@@ -80,6 +80,7 @@ export interface ITaskWithAdditions extends ITask {
 export interface IRewardData {
   title: string;
   level: number;
+  picked: boolean;
 }
 
 export interface IReward extends IRewardData {

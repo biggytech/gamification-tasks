@@ -11,6 +11,9 @@ const defaults = {
   subtasks: {
     position: 1,
   },
+  nextRewardLevel: -1,
 };
+
+defaults.nextRewardLevel = defaults.stats.level + 1;
 
 export default defaults;

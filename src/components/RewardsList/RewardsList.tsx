@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { IReward } from '../../lib/types';
+import { IReward, Key } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
 
@@ -8,12 +8,16 @@ interface RewardsListProps {
   items: IReward[];
   error: null | string;
   onAddPress: () => void;
+  maxLevelPickEnabled: number;
+  onRewardPickPress: (id: Key) => void;
 }
 
 const RewardsList: React.FC<RewardsListProps> = ({
   error,
   items,
   onAddPress,
+  maxLevelPickEnabled,
+  onRewardPickPress,
 }) => {
   return (
     <>
@@ -23,16 +27,32 @@ const RewardsList: React.FC<RewardsListProps> = ({
           <Button title="Add a reward" onPress={onAddPress} />
           <FlatList
             data={items}
-            renderItem={({ item }) => (
-              <ListItem
-                title={item.title}
-                trailing={
-                  <View>
-                    <Text>{item.level}</Text>
-                  </View>
-                }
-              />
-            )}
+            renderItem={({ item }) => {
+              let trailingNode = null;
+
+              if (item.picked) {
+                trailingNode = <Text>Picked</Text>;
+              } else if (item.level <= maxLevelPickEnabled) {
+                trailingNode = (
+                  <Button
+                    title="Pick"
+                    onPress={() => onRewardPickPress(item.id)}
+                  />
+                );
+              }
+
+              return (
+                <ListItem
+                  title={item.title}
+                  leading={
+                    <View>
+                      <Text>{item.level}</Text>
+                    </View>
+                  }
+                  trailing={trailingNode}
+                />
+              );
+            }}
           />
         </>
       ) : null}

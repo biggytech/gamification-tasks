@@ -68,6 +68,8 @@ const appRepository = {
     await SQLiteProvider.getMaxSubtasksPosition(taskId),
   changeSubtask: async (subtask: ISubtask): Promise<ISubtask> =>
     await SQLiteProvider.changeSubtask(subtask),
+  pickReward: async (id: Key): Promise<IReward> =>
+    await SQLiteProvider.pickReward(id),
 };
 
 export default appRepository;

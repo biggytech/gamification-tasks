@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import { IRewardData, ModuleComponent } from '../../lib/types';
+import { IRewardData, Key, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
@@ -19,7 +19,7 @@ const screens = {
 
 type RewardsModuleData = Pick<
   IAppData,
-  'rewards' | 'nextRewardLevel' | 'error'
+  'rewards' | 'nextRewardLevel' | 'error' | 'stats'
 >;
 type RewardsModuleActions = keyof typeof rewardsDataSource.actions;
 
@@ -27,12 +27,13 @@ const RewardsModule: ModuleComponent<
   RewardsModuleData,
   RewardsModuleActions
 > = ({ data, callDispatch, actions, navigation }) => {
-  const { rewards, error, nextRewardLevel } = data;
+  const { rewards, error, nextRewardLevel, stats } = data;
 
   useFocusEffect(
     useCallback(() => {
       (async () => {
         await callDispatch(actions.LOAD_REWARDS);
+        await callDispatch(actions.LOAD_STATS);
         await callDispatch(actions.LOAD_NEXT_REWARD_LEVEL);
       })();
 
@@ -43,6 +44,7 @@ const RewardsModule: ModuleComponent<
       actions.CLEAR_REWARDS,
       actions.LOAD_NEXT_REWARD_LEVEL,
       actions.LOAD_REWARDS,
+      actions.LOAD_STATS,
       callDispatch,
     ]),
   );
@@ -65,6 +67,13 @@ const RewardsModule: ModuleComponent<
     ],
   );
 
+  const handlePickReward = useCallback(
+    (id: Key) => {
+      callDispatch(actions.PICK_REWARD, id);
+    },
+    [actions.PICK_REWARD, callDispatch],
+  );
+
   return (
     <>
       <Stack.Navigator>
@@ -82,6 +91,8 @@ const RewardsModule: ModuleComponent<
               items={rewards}
               error={error}
               onAddPress={handleAddRewardPress}
+              maxLevelPickEnabled={stats.level}
+              onRewardPickPress={handlePickReward}
             />
           )}
         </Stack.Screen>

@@ -230,14 +230,29 @@ class SQLiteProvider {
   }
 
   async getRewards(): Promise<IReward[]> {
-    return await this.executeQuery('SELECT * FROM rewards');
+    const rewards = await this.executeQuery('SELECT * FROM rewards');
+    return rewards.map(reward => ({
+      ...reward,
+      picked: Boolean(reward.picked),
+    }));
   }
 
   async addReward(reward: IRewardData): Promise<IReward> {
     return (
       await this.executeQuery(
-        'INSERT INTO rewards (title, level) VALUES (?, ?) RETURNING *',
-        [reward.title, reward.level],
+        'INSERT INTO rewards (title, level, picked) VALUES (?, ?, ?) RETURNING *',
+        [reward.title, reward.level, Number(reward.picked)],
+      )
+    )[0];
+  }
+
+  async pickReward(id: Key): Promise<IReward> {
+    return (
+      await this.executeQuery(
+        `UPDATE rewards 
+        SET picked = ? 
+        WHERE id = ? RETURNING *`,
+        [1, id],
       )
     )[0];
   }

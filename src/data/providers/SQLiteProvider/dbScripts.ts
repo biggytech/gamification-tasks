@@ -21,7 +21,9 @@ const dbScripts: DbScripts = [
         FOREIGN KEY(taskId) REFERENCES tasks(id))`,
       'CREATE TABLE IF NOT EXISTS repetitiveTasks (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, value integer NOT NULL)',
       'CREATE TABLE IF NOT EXISTS settings (id integer PRIMARY KEY AUTOINCREMENT, levelSize integer NOT NULL)',
-      'CREATE TABLE IF NOT EXISTS rewards (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, level integer NOT NULL)',
+      `CREATE TABLE IF NOT EXISTS rewards 
+      (id integer PRIMARY KEY AUTOINCREMENT, title text NOT NULL, 
+        level integer NOT NULL, picked integer NOT NULL)`,
       `CREATE TABLE IF NOT EXISTS stats 
       (id integer PRIMARY KEY AUTOINCREMENT, level integer NOT NULL, points integer NOT NULL, 
         nextLevelSize integer NOT NULL, prevLevelSize integer NOT NULL)`,

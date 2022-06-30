@@ -45,7 +45,7 @@ const intialData: IAppData = {
   unusedLabels: [],
   selectedTask: null,
   rewards: [],
-  nextRewardLevel: defaults.stats.level,
+  nextRewardLevel: defaults.nextRewardLevel,
   stats: {
     level: defaults.stats.level,
     points: defaults.stats.points,
@@ -219,7 +219,7 @@ async function appActionHandler(
           ...data,
           nextRewardLevel: maxRewardsLevel
             ? maxRewardsLevel + 1
-            : defaults.stats.level,
+            : defaults.nextRewardLevel,
         };
       }
       case ACTIONS.LOAD_STATS: {
@@ -269,8 +269,8 @@ async function appActionHandler(
             shouldBumpLevel
               ? {
                   type: 'success',
-                  title: 'Completed!',
-                  message: 'You have reached new level',
+                  title: 'New level reached!',
+                  message: "It's time to pick your reward",
                 }
               : {
                   type: 'success',
@@ -313,6 +313,21 @@ async function appActionHandler(
         } else {
           return data;
         }
+      }
+      case ACTIONS.PICK_REWARD: {
+        const reward = await appRepository.pickReward(value);
+        const index = data.rewards.findIndex(_reward => _reward.id === value);
+        let newRewards = data.rewards;
+
+        if (index !== -1) {
+          newRewards = newRewards.concat([]);
+          newRewards.splice(index, 1, reward);
+        }
+
+        return {
+          ...data,
+          rewards: newRewards,
+        };
       }
       default:
         return data;
