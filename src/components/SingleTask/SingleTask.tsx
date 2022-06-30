@@ -63,7 +63,7 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
           />
           {label ? (
             <ListItem
-              title="Label"
+              title="Category"
               trailing={
                 <View
                   style={[styles.labelColor, { backgroundColor: label.color }]}

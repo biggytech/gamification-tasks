@@ -59,7 +59,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Labels',
+            title: 'Categories',
           }}>
           {props => (
             <LabelsList
@@ -72,7 +72,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
         </Stack.Screen>
         <Stack.Screen
           name={screens.AddLabelForm}
-          options={{ title: 'Add a Label' }}>
+          options={{ title: 'Add a Category' }}>
           {props => <AddLabelForm {...props} onSubmit={handleLabelAdd} />}
         </Stack.Screen>
       </Stack.Navigator>
@@ -83,7 +83,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
 export default asModule<LabelsModuleData, LabelsModuleActions>(
   LabelsModule,
   {
-    title: 'Labels',
+    title: 'Categories',
     name: 'LabelsModule',
   },
   labelsDataSource,

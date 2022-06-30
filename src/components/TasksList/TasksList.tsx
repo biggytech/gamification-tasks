@@ -56,7 +56,7 @@ const TasksList: React.FC<TasksListProps> = ({
                       <Text>{item.value}</Text>
                     </View>
                   }
-                  secondaryText={`Label: ${label?.name}`}
+                  secondaryText={`Category: ${label?.name}`}
                   onPress={() => onTaskItemPress(item.id)}
                 />
               );

@@ -13,7 +13,7 @@ interface IAddLabelFormInternalState extends ILabelData {
 
 const AddLabelForm: React.FC<IAddLabelFormProps> = ({ onSubmit }) => {
   const [state, setState] = useState<IAddLabelFormInternalState>({
-    name: 'Label',
+    name: 'Category',
     color: '#ffffff',
   });
 
@@ -33,7 +33,7 @@ const AddLabelForm: React.FC<IAddLabelFormProps> = ({ onSubmit }) => {
     <Stack spacing={4} m={4}>
       <TextInput
         value={state.name}
-        label="Label name"
+        label="Category name"
         variant="standard"
         onChangeText={handleNameChange}
         autoFocus

@@ -28,7 +28,7 @@ const LabelsList: React.FC<LabelsListProps> = ({
       {error ? <Text>{error}</Text> : null}
       {!error ? (
         <>
-          <Button title="Add label" onPress={onAddPress} />
+          <Button title="Add a category" onPress={onAddPress} />
           <FlatList
             data={items}
             renderItem={({ item }) => (
