@@ -61,11 +61,11 @@ const initialData: IAppData = {
   achievements: [],
 };
 
-const newLevelMessage: IGlobalMessage = {
+const getNewLevelMessage = (level: number): IGlobalMessage => ({
   type: 'success',
-  title: 'New level reached!',
+  title: `Level ${level} reached!`,
   message: "It's time to pick your reward",
-};
+});
 
 async function appActionHandler(
   data: IAppData,
@@ -276,16 +276,20 @@ async function appActionHandler(
       case ACTIONS.COMPLETE_REPETITIVE_TASK: {
         const task = await appRepository.getRepetitiveTask(value);
         if (task) {
-          const shouldBumpLevel = await updateStats(task.value);
+          const { shouldBumpLevel, level } = await updateStats(task.value);
 
           await writeToHistory(
             `Completed repetitive task "${task?.title}"`,
             task.value,
           );
 
+          if (shouldBumpLevel) {
+            await writeToHistory(`Reached level ${level}`, 0);
+          }
+
           showGlobalMessage(
             shouldBumpLevel
-              ? newLevelMessage
+              ? getNewLevelMessage(level)
               : {
                   type: 'success',
                   title: 'Completed!',
@@ -361,16 +365,20 @@ async function appActionHandler(
             newSubtasks = newSubtasks.concat([]);
             newSubtasks.splice(index, 1, subtask);
 
-            const shouldBumpLevel = await updateStats(subtask.value);
+            const { shouldBumpLevel, level } = await updateStats(subtask.value);
 
             await writeToHistory(
               `Completed subtask "${subtask.title}"`,
               subtask.value,
             );
 
+            if (shouldBumpLevel) {
+              await writeToHistory(`Reached level ${level}`, 0);
+            }
+
             showGlobalMessage(
               shouldBumpLevel
-                ? newLevelMessage
+                ? getNewLevelMessage(level)
                 : {
                     type: 'success',
                     title: 'Completed!',
@@ -404,13 +412,17 @@ async function appActionHandler(
           );
 
           if (task) {
-            const shouldBumpLevel = await updateStats(task.value);
+            const { shouldBumpLevel, level } = await updateStats(task.value);
 
             await writeToHistory(`Completed task "${task.title}"`, task.value);
 
+            if (shouldBumpLevel) {
+              await writeToHistory(`Reached level ${level}`, 0);
+            }
+
             showGlobalMessage(
               shouldBumpLevel
-                ? newLevelMessage
+                ? getNewLevelMessage(level)
                 : {
                     type: 'success',
                     title: 'Completed!',
