@@ -1,4 +1,5 @@
 import {
+  IAchievement,
   IHistory,
   IHistoryData,
   ILabel,
@@ -142,6 +143,13 @@ class SQLiteProvider {
   async getNotCompletedTasks(): Promise<ITask[]> {
     const tasks = await this.executeQuery(
       'SELECT * from tasks WHERE completed = 0',
+    );
+    return tasks.map(task => ({ ...task, completed: Boolean(task.completed) }));
+  }
+
+  async getCompletedTasks(): Promise<ITask[]> {
+    const tasks = await this.executeQuery(
+      'SELECT * from tasks WHERE completed = 1',
     );
     return tasks.map(task => ({ ...task, completed: Boolean(task.completed) }));
   }
@@ -362,6 +370,42 @@ class SQLiteProvider {
         ])
       )[0] ?? null
     );
+  }
+
+  async getAchievements(): Promise<IAchievement[]> {
+    const achievements = await this.executeQuery('SELECT * FROM achievements');
+    return achievements.map(achievement => ({
+      ...achievement,
+      completed: Boolean(achievement.completed),
+    }));
+  }
+
+  async changeAchievement(achievement: IAchievement): Promise<IAchievement> {
+    return (
+      await this.executeQuery(
+        `UPDATE achievements 
+        SET title = ?, message = ?, completed = ?, timestamp = ? 
+        WHERE id = ? RETURNING *`,
+        [
+          achievement.title,
+          achievement.message,
+          Number(achievement.completed),
+          achievement.timestamp,
+          achievement.id,
+        ],
+      )
+    )[0];
+  }
+
+  async getNotCompletedAchievements(): Promise<IAchievement[]> {
+    const achievements = await this.executeQuery(
+      'SELECT * FROM achievements WHERE completed = ?',
+      [0],
+    );
+    return achievements.map(achievement => ({
+      ...achievement,
+      completed: Boolean(achievement.completed),
+    }));
   }
 }
 

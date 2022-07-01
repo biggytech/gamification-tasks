@@ -115,3 +115,14 @@ export interface IGlobalMessage {
   title: string;
   message?: string;
 }
+
+export interface IAchievementData {
+  title: string;
+  message: string;
+  completed: boolean;
+  timestamp: number | null;
+}
+
+export interface IAchievement extends IAchievementData {
+  id: Key;
+}

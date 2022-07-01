@@ -1,4 +1,5 @@
 import {
+  IAchievement,
   IHistory,
   IHistoryData,
   ILabel,
@@ -72,6 +73,16 @@ const appRepository = {
     await SQLiteProvider.pickReward(id),
   changeTask: async (task: ITask): Promise<ITask> =>
     await SQLiteProvider.changeTask(task),
+  getAchievements: async (): Promise<IAchievement[]> =>
+    await SQLiteProvider.getAchievements(),
+  getNotCompletedAchievements: async (): Promise<IAchievement[]> =>
+    await SQLiteProvider.getNotCompletedAchievements(),
+  changeAchievement: async (achievement: IAchievement): Promise<IAchievement> =>
+    await SQLiteProvider.changeAchievement(achievement),
+  getNotCompletedTasks: async (): Promise<ITask[]> =>
+    await SQLiteProvider.getNotCompletedTasks(),
+  getCompletedTasks: async (): Promise<ITask[]> =>
+    await SQLiteProvider.getCompletedTasks(),
 };
 
 export default appRepository;

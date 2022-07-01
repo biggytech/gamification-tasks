@@ -1,3 +1,4 @@
+import achievements from '../../../config/achievements';
 import defaults from '../../../config/defaults';
 
 type DbScripts = Array<{
@@ -32,6 +33,8 @@ const dbScripts: DbScripts = [
       (id integer PRIMARY KEY AUTOINCREMENT, level integer NOT NULL, points integer NOT NULL, 
         nextLevelSize integer NOT NULL, prevLevelSize integer NOT NULL)`,
       'CREATE TABLE IF NOT EXISTS history (id integer PRIMARY KEY AUTOINCREMENT, message text NOT NULL, points integer NOT NULL, timestamp integer NOT NULL)',
+      `CREATE TABLE IF NOT EXISTS achievements (id integer PRIMARY KEY, 
+        title text NOT NULL, message text NOT NULL, completed integer NOT NULL, timestamp integer)`,
     ],
     upsertScripts: [
       {
@@ -57,6 +60,19 @@ const dbScripts: DbScripts = [
           defaults.stats.id,
         ],
       },
+      ...Object.values(achievements).map(achievement => ({
+        sql: `INSERT INTO achievements(id, title, message, completed, timestamp) 
+        SELECT ?, ?, ?, ?, ?
+        WHERE NOT EXISTS(SELECT id FROM achievements WHERE id = ?);`,
+        values: [
+          achievement.id,
+          achievement.title,
+          achievement.message,
+          defaults.achievements.completed,
+          defaults.achievements.timestamp,
+          achievement.id,
+        ],
+      })),
     ],
   },
 ];

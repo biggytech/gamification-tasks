@@ -1,9 +1,9 @@
 import defaults from '../config/defaults';
 import DataSource from '../lib/data/DataSource';
 import {
+  IAchievement,
   IGlobalMessage,
   IHistory,
-  IHistoryData,
   ILabel,
   IRepetitiveTask,
   IReward,
@@ -15,8 +15,10 @@ import {
 } from '../lib/types';
 import ACTIONS from './actions';
 import appRepository from './appRepository';
-import appEventsProvider from './appEventsProvider';
 import updateStats from './handlers/common/updateStats';
+import updateAchievements from './handlers/common/updateAchievements';
+import showGlobalMessage from './handlers/common/showGlobalMessage';
+import writeToHistory from './handlers/common/writeToHistory';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -33,9 +35,10 @@ export interface IAppData {
   nextRewardLevel: number;
   stats: IStats;
   history: IHistory[];
+  achievements: IAchievement[];
 }
 
-const intialData: IAppData = {
+const initialData: IAppData = {
   error: null,
   labels: [],
   dbSize: 0,
@@ -55,6 +58,7 @@ const intialData: IAppData = {
     prevLevelSize: defaults.stats.points,
   },
   history: [],
+  achievements: [],
 };
 
 const newLevelMessage: IGlobalMessage = {
@@ -69,43 +73,50 @@ async function appActionHandler(
   value: any,
 ): Promise<IAppData> {
   try {
+    let dataToReturn = data;
+
     switch (action) {
       case ACTIONS.LOAD_LABELS: {
         const labels = await appRepository.getLabels();
-        return {
+        dataToReturn = {
           ...data,
           labels,
         };
+        break;
       }
       case ACTIONS.CLEAR_LABELS: {
-        return {
+        dataToReturn = {
           ...data,
-          labels: intialData.labels,
+          labels: initialData.labels,
         };
+        break;
       }
       case ACTIONS.ADD_LABEL: {
         const label = await appRepository.addLabel(value);
 
-        return {
+        dataToReturn = {
           ...data,
           labels: data.labels.concat(label),
         };
+        break;
       }
       case ACTIONS.DELETE_DATABASE: {
         await appRepository.deleteDatabase();
 
-        return {
+        dataToReturn = {
           ...data,
           dbSize: 0,
         };
+        break;
       }
       case ACTIONS.LOAD_SETTINGS: {
         const settings = await appRepository.getSettings();
 
-        return {
+        dataToReturn = {
           ...data,
           settings,
         };
+        break;
       }
       case ACTIONS.CHANGE_LEVEL_SIZE: {
         const settings = await appRepository.changeLevelSize(value);
@@ -117,67 +128,76 @@ async function appActionHandler(
           prevLevelSize: prevStats.points,
         });
 
-        return {
+        dataToReturn = {
           ...data,
           settings,
           stats,
         };
+        break;
       }
       case ACTIONS.LOAD_REPETITIVE_TASKS: {
         const repetitiveTasks = await appRepository.getRepetitiveTasks();
-        return {
+        dataToReturn = {
           ...data,
           repetitiveTasks,
         };
+        break;
       }
       case ACTIONS.CLEAR_REPETITIVE_TASKS: {
-        return {
+        dataToReturn = {
           ...data,
-          repetitiveTasks: intialData.repetitiveTasks,
+          repetitiveTasks: initialData.repetitiveTasks,
         };
+        break;
       }
       case ACTIONS.ADD_REPETITIVE_TASK: {
         const repetitiveTask = await appRepository.addRepetitiveTask(value);
 
-        return {
+        dataToReturn = {
           ...data,
           repetitiveTasks: data.repetitiveTasks.concat(repetitiveTask),
         };
+        break;
       }
       case ACTIONS.LOAD_TASKS: {
         const tasks = await appRepository.getTasks();
-        return {
+        dataToReturn = {
           ...data,
           tasks,
         };
+        break;
       }
       case ACTIONS.CLEAR_TASKS: {
-        return {
+        dataToReturn = {
           ...data,
-          tasks: intialData.tasks,
+          tasks: initialData.tasks,
         };
+        break;
       }
       case ACTIONS.ADD_TASK: {
         const task = await appRepository.addTask(value);
 
-        return {
+        dataToReturn = {
           ...data,
           tasks: data.tasks.concat(task),
         };
+        break;
       }
       case ACTIONS.LOAD_UNUSED_LABELS: {
         const unusedLabels = await appRepository.getUnusedLabels();
-        return {
+        dataToReturn = {
           ...data,
           unusedLabels,
         };
+        break;
       }
       case ACTIONS.LOAD_SELECTED_TASK: {
         const selectedTask = await appRepository.getTaskWithAdditions(value);
-        return {
+        dataToReturn = {
           ...data,
           selectedTask,
         };
+        break;
       }
       case ACTIONS.ADD_SUBTASK: {
         const prevPosition = await appRepository.getMaxSubtasksPosition(
@@ -190,7 +210,7 @@ async function appActionHandler(
             : defaults.subtasks.position,
         });
 
-        return {
+        dataToReturn = {
           ...data,
           selectedTask: data.selectedTask
             ? {
@@ -199,67 +219,71 @@ async function appActionHandler(
               }
             : null,
         };
+        break;
       }
       case ACTIONS.LOAD_REWARDS: {
         const rewards = await appRepository.getRewards();
-        return {
+        dataToReturn = {
           ...data,
           rewards,
         };
+        break;
       }
       case ACTIONS.CLEAR_REWARDS: {
-        return {
+        dataToReturn = {
           ...data,
-          rewards: intialData.rewards,
+          rewards: initialData.rewards,
         };
+        break;
       }
       case ACTIONS.ADD_REWARD: {
         const reward = await appRepository.addReward(value);
 
-        return {
+        dataToReturn = {
           ...data,
           rewards: data.rewards.concat(reward),
         };
+        break;
       }
       case ACTIONS.LOAD_NEXT_REWARD_LEVEL: {
         const maxRewardsLevel = await appRepository.getMaxRewardsLevel();
-        return {
+        dataToReturn = {
           ...data,
           nextRewardLevel: maxRewardsLevel
             ? maxRewardsLevel + 1
-            : defaults.nextRewardLevel,
+            : initialData.nextRewardLevel,
         };
+        break;
       }
       case ACTIONS.LOAD_STATS: {
         const stats = await appRepository.getStats();
 
-        return {
+        dataToReturn = {
           ...data,
           stats,
         };
+        break;
       }
       case ACTIONS.LOAD_HISTORY: {
         const history = await appRepository.getHistory();
 
-        return {
+        dataToReturn = {
           ...data,
           history,
         };
+        break;
       }
       case ACTIONS.COMPLETE_REPETITIVE_TASK: {
         const task = await appRepository.getRepetitiveTask(value);
         if (task) {
           const shouldBumpLevel = await updateStats(task.value);
 
-          const history: IHistoryData = {
-            message: `Completed repetitive task "${task?.title}"`,
-            points: task.value,
-            timestamp: Date.now() / 1000,
-          };
-          await appRepository.addHistory(history);
+          await writeToHistory(
+            `Completed repetitive task "${task?.title}"`,
+            task.value,
+          );
 
-          appEventsProvider.emit(
-            appEventsProvider.actions.SHOW_TOAST,
+          showGlobalMessage(
             shouldBumpLevel
               ? newLevelMessage
               : {
@@ -269,7 +293,8 @@ async function appActionHandler(
           );
         }
 
-        return data;
+        dataToReturn = data;
+        break;
       }
       case ACTIONS.CHANGE_SUBTASKS_ORDER: {
         if (data.selectedTask && value.from !== value.to) {
@@ -291,7 +316,7 @@ async function appActionHandler(
             }),
           );
 
-          return {
+          dataToReturn = {
             ...data,
             selectedTask: data.selectedTask
               ? {
@@ -301,8 +326,9 @@ async function appActionHandler(
               : data.selectedTask,
           };
         } else {
-          return data;
+          dataToReturn = data;
         }
+        break;
       }
       case ACTIONS.PICK_REWARD: {
         const reward = await appRepository.pickReward(value);
@@ -314,10 +340,11 @@ async function appActionHandler(
           newRewards.splice(index, 1, reward);
         }
 
-        return {
+        dataToReturn = {
           ...data,
           rewards: newRewards,
         };
+        break;
       }
       case ACTIONS.COMPLETE_SUBTASK: {
         if (data.selectedTask) {
@@ -336,15 +363,12 @@ async function appActionHandler(
 
             const shouldBumpLevel = await updateStats(subtask.value);
 
-            const history: IHistoryData = {
-              message: `Completed subtask "${subtask.title}"`,
-              points: subtask.value,
-              timestamp: Date.now() / 1000,
-            };
-            await appRepository.addHistory(history);
+            await writeToHistory(
+              `Completed subtask "${subtask.title}"`,
+              subtask.value,
+            );
 
-            appEventsProvider.emit(
-              appEventsProvider.actions.SHOW_TOAST,
+            showGlobalMessage(
               shouldBumpLevel
                 ? newLevelMessage
                 : {
@@ -354,7 +378,7 @@ async function appActionHandler(
             );
           }
 
-          return {
+          dataToReturn = {
             ...data,
             selectedTask: {
               ...data.selectedTask,
@@ -362,8 +386,9 @@ async function appActionHandler(
             },
           };
         } else {
-          return data;
+          dataToReturn = data;
         }
+        break;
       }
       case ACTIONS.COMPLETE_TASK: {
         if (data.selectedTask) {
@@ -381,15 +406,9 @@ async function appActionHandler(
           if (task) {
             const shouldBumpLevel = await updateStats(task.value);
 
-            const history: IHistoryData = {
-              message: `Completed task "${task.title}"`,
-              points: task.value,
-              timestamp: Date.now() / 1000,
-            };
-            await appRepository.addHistory(history);
+            await writeToHistory(`Completed task "${task.title}"`, task.value);
 
-            appEventsProvider.emit(
-              appEventsProvider.actions.SHOW_TOAST,
+            showGlobalMessage(
               shouldBumpLevel
                 ? newLevelMessage
                 : {
@@ -398,18 +417,38 @@ async function appActionHandler(
                   },
             );
 
-            return {
+            dataToReturn = {
               ...data,
               selectedTask: task,
             };
           }
         }
 
-        return data;
+        break;
+      }
+      case ACTIONS.LOAD_ACHIEVEMENTS: {
+        const achievements = await appRepository.getAchievements();
+
+        dataToReturn = {
+          ...data,
+          achievements,
+        };
+        break;
+      }
+      case ACTIONS.CLEAR_ACHIEVEMENTS: {
+        dataToReturn = {
+          ...data,
+          achievements: initialData.achievements,
+        };
+        break;
       }
       default:
-        return data;
+        dataToReturn = data;
     }
+
+    await updateAchievements();
+
+    return dataToReturn;
   } catch (err: any) {
     return {
       ...data,
@@ -419,7 +458,7 @@ async function appActionHandler(
 }
 
 const appDataSource = new DataSource<IAppData, AppActions>(
-  intialData,
+  initialData,
   appActionHandler,
   ACTIONS as { [action in AppActions]: AppActions },
 );

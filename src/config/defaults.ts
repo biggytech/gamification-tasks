@@ -12,6 +12,10 @@ const defaults = {
     position: 1,
   },
   nextRewardLevel: -1,
+  achievements: {
+    completed: 0,
+    timestamp: null,
+  },
 };
 
 defaults.nextRewardLevel = defaults.stats.level + 1;
