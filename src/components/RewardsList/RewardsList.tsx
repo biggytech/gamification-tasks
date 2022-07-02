@@ -3,6 +3,7 @@ import { FlatList, Text, View } from 'react-native';
 import { IReward, Key } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface RewardsListProps {
   items: IReward[];
@@ -24,7 +25,14 @@ const RewardsList: React.FC<RewardsListProps> = ({
       {error ? <Text>{error}</Text> : null}
       {!error ? (
         <>
-          <Button title="Add a reward" onPress={onAddPress} />
+          <Button
+            title={
+              appLanguageProvider.translate('general.add') +
+              ' ' +
+              appLanguageProvider.translate('reward.name.single').toLowerCase()
+            }
+            onPress={onAddPress}
+          />
           <FlatList
             data={items}
             renderItem={({ item }) => {
@@ -35,7 +43,7 @@ const RewardsList: React.FC<RewardsListProps> = ({
               } else if (item.level <= maxLevelPickEnabled) {
                 trailingNode = (
                   <Button
-                    title="Pick"
+                    title={appLanguageProvider.translate('reward.pick')}
                     onPress={() => onRewardPickPress(item.id)}
                   />
                 );

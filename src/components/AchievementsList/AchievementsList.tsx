@@ -4,6 +4,7 @@ import { IAchievement } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import formatDate from '../../lib/utils/formatDate';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface AchievementsListProps {
   items: IAchievement[];
@@ -27,8 +28,9 @@ const AchievementsList: React.FC<AchievementsListProps> = ({
                   title={item.title}
                   secondaryText={
                     item.completed && item.timestamp !== null
-                      ? `${item.message}\nCompleted at: 
-                      ${formatDate(item.timestamp)}`
+                      ? `${item.message}\n${appLanguageProvider.translate(
+                          'general.completedAt',
+                        )}: ${formatDate(item.timestamp)}`
                       : item.message
                   }
                   trailing={

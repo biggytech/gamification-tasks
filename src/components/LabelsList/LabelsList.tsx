@@ -3,6 +3,7 @@ import { FlatList, Text, View, StyleSheet } from 'react-native';
 import { ILabel } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const styles = StyleSheet.create({
   color: {
@@ -28,7 +29,16 @@ const LabelsList: React.FC<LabelsListProps> = ({
       {error ? <Text>{error}</Text> : null}
       {!error ? (
         <>
-          <Button title="Add a category" onPress={onAddPress} />
+          <Button
+            title={
+              appLanguageProvider.translate('general.add') +
+              ' ' +
+              appLanguageProvider
+                .translate('category.name.single')
+                .toLowerCase()
+            }
+            onPress={onAddPress}
+          />
           <FlatList
             data={items}
             renderItem={({ item }) => (

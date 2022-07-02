@@ -6,6 +6,7 @@ import {
   Button,
   ListItem,
 } from '@react-native-material/core';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface IAddRewardFormProps {
   onSubmit: (label: IRewardData) => void;
@@ -16,7 +17,7 @@ interface IAddRewardFormInternalState extends IRewardData {}
 
 const AddRewardForm: React.FC<IAddRewardFormProps> = ({ onSubmit, level }) => {
   const [state, setState] = useState<IAddRewardFormInternalState>({
-    title: 'Reward',
+    title: appLanguageProvider.translate('reward.name.single'),
     level,
     picked: false,
   });
@@ -34,13 +35,16 @@ const AddRewardForm: React.FC<IAddRewardFormProps> = ({ onSubmit, level }) => {
       <ListItem title="Level" secondaryText={state.level.toString()} />
       <TextInput
         value={state.title}
-        label="Reward title"
+        label={appLanguageProvider.translate('general.title')}
         variant="standard"
         onChangeText={handleTitleChange}
         autoFocus
       />
 
-      <Button title="Submit" onPress={handleSubmitPress} />
+      <Button
+        title={appLanguageProvider.translate('general.submit')}
+        onPress={handleSubmitPress}
+      />
     </Stack>
   );
 };

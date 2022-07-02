@@ -1,7 +1,9 @@
 import React, { memo } from 'react';
 import { Text } from 'react-native';
 import { ListItem } from '@react-native-material/core';
-import { Button } from '@react-native-material/core';
+import { IconButton } from '@react-native-material/core';
+import appLanguageProvider from '../../data/appLanguageProvider';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface IDeveloperSettingsProps {
   dbSize: number;
@@ -14,10 +16,18 @@ const DeveloperSettings: React.FC<IDeveloperSettingsProps> = ({
 }) => {
   return (
     <>
-      <ListItem title="Database size" trailing={() => <Text>{dbSize}</Text>} />
       <ListItem
-        title="Delete database"
-        trailing={() => <Button title="DEL" onPress={onDeleteDatabase} />}
+        title={appLanguageProvider.translate('settings.databaseSize')}
+        trailing={() => <Text>{dbSize}</Text>}
+      />
+      <ListItem
+        title={appLanguageProvider.translate('settings.deleteDatabase')}
+        trailing={() => (
+          <IconButton
+            onPress={onDeleteDatabase}
+            icon={props => <Icon name="trash-can" {...props} />}
+          />
+        )}
       />
     </>
   );

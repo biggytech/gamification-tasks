@@ -8,6 +8,7 @@ import DrawerButton from '../../components/common/DrawerButton';
 import Settings from '../../components/Settings';
 import EditLevelSizeForm from '../../components/EditLevelSizeForm';
 import { Alert } from 'react-native';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,17 +44,16 @@ const SettingsModule: ModuleComponent<
 
   const handleLevelSizePress = useCallback(() => {
     Alert.alert(
-      'Caution!',
-      `Changing this setting will reset your current level progress. 
-    Your level and gained XP will stay the same, but the level progress bar will be set to zero. Are you sure to proceed?`,
+      appLanguageProvider.translate('general.caution') + '!',
+      appLanguageProvider.translate('settings.changeLevelSizeWarning'),
       [
         {
-          text: 'Cancel',
+          text: appLanguageProvider.translate('general.cancel'),
           onPress: () => {},
           style: 'cancel',
         },
         {
-          text: 'OK',
+          text: appLanguageProvider.translate('general.ok'),
           onPress: () => navigation.navigate(screens.EditLevelSizeForm),
         },
       ],
@@ -69,7 +69,7 @@ const SettingsModule: ModuleComponent<
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Settings',
+            title: appLanguageProvider.translate('settings.name'),
           }}>
           {props => (
             <Settings
@@ -81,7 +81,9 @@ const SettingsModule: ModuleComponent<
         </Stack.Screen>
         <Stack.Screen
           name={screens.EditLevelSizeForm}
-          options={{ title: 'Edit Level Size' }}>
+          options={{
+            title: appLanguageProvider.translate('settings.editLevelSize'),
+          }}>
           {props => (
             <EditLevelSizeForm
               {...props}
@@ -98,7 +100,7 @@ const SettingsModule: ModuleComponent<
 export default asModule<SettingsModuleData, SettingsModuleActions>(
   SettingsModule,
   {
-    title: 'Settings',
+    title: appLanguageProvider.translate('settings.name'),
     name: 'SettingsModule',
   },
   settingsDataSource,

@@ -2,6 +2,7 @@ import React, { memo, useCallback, useState } from 'react';
 import { ILabelData } from '../../lib/types';
 import { Stack, TextInput, Button } from '@react-native-material/core';
 import ColorPicker from 'react-native-wheel-color-picker';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface IAddLabelFormProps {
   onSubmit: (label: ILabelData) => void;
@@ -13,7 +14,7 @@ interface IAddLabelFormInternalState extends ILabelData {
 
 const AddLabelForm: React.FC<IAddLabelFormProps> = ({ onSubmit }) => {
   const [state, setState] = useState<IAddLabelFormInternalState>({
-    name: 'Category',
+    name: appLanguageProvider.translate('category.name.single'),
     color: '#ffffff',
   });
 
@@ -33,7 +34,7 @@ const AddLabelForm: React.FC<IAddLabelFormProps> = ({ onSubmit }) => {
     <Stack spacing={4} m={4}>
       <TextInput
         value={state.name}
-        label="Category name"
+        label={appLanguageProvider.translate('general.title')}
         variant="standard"
         onChangeText={handleNameChange}
         autoFocus
@@ -45,7 +46,10 @@ const AddLabelForm: React.FC<IAddLabelFormProps> = ({ onSubmit }) => {
         />
       </Stack>
 
-      <Button title="Submit" onPress={handleSubmitPress} />
+      <Button
+        title={appLanguageProvider.translate('general.submit')}
+        onPress={handleSubmitPress}
+      />
     </Stack>
   );
 };

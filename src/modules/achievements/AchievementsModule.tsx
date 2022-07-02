@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
 import AchievementsList from '../../components/AchievementsList';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +47,7 @@ const AchievementsModule: ModuleComponent<
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Achievements',
+            title: appLanguageProvider.translate('achievements.name.multiple'),
           }}>
           {props => (
             <AchievementsList {...props} items={achievements} error={error} />
@@ -60,7 +61,7 @@ const AchievementsModule: ModuleComponent<
 export default asModule<AchievementsModuleData, AchievementsModuleActions>(
   AchievementsModule,
   {
-    title: 'Achievements',
+    title: appLanguageProvider.translate('achievements.name.multiple'),
     name: 'AchievementsModule',
   },
   achieventsModuleDataSource,

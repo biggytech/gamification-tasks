@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useState } from 'react';
 import { IRepetitiveTaskData } from '../../lib/types';
 import { Stack, TextInput, Button } from '@react-native-material/core';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface IAddRepetitiveTaskFormProps {
   onSubmit: (label: IRepetitiveTaskData) => void;
@@ -12,7 +13,7 @@ const AddRepetitiveTaskForm: React.FC<IAddRepetitiveTaskFormProps> = ({
   onSubmit,
 }) => {
   const [state, setState] = useState<IAddRepetitiveTaskFormInternalState>({
-    title: 'Task',
+    title: appLanguageProvider.translate('task.name.single'),
     value: 1,
   });
 
@@ -32,7 +33,7 @@ const AddRepetitiveTaskForm: React.FC<IAddRepetitiveTaskFormProps> = ({
     <Stack spacing={4} m={4}>
       <TextInput
         value={state.title}
-        label="Task title"
+        label={appLanguageProvider.translate('general.title')}
         variant="standard"
         onChangeText={handleTitleChange}
         autoFocus
@@ -40,12 +41,15 @@ const AddRepetitiveTaskForm: React.FC<IAddRepetitiveTaskFormProps> = ({
       <TextInput
         value={state.value.toString()}
         keyboardType="number-pad"
-        label="Value (in experience points)"
+        label={appLanguageProvider.translate('general.xpValue')}
         variant="standard"
         onChangeText={handleValueChange}
       />
 
-      <Button title="Submit" onPress={handleSubmitPress} />
+      <Button
+        title={appLanguageProvider.translate('general.submit')}
+        onPress={handleSubmitPress}
+      />
     </Stack>
   );
 };

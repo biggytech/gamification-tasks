@@ -19,6 +19,7 @@ import updateStats from './handlers/common/updateStats';
 import updateAchievements from './handlers/common/updateAchievements';
 import showGlobalMessage from './handlers/common/showGlobalMessage';
 import writeToHistory from './handlers/common/writeToHistory';
+import appLanguageProvider from './appLanguageProvider';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -63,8 +64,10 @@ const initialData: IAppData = {
 
 const getNewLevelMessage = (level: number): IGlobalMessage => ({
   type: 'success',
-  title: `Level ${level} reached!`,
-  message: "It's time to pick your reward",
+  title: `${appLanguageProvider.translate(
+    'level.name',
+  )} ${level} ${appLanguageProvider.translate('level.reached').toLowerCase()}!`,
+  message: appLanguageProvider.translate('reward.timeToPick'),
 });
 
 async function appActionHandler(
@@ -279,12 +282,23 @@ async function appActionHandler(
           const { shouldBumpLevel, level } = await updateStats(task.value);
 
           await writeToHistory(
-            `Completed repetitive task "${task?.title}"`,
+            `${appLanguageProvider.translate(
+              'general.completed',
+            )} ${appLanguageProvider
+              .translate('repetitiveTask.name.single')
+              .toLowerCase()} "${task?.title}"`,
             task.value,
           );
 
           if (shouldBumpLevel) {
-            await writeToHistory(`Reached level ${level}`, 0);
+            await writeToHistory(
+              `${appLanguageProvider.translate(
+                'level.reached',
+              )} ${appLanguageProvider
+                .translate('level.name')
+                .toLowerCase()} ${level}`,
+              0,
+            );
           }
 
           showGlobalMessage(
@@ -292,7 +306,8 @@ async function appActionHandler(
               ? getNewLevelMessage(level)
               : {
                   type: 'success',
-                  title: 'Completed!',
+                  title:
+                    appLanguageProvider.translate('general.completed') + '!',
                 },
           );
         }
@@ -368,12 +383,23 @@ async function appActionHandler(
             const { shouldBumpLevel, level } = await updateStats(subtask.value);
 
             await writeToHistory(
-              `Completed subtask "${subtask.title}"`,
+              `${appLanguageProvider.translate(
+                'general.completed',
+              )} ${appLanguageProvider
+                .translate('subtask.name.single')
+                .toLowerCase()} "${subtask.title}"`,
               subtask.value,
             );
 
             if (shouldBumpLevel) {
-              await writeToHistory(`Reached level ${level}`, 0);
+              await writeToHistory(
+                `${appLanguageProvider.translate(
+                  'level.reached',
+                )} ${appLanguageProvider
+                  .translate('level.name')
+                  .toLowerCase()} ${level}`,
+                0,
+              );
             }
 
             showGlobalMessage(
@@ -381,7 +407,8 @@ async function appActionHandler(
                 ? getNewLevelMessage(level)
                 : {
                     type: 'success',
-                    title: 'Completed!',
+                    title:
+                      appLanguageProvider.translate('general.completed') + '!',
                   },
             );
           }
@@ -414,10 +441,24 @@ async function appActionHandler(
           if (task) {
             const { shouldBumpLevel, level } = await updateStats(task.value);
 
-            await writeToHistory(`Completed task "${task.title}"`, task.value);
+            await writeToHistory(
+              `${appLanguageProvider.translate(
+                'general.completed',
+              )} ${appLanguageProvider
+                .translate('task.name.single')
+                .toLowerCase()} "${task.title}"`,
+              task.value,
+            );
 
             if (shouldBumpLevel) {
-              await writeToHistory(`Reached level ${level}`, 0);
+              await writeToHistory(
+                `${appLanguageProvider.translate(
+                  'level.reached',
+                )} ${appLanguageProvider
+                  .translate('level.name')
+                  .toLowerCase()} ${level}`,
+                0,
+              );
             }
 
             showGlobalMessage(
@@ -425,7 +466,8 @@ async function appActionHandler(
                 ? getNewLevelMessage(level)
                 : {
                     type: 'success',
-                    title: 'Completed!',
+                    title:
+                      appLanguageProvider.translate('general.completed') + '!',
                   },
             );
 

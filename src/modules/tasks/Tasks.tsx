@@ -9,6 +9,7 @@ import TasksList from '../../components/TasksList';
 import AddTaskForm from '../../components/AddTaskForm';
 import SingleTask from '../../components/SingleTask';
 import AddSubtaskForm from '../../components/AddSubtaskForm';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -133,13 +134,16 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Tasks',
+            title: appLanguageProvider.translate('task.name.multiple'),
           }}>
           {props => (
             <TasksList
               {...props}
               error={
-                error ?? (labels.length === 0 ? 'Add categories first' : null)
+                error ??
+                (labels.length === 0
+                  ? appLanguageProvider.translate('task.addCategoriesFirst')
+                  : null)
               }
               items={tasks}
               onAddPress={handleAddPress}
@@ -151,7 +155,12 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
         </Stack.Screen>
         <Stack.Screen
           name={screens.AddTaskForm}
-          options={{ title: 'Add a Task' }}>
+          options={{
+            title:
+              appLanguageProvider.translate('general.add') +
+              ' ' +
+              appLanguageProvider.translate('task.name.single'),
+          }}>
           {props => (
             <AddTaskForm
               {...props}
@@ -162,12 +171,20 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
         </Stack.Screen>
         <Stack.Screen
           name={screens.SingleTask}
-          options={{ title: selectedTask?.title ?? 'Not Found' }}>
+          options={{
+            title:
+              selectedTask?.title ??
+              appLanguageProvider.translate('general.notFound'),
+          }}>
           {props => (
             <SingleTask
               {...props}
               task={selectedTask}
-              error={selectedTask ? null : 'Not Found'}
+              error={
+                selectedTask
+                  ? null
+                  : appLanguageProvider.translate('general.notFound')
+              }
               labels={labels}
               onAddSubtaskPress={handleAddSubtaskPress}
               onSubtasksOrderChange={handleSubtasksOrderChange}
@@ -178,11 +195,20 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
         </Stack.Screen>
         <Stack.Screen
           name={screens.AssSubtaskForm}
-          options={{ title: 'Add a Subtask' }}>
+          options={{
+            title:
+              appLanguageProvider.translate('general.add') +
+              ' ' +
+              appLanguageProvider.translate('subtask.name.single'),
+          }}>
           {props => (
             <AddSubtaskForm
               {...props}
-              error={selectedTask ? null : 'Not Found'}
+              error={
+                selectedTask
+                  ? null
+                  : appLanguageProvider.translate('general.notFound')
+              }
               taskId={selectedTask?.id ?? null}
               onSubmit={subtask =>
                 handleAddSubtask(subtask, props.navigation.goBack)
@@ -198,7 +224,7 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
 export default asModule<TasksModuleData, TasksModuleActions>(
   TasksModule,
   {
-    title: 'Tasks',
+    title: appLanguageProvider.translate('task.name.multiple'),
     name: 'TasksModule',
   },
   tasksDataSource,

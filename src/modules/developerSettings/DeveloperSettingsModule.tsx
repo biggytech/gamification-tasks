@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DeveloperSettings from '../../components/DeveloperSettings';
 import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +45,7 @@ const DeveloperSettingsModule: ModuleComponent<
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Developer Settings',
+            title: appLanguageProvider.translate('developerSettings.name'),
           }}>
           {props => (
             <DeveloperSettings
@@ -65,7 +66,7 @@ export default asModule<
 >(
   DeveloperSettingsModule,
   {
-    title: 'Developer Settings',
+    title: appLanguageProvider.translate('developerSettings.name'),
     name: 'DeveloperSettingsModule',
   },
   developerSettingsDataSource,

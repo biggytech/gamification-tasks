@@ -4,6 +4,7 @@ import { ILabel, ITask, Key } from '../../lib/types';
 import { IconButton, ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const styles = StyleSheet.create({
   labelColor: {
@@ -35,7 +36,16 @@ const TasksList: React.FC<TasksListProps> = ({
       {error ? <Text>{error}</Text> : null}
       {!error ? (
         <>
-          {canAdd ? <Button title="Add a task" onPress={onAddPress} /> : null}
+          {canAdd ? (
+            <Button
+              title={
+                appLanguageProvider.translate('general.add') +
+                ' ' +
+                appLanguageProvider.translate('task.name.single').toLowerCase()
+              }
+              onPress={onAddPress}
+            />
+          ) : null}
           <FlatList
             data={items}
             renderItem={({ item }) => {
@@ -62,7 +72,9 @@ const TasksList: React.FC<TasksListProps> = ({
                       <Text>{item.value}</Text>
                     )
                   }
-                  secondaryText={`Category: ${label?.name}`}
+                  secondaryText={`${appLanguageProvider.translate(
+                    'category.name.single',
+                  )}: ${label?.name}`}
                   onPress={() => onTaskItemPress(item.id)}
                 />
               );

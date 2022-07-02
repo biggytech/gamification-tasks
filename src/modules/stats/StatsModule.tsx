@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
 import Progress from '../../components/Progress';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +47,7 @@ const StatsModule: ModuleComponent<StatsModuleData, StatsModuleActions> = ({
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Progress',
+            title: appLanguageProvider.translate('progress.name'),
           }}>
           {props => (
             <Progress
@@ -65,7 +66,7 @@ const StatsModule: ModuleComponent<StatsModuleData, StatsModuleActions> = ({
 export default asModule<StatsModuleData, StatsModuleActions>(
   StatsModule,
   {
-    title: 'Progress',
+    title: appLanguageProvider.translate('progress.name'),
     name: 'StatsModule',
   },
   statsDataSource,

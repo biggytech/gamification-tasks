@@ -1,6 +1,7 @@
 import React, { memo, useCallback, useState } from 'react';
 import { Stack, TextInput, Button } from '@react-native-material/core';
 import { LevelSize } from '../../lib/types';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface IEditLevelSizeFormProps {
   levelSize: LevelSize;
@@ -32,13 +33,16 @@ const EditLevelSizeForm: React.FC<IEditLevelSizeFormProps> = ({
       <TextInput
         value={state.levelSize.toString()}
         keyboardType="number-pad"
-        label="Level size (in experience points)"
+        label={appLanguageProvider.translate('general.xpValue')}
         variant="standard"
         onChangeText={handleLevelSizeChange}
         autoFocus
       />
 
-      <Button title="Submit" onPress={handleSubmitPress} />
+      <Button
+        title={appLanguageProvider.translate('general.submit')}
+        onPress={handleSubmitPress}
+      />
     </Stack>
   );
 };

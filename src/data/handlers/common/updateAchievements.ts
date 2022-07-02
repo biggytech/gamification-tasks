@@ -1,5 +1,6 @@
 import achievements from '../../../config/achievements';
 import getTimestamp from '../../../lib/utils/getTimestamp';
+import appLanguageProvider from '../../appLanguageProvider';
 import appRepository from '../../appRepository';
 import showGlobalMessage from './showGlobalMessage';
 import writeToHistory from './writeToHistory';
@@ -33,11 +34,16 @@ async function updateAchievements() {
           });
           showGlobalMessage({
             type: 'success',
-            title: 'Achievement completed!',
-            message: `You have completed achievement "${achievement.title}"`,
+            title:
+              appLanguageProvider.translate('achievements.completed') + '!',
+            message: `${appLanguageProvider.translate(
+              'achievements.completedMessage',
+            )} "${achievement.title}"`,
           });
           await writeToHistory(
-            `You have completed achievement "${achievement.title}"`,
+            `${appLanguageProvider.translate(
+              'achievements.completedMessage',
+            )} "${achievement.title}"`,
             0,
           );
         }

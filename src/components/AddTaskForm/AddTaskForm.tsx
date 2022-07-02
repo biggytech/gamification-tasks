@@ -2,6 +2,7 @@ import React, { memo, useCallback, useMemo, useState } from 'react';
 import { ILabel, ITaskData, Key } from '../../lib/types';
 import { Stack, TextInput, Button } from '@react-native-material/core';
 import DropDownPicker from 'react-native-dropdown-picker';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface IAddTaskFormProps {
   onSubmit: (label: ITaskData) => void;
@@ -15,7 +16,7 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
     useState<boolean>(false);
 
   const [state, setState] = useState<IAddTaskFormInternalState>({
-    title: 'Task',
+    title: appLanguageProvider.translate('task.name.single'),
     value: 5,
     labelId: labels[0].id,
     completed: false,
@@ -53,7 +54,7 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
     <Stack spacing={4} m={4}>
       <TextInput
         value={state.title}
-        label="Task title"
+        label={appLanguageProvider.translate('general.title')}
         variant="standard"
         onChangeText={handleTitleChange}
         autoFocus
@@ -61,7 +62,7 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
       <TextInput
         value={state.value.toString()}
         keyboardType="number-pad"
-        label="Value (in experience points)"
+        label={appLanguageProvider.translate('general.xpValue')}
         variant="standard"
         onChangeText={handleValueChange}
       />
@@ -75,7 +76,10 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
         setValue={() => {}}
       />
 
-      <Button title="Submit" onPress={handleSubmitPress} />
+      <Button
+        title={appLanguageProvider.translate('general.submit')}
+        onPress={handleSubmitPress}
+      />
     </Stack>
   );
 };

@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
 import RepetitiveTasksList from '../../components/RepetitiveTasksList';
 import AddRepetitiveTaskForm from '../../components/AddRepetitiveTaskForm';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -69,7 +70,9 @@ const RepetitiveTasksModule: ModuleComponent<
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Repetitive Tasks',
+            title: appLanguageProvider.translate(
+              'repetitiveTask.name.multiple',
+            ),
           }}>
           {props => (
             <RepetitiveTasksList
@@ -83,7 +86,12 @@ const RepetitiveTasksModule: ModuleComponent<
         </Stack.Screen>
         <Stack.Screen
           name={screens.AddRepetitiveTaskForm}
-          options={{ title: 'Add a Repetitive Task' }}>
+          options={{
+            title:
+              appLanguageProvider.translate('general.add') +
+              ' ' +
+              appLanguageProvider.translate('repetitiveTask.name.single'),
+          }}>
           {props => (
             <AddRepetitiveTaskForm
               {...props}
@@ -102,7 +110,7 @@ export default asModule<
 >(
   RepetitiveTasksModule,
   {
-    title: 'Repetitive Tasks',
+    title: appLanguageProvider.translate('repetitiveTask.name.multiple'),
     name: 'RepetitiveTasksModule',
   },
   repetitiveTasksDataSource,

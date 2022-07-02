@@ -22,6 +22,7 @@ import SQLite from 'react-native-sqlite-storage';
 import sqLiteConfig from '../../../config/sqlLite';
 import dbScripts from './dbScripts';
 import defaults from '../../../config/defaults';
+import appLanguageProvider from '../../appLanguageProvider';
 
 SQLite.enablePromise(true);
 
@@ -46,7 +47,9 @@ class SQLiteProvider {
           reject(err);
         }
       } else {
-        reject(new Error('The database is not initialized'));
+        reject(
+          new Error(appLanguageProvider.translate('error.dbNotInitialized')),
+        );
       }
     });
   }

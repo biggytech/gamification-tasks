@@ -1,3 +1,4 @@
+import appLanguageProvider from '../data/appLanguageProvider';
 import { IAchievement, Key } from '../lib/types';
 
 type IAchievementWithCondition = Omit<
@@ -13,8 +14,8 @@ type IAchievementWithCondition = Omit<
 const achievements: { [key: Key]: IAchievementWithCondition } = {
   [1]: {
     id: 1,
-    title: 'Reach 10th level',
-    message: 'Reach 10th level to complete this achievement.',
+    title: appLanguageProvider.translate('achievements.1.title'),
+    message: appLanguageProvider.translate('achievements.1.message'),
     condition: {
       level: 10,
       tasks: null,
@@ -22,8 +23,8 @@ const achievements: { [key: Key]: IAchievementWithCondition } = {
   },
   [2]: {
     id: 2,
-    title: 'Complete 10 tasks',
-    message: 'Complete 10 tasks to complete this achievement.',
+    title: appLanguageProvider.translate('achievements.2.title'),
+    message: appLanguageProvider.translate('achievements.2.message'),
     condition: {
       level: null,
       tasks: 10,

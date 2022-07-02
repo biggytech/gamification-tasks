@@ -4,6 +4,7 @@ import { IRepetitiveTask, Key } from '../../lib/types';
 import { IconButton, ListItem, Stack } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface RepetitiveTasksListProps {
   items: IRepetitiveTask[];
@@ -23,7 +24,16 @@ const RepetitiveTasksList: React.FC<RepetitiveTasksListProps> = ({
       {error ? <Text>{error}</Text> : null}
       {!error ? (
         <>
-          <Button title="Add a repetitive task" onPress={onAddPress} />
+          <Button
+            title={
+              appLanguageProvider.translate('general.add') +
+              ' ' +
+              appLanguageProvider
+                .translate('repetitiveTask.name.single')
+                .toLowerCase()
+            }
+            onPress={onAddPress}
+          />
           <FlatList
             data={items}
             renderItem={({ item }) => (

@@ -7,6 +7,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
 import RewardsList from '../../components/RewardsList';
 import AddRewardForm from '../../components/AddRewardForm';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -83,7 +84,7 @@ const RewardsModule: ModuleComponent<
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Rewards',
+            title: appLanguageProvider.translate('reward.name.multiple'),
           }}>
           {props => (
             <RewardsList
@@ -98,7 +99,12 @@ const RewardsModule: ModuleComponent<
         </Stack.Screen>
         <Stack.Screen
           name={screens.AddRewardForm}
-          options={{ title: 'Add a Reward' }}>
+          options={{
+            title:
+              appLanguageProvider.translate('general.add') +
+              ' ' +
+              appLanguageProvider.translate('reward.name.single'),
+          }}>
           {props => (
             <AddRewardForm
               {...props}
@@ -115,7 +121,7 @@ const RewardsModule: ModuleComponent<
 export default asModule<RewardsModuleData, RewardsModuleActions>(
   RewardsModule,
   {
-    title: 'Rewards',
+    title: appLanguageProvider.translate('reward.name.multiple'),
     name: 'RewardsModule',
   },
   rewardsDataSource,

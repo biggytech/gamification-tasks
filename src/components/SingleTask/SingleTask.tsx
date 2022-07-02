@@ -12,6 +12,7 @@ import DraggableFlatList, {
   OpacityDecorator,
 } from 'react-native-draggable-flatlist';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 interface ISingleTaskProps {
   task: ITaskWithAdditions | null;
@@ -67,14 +68,17 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
       {error ? <Text>{error}</Text> : null}
       {!error && internalTask ? (
         <Stack spacing={4} m={4}>
-          <ListItem title="Title" secondaryText={internalTask.title} />
           <ListItem
-            title="Value (in experience points)"
+            title={appLanguageProvider.translate('general.title')}
+            secondaryText={internalTask.title}
+          />
+          <ListItem
+            title={appLanguageProvider.translate('general.xpValue')}
             secondaryText={internalTask.value.toString()}
           />
           {label ? (
             <ListItem
-              title="Category"
+              title={appLanguageProvider.translate('category.name.single')}
               trailing={
                 <View
                   style={[styles.labelColor, { backgroundColor: label.color }]}
@@ -84,10 +88,15 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
             />
           ) : null}
           {!internalTask.completed ? (
-            <Button title="Complete" onPress={onCompletePress} />
+            <Button
+              title={appLanguageProvider.translate('task.complete')}
+              onPress={onCompletePress}
+            />
           ) : null}
 
-          <Text variant="h4">Subtasks</Text>
+          <Text variant="h4">
+            {appLanguageProvider.translate('subtask.name.multiple')}
+          </Text>
 
           {internalTask.completed ? (
             <FlatList
@@ -108,9 +117,7 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
                       icon={props =>
                         item.completed ? (
                           <Icon name="check-outline" {...props} />
-                        ) : (
-                          <Icon name="check-bold" {...props} />
-                        )
+                        ) : null
                       }
                     />
                   }
@@ -153,7 +160,16 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
                 )}
               />
 
-              <Button title="Add a subtask" onPress={onAddSubtaskPress} />
+              <Button
+                title={
+                  appLanguageProvider.translate('general.add') +
+                  ' ' +
+                  appLanguageProvider
+                    .translate('subtask.name.single')
+                    .toLowerCase()
+                }
+                onPress={onAddSubtaskPress}
+              />
             </>
           )}
         </Stack>

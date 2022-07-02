@@ -7,6 +7,7 @@ import AddLabelForm from '../../components/AddLabelForm';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
 import DrawerButton from '../../components/common/DrawerButton';
+import appLanguageProvider from '../../data/appLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,7 +60,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
             headerLeft: () => (
               <DrawerButton onPress={() => navigation.openDrawer()} />
             ),
-            title: 'Categories',
+            title: appLanguageProvider.translate('category.name.multiple'),
           }}>
           {props => (
             <LabelsList
@@ -72,7 +73,12 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
         </Stack.Screen>
         <Stack.Screen
           name={screens.AddLabelForm}
-          options={{ title: 'Add a Category' }}>
+          options={{
+            title:
+              appLanguageProvider.translate('general.add') +
+              ' ' +
+              appLanguageProvider.translate('category.name.single'),
+          }}>
           {props => <AddLabelForm {...props} onSubmit={handleLabelAdd} />}
         </Stack.Screen>
       </Stack.Navigator>
@@ -83,7 +89,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
 export default asModule<LabelsModuleData, LabelsModuleActions>(
   LabelsModule,
   {
-    title: 'Categories',
+    title: appLanguageProvider.translate('category.name.multiple'),
     name: 'LabelsModule',
   },
   labelsDataSource,
