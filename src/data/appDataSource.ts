@@ -20,6 +20,7 @@ import updateAchievements from './handlers/common/updateAchievements';
 import showGlobalMessage from './handlers/common/showGlobalMessage';
 import writeToHistory from './handlers/common/writeToHistory';
 import appLanguageProvider from './appLanguageProvider';
+import appSoundProvider from './appSoundProvider';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -68,6 +69,7 @@ const getNewLevelMessage = (level: number): IGlobalMessage => ({
     'level.name',
   )} ${level} ${appLanguageProvider.translate('level.reached').toLowerCase()}!`,
   message: appLanguageProvider.translate('reward.timeToPick'),
+  soundFile: appSoundProvider.soundFiles.notification_2,
 });
 
 async function appActionHandler(
@@ -308,6 +310,7 @@ async function appActionHandler(
                   type: 'success',
                   title:
                     appLanguageProvider.translate('general.completed') + '!',
+                  soundFile: appSoundProvider.soundFiles.notification_1,
                 },
           );
         }
@@ -409,6 +412,7 @@ async function appActionHandler(
                     type: 'success',
                     title:
                       appLanguageProvider.translate('general.completed') + '!',
+                    soundFile: appSoundProvider.soundFiles.notification_1,
                   },
             );
           }
@@ -468,6 +472,7 @@ async function appActionHandler(
                     type: 'success',
                     title:
                       appLanguageProvider.translate('general.completed') + '!',
+                    soundFile: appSoundProvider.soundFiles.notification_1,
                   },
             );
 

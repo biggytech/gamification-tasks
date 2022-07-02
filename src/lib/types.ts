@@ -114,6 +114,7 @@ export interface IGlobalMessage {
   type: string;
   title: string;
   message?: string;
+  soundFile?: string;
 }
 
 export interface IAchievementData {

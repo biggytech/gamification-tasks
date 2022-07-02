@@ -9,6 +9,7 @@ import { StyleSheet } from 'react-native';
 import asSubscriber from './src/lib/hoc/asSubscriber';
 import appEventsProvider from './src/data/appEventsProvider';
 import { IGlobalMessage } from './src/lib/types';
+import appSoundProvider from './src/data/appSoundProvider';
 
 const styles = StyleSheet.create({
   rootView: {
@@ -49,6 +50,11 @@ export default asSubscriber(
           text1: globalMessage.title,
           text2: globalMessage.message,
         });
+        if (globalMessage.soundFile) {
+          appSoundProvider.play(
+            globalMessage.soundFile as keyof typeof appSoundProvider.soundFiles,
+          );
+        }
       },
     },
   ],

@@ -2,6 +2,7 @@ import achievements from '../../../config/achievements';
 import getTimestamp from '../../../lib/utils/getTimestamp';
 import appLanguageProvider from '../../appLanguageProvider';
 import appRepository from '../../appRepository';
+import appSoundProvider from '../../appSoundProvider';
 import showGlobalMessage from './showGlobalMessage';
 import writeToHistory from './writeToHistory';
 
@@ -39,6 +40,7 @@ async function updateAchievements() {
             message: `${appLanguageProvider.translate(
               'achievements.completedMessage',
             )} "${achievement.title}"`,
+            soundFile: appSoundProvider.soundFiles.notification_3,
           });
           await writeToHistory(
             `${appLanguageProvider.translate(

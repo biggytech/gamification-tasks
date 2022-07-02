@@ -15,13 +15,13 @@ class Events<TEventActions> {
   }
 
   subscribe(
-    eventName: string,
+    eventName: keyof TEventActions,
     handler: (...args: any[]) => any,
   ): ISubscription {
     return this.emitter.addListener(eventName, handler);
   }
 
-  emit(eventName: string, ...args: any[]) {
+  emit(eventName: keyof TEventActions, ...args: any[]) {
     this.emitter.emit(eventName, ...args);
   }
 }
