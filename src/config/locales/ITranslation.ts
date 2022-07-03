@@ -50,6 +50,11 @@ interface ITranslation {
       levelSize: string;
       changeLevelSizeWarning: string;
       editLevelSize: string;
+      downloadBackup: string;
+      backupSaved: string;
+      backupSavedMessage: string;
+      backupNotSaved: string;
+      backupNotSavedMessage: string;
     };
     level: {
       name: string;

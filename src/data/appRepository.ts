@@ -1,5 +1,6 @@
 import {
   IAchievement,
+  IBackupData,
   IHistory,
   IHistoryData,
   ILabel,
@@ -18,71 +19,77 @@ import {
   Key,
   LevelSize,
 } from '../lib/types';
-import SQLiteProvider from './providers/SQLiteProvider';
+import DatabaseProvider from './providers/DatabaseProvider';
+
+const appDatabaseProvider = new DatabaseProvider();
 
 const appRepository = {
   async prepare(): Promise<boolean> {
     try {
-      await SQLiteProvider.prepare();
+      await appDatabaseProvider.prepare();
       return true;
     } catch (err) {
       console.log('ERR', err);
       return false;
     }
   },
-  getLabels: async () => await SQLiteProvider.getLabels(),
+  getLabels: async () => await appDatabaseProvider.getLabels(),
   addLabel: async (label: ILabelData): Promise<ILabel> =>
-    await SQLiteProvider.addLabel(label),
-  deleteDatabase: async () => await SQLiteProvider.deleteDatabase(),
+    await appDatabaseProvider.addLabel(label),
+  deleteDatabase: async () => await appDatabaseProvider.deleteDatabase(),
+  getDbSize: async (): Promise<number> => await appDatabaseProvider.getDbSize(),
   getSettings: async (): Promise<ISettings> =>
-    await SQLiteProvider.getSettings(),
+    await appDatabaseProvider.getSettings(),
   changeLevelSize: async (levelSize: LevelSize) =>
-    await SQLiteProvider.changeLevelSize(levelSize),
+    await appDatabaseProvider.changeLevelSize(levelSize),
   getRepetitiveTasks: async (): Promise<IRepetitiveTask[]> =>
-    await SQLiteProvider.getRepetitiveTasks(),
+    await appDatabaseProvider.getRepetitiveTasks(),
   addRepetitiveTask: async (task: IRepetitiveTaskData) =>
-    await SQLiteProvider.addRepetitiveTask(task),
-  getTasks: async (): Promise<ITask[]> => await SQLiteProvider.getTasks(),
-  addTask: async (task: ITaskData) => await SQLiteProvider.addTask(task),
-  getUnusedLabels: async () => await SQLiteProvider.getUnusedLabels(),
+    await appDatabaseProvider.addRepetitiveTask(task),
+  getTasks: async (): Promise<ITask[]> => await appDatabaseProvider.getTasks(),
+  addTask: async (task: ITaskData) => await appDatabaseProvider.addTask(task),
+  getUnusedLabels: async () => await appDatabaseProvider.getUnusedLabels(),
   getTaskWithAdditions: async (id: Key): Promise<ITaskWithAdditions | null> =>
-    await SQLiteProvider.getTaskWithAdditions(id),
+    await appDatabaseProvider.getTaskWithAdditions(id),
   addSubtask: async (subtask: ISubtaskData) =>
-    await SQLiteProvider.addSubtask(subtask),
-  getRewards: async (): Promise<IReward[]> => await SQLiteProvider.getRewards(),
+    await appDatabaseProvider.addSubtask(subtask),
+  getRewards: async (): Promise<IReward[]> =>
+    await appDatabaseProvider.getRewards(),
   addReward: async (reward: IRewardData): Promise<IReward> =>
-    await SQLiteProvider.addReward(reward),
+    await appDatabaseProvider.addReward(reward),
   getMaxRewardsLevel: async (): Promise<number | null> =>
-    await SQLiteProvider.getMaxRewardsLevel(),
-  getStats: async (): Promise<IStats> => await SQLiteProvider.getStats(),
+    await appDatabaseProvider.getMaxRewardsLevel(),
+  getStats: async (): Promise<IStats> => await appDatabaseProvider.getStats(),
   changeStats: async (stats: IStats): Promise<IStats> =>
-    await SQLiteProvider.changeStats(stats),
+    await appDatabaseProvider.changeStats(stats),
   getHistory: async (): Promise<IHistory[]> =>
-    await SQLiteProvider.getHistory(),
+    await appDatabaseProvider.getHistory(),
   addHistory: async (history: IHistoryData): Promise<IHistory> =>
-    await SQLiteProvider.addHistory(history),
+    await appDatabaseProvider.addHistory(history),
   clearOldestHistoryItems: async (countToPreserve: number): Promise<void> =>
-    await SQLiteProvider.clearOldestHistoryItems(countToPreserve),
+    await appDatabaseProvider.clearOldestHistoryItems(countToPreserve),
   getRepetitiveTask: async (id: Key): Promise<IRepetitiveTask | null> =>
-    await SQLiteProvider.getRepetitiveTask(id),
+    await appDatabaseProvider.getRepetitiveTask(id),
   getMaxSubtasksPosition: async (taskId: Key): Promise<number | null> =>
-    await SQLiteProvider.getMaxSubtasksPosition(taskId),
+    await appDatabaseProvider.getMaxSubtasksPosition(taskId),
   changeSubtask: async (subtask: ISubtask): Promise<ISubtask> =>
-    await SQLiteProvider.changeSubtask(subtask),
+    await appDatabaseProvider.changeSubtask(subtask),
   pickReward: async (id: Key): Promise<IReward> =>
-    await SQLiteProvider.pickReward(id),
+    await appDatabaseProvider.pickReward(id),
   changeTask: async (task: ITask): Promise<ITask> =>
-    await SQLiteProvider.changeTask(task),
+    await appDatabaseProvider.changeTask(task),
   getAchievements: async (): Promise<IAchievement[]> =>
-    await SQLiteProvider.getAchievements(),
+    await appDatabaseProvider.getAchievements(),
   getNotCompletedAchievements: async (): Promise<IAchievement[]> =>
-    await SQLiteProvider.getNotCompletedAchievements(),
+    await appDatabaseProvider.getNotCompletedAchievements(),
   changeAchievement: async (achievement: IAchievement): Promise<IAchievement> =>
-    await SQLiteProvider.changeAchievement(achievement),
+    await appDatabaseProvider.changeAchievement(achievement),
   getNotCompletedTasks: async (): Promise<ITask[]> =>
-    await SQLiteProvider.getNotCompletedTasks(),
+    await appDatabaseProvider.getNotCompletedTasks(),
   getCompletedTasks: async (): Promise<ITask[]> =>
-    await SQLiteProvider.getCompletedTasks(),
+    await appDatabaseProvider.getCompletedTasks(),
+  getBackupData: async (): Promise<IBackupData> =>
+    await appDatabaseProvider.getBackupData(),
 };
 
 export default appRepository;

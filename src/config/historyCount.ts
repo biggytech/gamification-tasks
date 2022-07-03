@@ -1,0 +1,3 @@
+const ALLOWED_HISTORY_COUNT = 100;
+
+export default ALLOWED_HISTORY_COUNT;

@@ -12,12 +12,14 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		24B0959C28706017003DEBA1 /* notification_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B0959928706016003DEBA1 /* notification_1.mp3 */; };
-		24B0959D28706017003DEBA1 /* notification_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B0959928706016003DEBA1 /* notification_1.mp3 */; };
-		24B0959E28706017003DEBA1 /* notification_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B0959A28706016003DEBA1 /* notification_2.mp3 */; };
-		24B0959F28706017003DEBA1 /* notification_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B0959A28706016003DEBA1 /* notification_2.mp3 */; };
-		24B095A028706017003DEBA1 /* notification_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B0959B28706016003DEBA1 /* notification_3.mp3 */; };
-		24B095A128706017003DEBA1 /* notification_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B0959B28706016003DEBA1 /* notification_3.mp3 */; };
+		24B37C91287214A600EA843E /* notification_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B37C8D287214A600EA843E /* notification_4.mp3 */; };
+		24B37C92287214A600EA843E /* notification_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B37C8D287214A600EA843E /* notification_4.mp3 */; };
+		24B37C93287214A600EA843E /* notification_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B37C8E287214A600EA843E /* notification_2.mp3 */; };
+		24B37C94287214A600EA843E /* notification_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B37C8E287214A600EA843E /* notification_2.mp3 */; };
+		24B37C95287214A600EA843E /* notification_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B37C8F287214A600EA843E /* notification_3.mp3 */; };
+		24B37C96287214A600EA843E /* notification_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B37C8F287214A600EA843E /* notification_3.mp3 */; };
+		24B37C97287214A600EA843E /* notification_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B37C90287214A600EA843E /* notification_1.mp3 */; };
+		24B37C98287214A600EA843E /* notification_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 24B37C90287214A600EA843E /* notification_1.mp3 */; };
 		7699B88040F8A987B510C191 /* libPods-GamificationTasks-GamificationTasksTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-GamificationTasks-GamificationTasksTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -43,9 +45,10 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = GamificationTasks/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = GamificationTasks/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-GamificationTasks-GamificationTasksTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GamificationTasks-GamificationTasksTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		24B0959928706016003DEBA1 /* notification_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = notification_1.mp3; path = ../src/assets/notification_1.mp3; sourceTree = "<group>"; };
-		24B0959A28706016003DEBA1 /* notification_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = notification_2.mp3; path = ../src/assets/notification_2.mp3; sourceTree = "<group>"; };
-		24B0959B28706016003DEBA1 /* notification_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = notification_3.mp3; path = ../src/assets/notification_3.mp3; sourceTree = "<group>"; };
+		24B37C8D287214A600EA843E /* notification_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = notification_4.mp3; path = ../src/assets/notification_4.mp3; sourceTree = "<group>"; };
+		24B37C8E287214A600EA843E /* notification_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = notification_2.mp3; path = ../src/assets/notification_2.mp3; sourceTree = "<group>"; };
+		24B37C8F287214A600EA843E /* notification_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = notification_3.mp3; path = ../src/assets/notification_3.mp3; sourceTree = "<group>"; };
+		24B37C90287214A600EA843E /* notification_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = notification_1.mp3; path = ../src/assets/notification_1.mp3; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-GamificationTasks.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamificationTasks.debug.xcconfig"; path = "Target Support Files/Pods-GamificationTasks/Pods-GamificationTasks.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-GamificationTasks.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamificationTasks.release.xcconfig"; path = "Target Support Files/Pods-GamificationTasks/Pods-GamificationTasks.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-GamificationTasks-GamificationTasksTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamificationTasks-GamificationTasksTests.debug.xcconfig"; path = "Target Support Files/Pods-GamificationTasks-GamificationTasksTests/Pods-GamificationTasks-GamificationTasksTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -125,9 +128,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				24B0959928706016003DEBA1 /* notification_1.mp3 */,
-				24B0959A28706016003DEBA1 /* notification_2.mp3 */,
-				24B0959B28706016003DEBA1 /* notification_3.mp3 */,
+				24B37C90287214A600EA843E /* notification_1.mp3 */,
+				24B37C8E287214A600EA843E /* notification_2.mp3 */,
+				24B37C8F287214A600EA843E /* notification_3.mp3 */,
+				24B37C8D287214A600EA843E /* notification_4.mp3 */,
 				13B07FAE1A68108700A75B9A /* GamificationTasks */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* GamificationTasksTests */,
@@ -247,9 +251,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24B0959F28706017003DEBA1 /* notification_2.mp3 in Resources */,
-				24B0959D28706017003DEBA1 /* notification_1.mp3 in Resources */,
-				24B095A128706017003DEBA1 /* notification_3.mp3 in Resources */,
+				24B37C94287214A600EA843E /* notification_2.mp3 in Resources */,
+				24B37C92287214A600EA843E /* notification_4.mp3 in Resources */,
+				24B37C96287214A600EA843E /* notification_3.mp3 in Resources */,
+				24B37C98287214A600EA843E /* notification_1.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -257,10 +262,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				24B0959E28706017003DEBA1 /* notification_2.mp3 in Resources */,
-				24B095A028706017003DEBA1 /* notification_3.mp3 in Resources */,
+				24B37C93287214A600EA843E /* notification_2.mp3 in Resources */,
+				24B37C97287214A600EA843E /* notification_1.mp3 in Resources */,
+				24B37C95287214A600EA843E /* notification_3.mp3 in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				24B0959C28706017003DEBA1 /* notification_1.mp3 in Resources */,
+				24B37C91287214A600EA843E /* notification_4.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

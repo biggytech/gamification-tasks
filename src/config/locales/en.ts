@@ -47,12 +47,17 @@ const enTranslation: ITranslation = {
     },
     settings: {
       name: 'Settings',
-      databaseSize: 'Database size',
+      databaseSize: 'Database size (in bytes)',
       deleteDatabase: 'Delete database',
       levelSize: 'XP in level',
       changeLevelSizeWarning: `Changing this setting will reset your current level progress. 
       Your level and gained XP will stay the same, but the level progress bar will be set to zero. Are you sure to proceed?`,
       editLevelSize: 'Edit Level Size',
+      downloadBackup: 'Download Backup',
+      backupSaved: 'Backup was saved',
+      backupSavedMessage: 'Backup file was saved in Documents directory',
+      backupNotSaved: 'Backup was not saved',
+      backupNotSavedMessage: 'An error occured during saving process',
     },
     level: {
       name: 'Level',

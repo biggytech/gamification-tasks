@@ -1,5 +1,6 @@
 import {
   IAchievement,
+  IBackupData,
   IHistory,
   IHistoryData,
   ILabel,
@@ -28,7 +29,7 @@ SQLite.enablePromise(true);
 
 const SQLiteLanguageProvider = appLanguageProvider;
 
-class SQLiteProvider {
+class DatabaseProvider {
   db: any = null;
 
   async executeQuery(sql: string, values?: any[]): Promise<any[]> {
@@ -92,6 +93,61 @@ class SQLiteProvider {
     await this.prepare();
   }
 
+  async getDbSize(): Promise<number> {
+    const tables = await this.executeQuery(
+      "SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%'",
+    );
+
+    let sizeInBytes = 0;
+
+    for (const table of tables) {
+      const tableName = table.name;
+      const columns = await this.executeQuery(
+        `PRAGMA table_info(${tableName})`,
+      );
+
+      // console.log('columns', columns);
+
+      const dataLength = (
+        await this.executeQuery(
+          `SELECT ${columns
+            .map(column => `length(${column.name}) as ${column.name}`)
+            .join(',')} FROM ${tableName}`,
+        )
+      ).reduce((sum, row) => {
+        console.log('row', row);
+        let rowSum = 0;
+
+        for (const columnName in row) {
+          if (typeof row[columnName] === 'number') {
+            const columnType = columns.find(
+              column => column.name === columnName,
+            );
+            // console.log('columnType', columnType)
+
+            // convert length size to bytes
+            switch (columnType?.type) {
+              case 'integer':
+                rowSum += row[columnName] * 4;
+                break;
+              case 'text':
+                rowSum += row[columnName] * 4;
+                break;
+              default:
+                break;
+            }
+          }
+        }
+
+        return sum + rowSum;
+      }, 0);
+
+      // console.log('DATA LENGTH', tableName, dataLength);
+      sizeInBytes += dataLength;
+    }
+    return sizeInBytes;
+  }
+
   async getLabels(): Promise<ILabel[]> {
     return await this.executeQuery('SELECT * from labels');
   }
@@ -126,7 +182,7 @@ class SQLiteProvider {
   }
 
   async getRepetitiveTasks(): Promise<IRepetitiveTask[]> {
-    return await this.executeQuery('SELECT * from repetitiveTasks');
+    return await this.executeQuery('SELECT * FROM repetitiveTasks');
   }
 
   async addRepetitiveTask(task: IRepetitiveTaskData) {
@@ -216,6 +272,14 @@ class SQLiteProvider {
     });
 
     return task;
+  }
+
+  async getSubtasks(): Promise<ISubtask[]> {
+    const subtasks = await this.executeQuery('SELECT * FROM subtasks');
+    return subtasks.map(subtask => ({
+      ...subtask,
+      completed: Boolean(subtask.completed),
+    }));
   }
 
   async getMaxSubtasksPosition(taskId: Key): Promise<number | null> {
@@ -412,6 +476,30 @@ class SQLiteProvider {
       completed: Boolean(achievement.completed),
     }));
   }
+
+  async getBackupData(): Promise<IBackupData> {
+    const labels = await this.getLabels();
+    const tasks = await this.getTasks();
+    const subtasks = await this.getSubtasks();
+    const repetitiveTasks = await this.getRepetitiveTasks();
+    const settings = await this.getSettings();
+    const rewards = await this.getRewards();
+    const stats = await this.getStats();
+    const history = await this.getHistory();
+    const achievements = await this.getAchievements();
+
+    return {
+      labels,
+      tasks,
+      subtasks,
+      repetitiveTasks,
+      settings,
+      rewards,
+      stats,
+      history,
+      achievements,
+    };
+  }
 }
 
-export default new SQLiteProvider();
+export default DatabaseProvider;

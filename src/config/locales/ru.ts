@@ -47,12 +47,17 @@ const ruTranslation: ITranslation = {
     },
     settings: {
       name: 'Настройки',
-      databaseSize: 'Размер базы данных',
+      databaseSize: 'Размер базы данных (в байтах)',
       deleteDatabase: 'Удалить базу данных',
       levelSize: 'XP в уровне',
       changeLevelSizeWarning: `Изменение этой настройки сбросит текущий прогресс уровня. 
       Ваш уровень и очки опыта останутся теми же, но прогресс бар текущего уровня будет сброшен в ноль. Вы точно хотите продолжить?`,
       editLevelSize: 'Редактировать размер уровня',
+      downloadBackup: 'Скачать бэкап',
+      backupSaved: 'Бэкап был сохранен',
+      backupSavedMessage: 'Файл бэкапа был сохранен в папку Документы',
+      backupNotSaved: 'Бэкап не был сохранен',
+      backupNotSavedMessage: 'Произошла ошибка во время сохранения файла',
     },
     level: {
       name: 'Уровень',

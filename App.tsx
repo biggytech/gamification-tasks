@@ -50,11 +50,9 @@ export default asSubscriber(
           text1: globalMessage.title,
           text2: globalMessage.message,
         });
-        if (globalMessage.soundFile) {
-          appSoundProvider.play(
-            globalMessage.soundFile as keyof typeof appSoundProvider.soundFiles,
-          );
-        }
+        appSoundProvider.play(
+          globalMessage.soundFile as keyof typeof appSoundProvider.soundFiles,
+        );
       },
     },
   ],

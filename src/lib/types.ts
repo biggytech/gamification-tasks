@@ -110,11 +110,13 @@ export interface IHistory extends IHistoryData {
   id: Key;
 }
 
+export type IGlobalMessageType = 'success' | 'error';
+
 export interface IGlobalMessage {
-  type: string;
+  type: IGlobalMessageType;
   title: string;
   message?: string;
-  soundFile?: string;
+  soundFile: string;
 }
 
 export interface IAchievementData {
@@ -136,3 +138,23 @@ export interface ILanguageProvider {
 export type IWithLanguageProviderProps<TComponentProps> = TComponentProps & {
   languageProvider: ILanguageProvider;
 };
+
+export interface IFileSystemProvider<TLocations> {
+  saveFileToSharedDirectory: (
+    location: keyof TLocations,
+    filename: string,
+    fileContents: string,
+  ) => Promise<boolean>;
+}
+
+export interface IBackupData {
+  labels: ILabel[];
+  tasks: ITask[];
+  subtasks: ISubtask[];
+  repetitiveTasks: IRepetitiveTask[];
+  settings: ISettings;
+  rewards: IReward[];
+  stats: IStats;
+  history: IHistory[];
+  achievements: IAchievement[];
+}

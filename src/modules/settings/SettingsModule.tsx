@@ -83,6 +83,10 @@ const SettingsModule: ModuleComponent<
     );
   }, [navigation]);
 
+  const handleDownloadBackupPress = useCallback(() => {
+    callDispatch(actions.DOWNLOAD_BACKUP_FILE);
+  }, [actions.DOWNLOAD_BACKUP_FILE, callDispatch]);
+
   return (
     <>
       <Stack.Navigator>
@@ -101,6 +105,7 @@ const SettingsModule: ModuleComponent<
               {...props}
               settings={settings}
               onLevelSizePress={handleLevelSizePress}
+              onDownloadBackupPress={handleDownloadBackupPress}
             />
           )}
         </Stack.Screen>

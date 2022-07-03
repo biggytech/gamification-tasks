@@ -21,6 +21,7 @@ import showGlobalMessage from './handlers/common/showGlobalMessage';
 import writeToHistory from './handlers/common/writeToHistory';
 import appLanguageProvider from './appLanguageProvider';
 import appSoundProvider from './appSoundProvider';
+import loadBackupFile from './handlers/data/loadBackupFile';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -501,6 +502,18 @@ async function appActionHandler(
         };
         break;
       }
+      case ACTIONS.DOWNLOAD_BACKUP_FILE: {
+        dataToReturn = data;
+        await loadBackupFile();
+        break;
+      }
+      case ACTIONS.GET_DB_SIZE:
+        const dbSize = await appRepository.getDbSize();
+        dataToReturn = {
+          ...data,
+          dbSize,
+        };
+        break;
       default:
         dataToReturn = data;
     }
@@ -509,6 +522,7 @@ async function appActionHandler(
 
     return dataToReturn;
   } catch (err: any) {
+    console.log('ERR', err);
     return {
       ...data,
       error: err?.message ?? null,

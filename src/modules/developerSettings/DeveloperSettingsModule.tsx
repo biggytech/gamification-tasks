@@ -34,7 +34,7 @@ const screens = {
   DeveloperSettings: 'DeveloperSettings',
 };
 
-type DeveloperSettingsModuleData = Pick<IAppData, 'dbSize'>;
+type DeveloperSettingsModuleData = Pick<IAppData, 'dbSize' | 'error'>;
 type DeveloperSettingsModuleActions =
   keyof typeof developerSettingsDataSource.actions;
 
@@ -42,7 +42,7 @@ const DeveloperSettingsModule: ModuleComponent<
   DeveloperSettingsModuleData,
   DeveloperSettingsModuleActions
 > = ({ data, callDispatch, actions, navigation }) => {
-  const { dbSize } = data;
+  const { dbSize, error } = data;
 
   useFocusEffect(
     useCallback(() => {
@@ -74,6 +74,7 @@ const DeveloperSettingsModule: ModuleComponent<
               {...props}
               dbSize={dbSize}
               onDeleteDatabase={handleDeleteDatabase}
+              error={error}
             />
           )}
         </Stack.Screen>
