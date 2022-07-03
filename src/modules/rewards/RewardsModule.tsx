@@ -4,14 +4,37 @@ import { IRewardData, Key, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
-import DrawerButton from '../../components/common/DrawerButton';
-import RewardsList from '../../components/RewardsList';
-import AddRewardForm from '../../components/AddRewardForm';
+import DrawerButton, {
+  IDrawerButtonProps,
+} from '../../components/common/DrawerButton';
+import RewardsList, { IRewardsListProps } from '../../components/RewardsList';
+import AddRewardForm, {
+  IAddRewardFormProps,
+} from '../../components/AddRewardForm';
 import appLanguageProvider from '../../data/appLanguageProvider';
+import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
 const rewardsDataSource = appDataSource;
+const rewardsLanguageProvider = appLanguageProvider;
+
+const AddRewardFormWithLanguageProvider =
+  withLanguageProvider<IAddRewardFormProps>(
+    AddRewardForm,
+    rewardsLanguageProvider,
+  );
+
+const DrawerButtonWithLanguageProvider =
+  withLanguageProvider<IDrawerButtonProps>(
+    DrawerButton,
+    rewardsLanguageProvider,
+  );
+
+const RewardsListWithLanguageProvider = withLanguageProvider<IRewardsListProps>(
+  RewardsList,
+  rewardsLanguageProvider,
+);
 
 const screens = {
   RewardsList: 'RewardsList',
@@ -82,12 +105,14 @@ const RewardsModule: ModuleComponent<
           name={screens.RewardsList}
           options={{
             headerLeft: () => (
-              <DrawerButton onPress={() => navigation.openDrawer()} />
+              <DrawerButtonWithLanguageProvider
+                onPress={() => navigation.openDrawer()}
+              />
             ),
-            title: appLanguageProvider.translate('reward.name.multiple'),
+            title: rewardsLanguageProvider.translate('reward.name.multiple'),
           }}>
           {props => (
-            <RewardsList
+            <RewardsListWithLanguageProvider
               {...props}
               items={rewards}
               error={error}
@@ -101,12 +126,12 @@ const RewardsModule: ModuleComponent<
           name={screens.AddRewardForm}
           options={{
             title:
-              appLanguageProvider.translate('general.add') +
+              rewardsLanguageProvider.translate('general.add') +
               ' ' +
-              appLanguageProvider.translate('reward.name.single'),
+              rewardsLanguageProvider.translate('reward.name.single'),
           }}>
           {props => (
-            <AddRewardForm
+            <AddRewardFormWithLanguageProvider
               {...props}
               onSubmit={handleAddReward}
               level={nextRewardLevel}
@@ -121,7 +146,7 @@ const RewardsModule: ModuleComponent<
 export default asModule<RewardsModuleData, RewardsModuleActions>(
   RewardsModule,
   {
-    title: appLanguageProvider.translate('reward.name.multiple'),
+    title: rewardsLanguageProvider.translate('reward.name.multiple'),
     name: 'RewardsModule',
   },
   rewardsDataSource,

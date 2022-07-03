@@ -1,9 +1,8 @@
 import React, { memo, useCallback, useState } from 'react';
-import { ISubtaskData, Key } from '../../lib/types';
+import { ISubtaskData, IWithLanguageProviderProps, Key } from '../../lib/types';
 import { Stack, TextInput, Button, Text } from '@react-native-material/core';
-import appLanguageProvider from '../../data/appLanguageProvider';
 
-interface IAddSubtaskFormProps {
+export interface IAddSubtaskFormProps {
   taskId: Key | null;
   onSubmit: (task: Omit<ISubtaskData, 'position'>) => void;
   error: string | null;
@@ -14,13 +13,11 @@ interface IAddSubtaskFormInternalState
   taskId: Key | null;
 }
 
-const AddSubtaskForm: React.FC<IAddSubtaskFormProps> = ({
-  taskId,
-  onSubmit,
-  error,
-}) => {
+const AddSubtaskForm: React.FC<
+  IWithLanguageProviderProps<IAddSubtaskFormProps>
+> = ({ taskId, onSubmit, error, languageProvider }) => {
   const [state, setState] = useState<IAddSubtaskFormInternalState>({
-    title: appLanguageProvider.translate('subtask.name.single'),
+    title: languageProvider.translate('subtask.name.single'),
     value: 5,
     taskId,
     completed: false,
@@ -52,7 +49,7 @@ const AddSubtaskForm: React.FC<IAddSubtaskFormProps> = ({
         <>
           <TextInput
             value={state.title}
-            label={appLanguageProvider.translate('general.title')}
+            label={languageProvider.translate('general.title')}
             variant="standard"
             onChangeText={handleTitleChange}
             autoFocus
@@ -60,13 +57,13 @@ const AddSubtaskForm: React.FC<IAddSubtaskFormProps> = ({
           <TextInput
             value={state.value.toString()}
             keyboardType="number-pad"
-            label={appLanguageProvider.translate('general.xpValue')}
+            label={languageProvider.translate('general.xpValue')}
             variant="standard"
             onChangeText={handleValueChange}
           />
 
           <Button
-            title={appLanguageProvider.translate('general.submit')}
+            title={languageProvider.translate('general.submit')}
             onPress={handleSubmitPress}
           />
         </>

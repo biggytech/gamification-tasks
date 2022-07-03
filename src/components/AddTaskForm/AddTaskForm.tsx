@@ -1,22 +1,30 @@
 import React, { memo, useCallback, useMemo, useState } from 'react';
-import { ILabel, ITaskData, Key } from '../../lib/types';
+import {
+  ILabel,
+  ITaskData,
+  IWithLanguageProviderProps,
+  Key,
+} from '../../lib/types';
 import { Stack, TextInput, Button } from '@react-native-material/core';
 import DropDownPicker from 'react-native-dropdown-picker';
-import appLanguageProvider from '../../data/appLanguageProvider';
 
-interface IAddTaskFormProps {
+export interface IAddTaskFormProps {
   onSubmit: (label: ITaskData) => void;
   labels: ILabel[];
 }
 
 interface IAddTaskFormInternalState extends ITaskData {}
 
-const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
+const AddTaskForm: React.FC<IWithLanguageProviderProps<IAddTaskFormProps>> = ({
+  onSubmit,
+  labels,
+  languageProvider,
+}) => {
   const [isLabelDropdownOpen, setIsLabelDropdownOpen] =
     useState<boolean>(false);
 
   const [state, setState] = useState<IAddTaskFormInternalState>({
-    title: appLanguageProvider.translate('task.name.single'),
+    title: languageProvider.translate('task.name.single'),
     value: 5,
     labelId: labels[0].id,
     completed: false,
@@ -54,7 +62,7 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
     <Stack spacing={4} m={4}>
       <TextInput
         value={state.title}
-        label={appLanguageProvider.translate('general.title')}
+        label={languageProvider.translate('general.title')}
         variant="standard"
         onChangeText={handleTitleChange}
         autoFocus
@@ -62,7 +70,7 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
       <TextInput
         value={state.value.toString()}
         keyboardType="number-pad"
-        label={appLanguageProvider.translate('general.xpValue')}
+        label={languageProvider.translate('general.xpValue')}
         variant="standard"
         onChangeText={handleValueChange}
       />
@@ -77,7 +85,7 @@ const AddTaskForm: React.FC<IAddTaskFormProps> = ({ onSubmit, labels }) => {
       />
 
       <Button
-        title={appLanguageProvider.translate('general.submit')}
+        title={languageProvider.translate('general.submit')}
         onPress={handleSubmitPress}
       />
     </Stack>

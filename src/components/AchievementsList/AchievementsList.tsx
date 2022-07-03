@@ -1,20 +1,18 @@
 import React, { memo } from 'react';
 import { FlatList, Text } from 'react-native';
-import { IAchievement } from '../../lib/types';
+import { IAchievement, IWithLanguageProviderProps } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import formatDate from '../../lib/utils/formatDate';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import appLanguageProvider from '../../data/appLanguageProvider';
 
-interface AchievementsListProps {
+export interface AchievementsListProps {
   items: IAchievement[];
   error: null | string;
 }
 
-const AchievementsList: React.FC<AchievementsListProps> = ({
-  error,
-  items,
-}) => {
+const AchievementsList: React.FC<
+  IWithLanguageProviderProps<AchievementsListProps>
+> = ({ error, items, languageProvider }) => {
   return (
     <>
       {error ? <Text>{error}</Text> : null}
@@ -28,7 +26,7 @@ const AchievementsList: React.FC<AchievementsListProps> = ({
                   title={item.title}
                   secondaryText={
                     item.completed && item.timestamp !== null
-                      ? `${item.message}\n${appLanguageProvider.translate(
+                      ? `${item.message}\n${languageProvider.translate(
                           'general.completedAt',
                         )}: ${formatDate(item.timestamp)}`
                       : item.message

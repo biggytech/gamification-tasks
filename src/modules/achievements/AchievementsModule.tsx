@@ -4,13 +4,31 @@ import { ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
-import DrawerButton from '../../components/common/DrawerButton';
-import AchievementsList from '../../components/AchievementsList';
+import DrawerButton, {
+  IDrawerButtonProps,
+} from '../../components/common/DrawerButton';
+import AchievementsList, {
+  AchievementsListProps,
+} from '../../components/AchievementsList';
 import appLanguageProvider from '../../data/appLanguageProvider';
+import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
 const achieventsModuleDataSource = appDataSource;
+const achievementsLanguageProvider = appLanguageProvider;
+
+const AchievementsListWithLanguageProvider =
+  withLanguageProvider<AchievementsListProps>(
+    AchievementsList,
+    achievementsLanguageProvider,
+  );
+
+const DrawerButtonWithLanguageProvider =
+  withLanguageProvider<IDrawerButtonProps>(
+    DrawerButton,
+    achievementsLanguageProvider,
+  );
 
 const screens = {
   AchievementsList: 'AchievementsList',
@@ -45,12 +63,20 @@ const AchievementsModule: ModuleComponent<
           name={screens.AchievementsList}
           options={{
             headerLeft: () => (
-              <DrawerButton onPress={() => navigation.openDrawer()} />
+              <DrawerButtonWithLanguageProvider
+                onPress={() => navigation.openDrawer()}
+              />
             ),
-            title: appLanguageProvider.translate('achievements.name.multiple'),
+            title: achievementsLanguageProvider.translate(
+              'achievements.name.multiple',
+            ),
           }}>
           {props => (
-            <AchievementsList {...props} items={achievements} error={error} />
+            <AchievementsListWithLanguageProvider
+              {...props}
+              items={achievements}
+              error={error}
+            />
           )}
         </Stack.Screen>
       </Stack.Navigator>
@@ -61,7 +87,7 @@ const AchievementsModule: ModuleComponent<
 export default asModule<AchievementsModuleData, AchievementsModuleActions>(
   AchievementsModule,
   {
-    title: appLanguageProvider.translate('achievements.name.multiple'),
+    title: achievementsLanguageProvider.translate('achievements.name.multiple'),
     name: 'AchievementsModule',
   },
   achieventsModuleDataSource,

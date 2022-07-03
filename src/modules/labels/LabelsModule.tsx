@@ -1,17 +1,40 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import LabelsList from '../../components/LabelsList';
+import LabelsList, { ILabelsListProps } from '../../components/LabelsList';
 import { ILabelData, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
-import AddLabelForm from '../../components/AddLabelForm';
+import AddLabelForm, {
+  IAddLabelFormProps,
+} from '../../components/AddLabelForm';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
-import DrawerButton from '../../components/common/DrawerButton';
+import DrawerButton, {
+  IDrawerButtonProps,
+} from '../../components/common/DrawerButton';
 import appLanguageProvider from '../../data/appLanguageProvider';
+import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
 const labelsDataSource = appDataSource;
+const labelsLanguageProvider = appLanguageProvider;
+
+const AddLabelFormWithLanguageProvider =
+  withLanguageProvider<IAddLabelFormProps>(
+    AddLabelForm,
+    labelsLanguageProvider,
+  );
+
+const DrawerButtonWithLanguageProvider =
+  withLanguageProvider<IDrawerButtonProps>(
+    DrawerButton,
+    labelsLanguageProvider,
+  );
+
+const LabelsListWithLanguageProvider = withLanguageProvider<ILabelsListProps>(
+  LabelsList,
+  labelsLanguageProvider,
+);
 
 const screens = {
   LabelsList: 'LabelsList',
@@ -58,12 +81,14 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
           name={screens.LabelsList}
           options={{
             headerLeft: () => (
-              <DrawerButton onPress={() => navigation.openDrawer()} />
+              <DrawerButtonWithLanguageProvider
+                onPress={() => navigation.openDrawer()}
+              />
             ),
-            title: appLanguageProvider.translate('category.name.multiple'),
+            title: labelsLanguageProvider.translate('category.name.multiple'),
           }}>
           {props => (
-            <LabelsList
+            <LabelsListWithLanguageProvider
               {...props}
               error={error}
               items={labels}
@@ -75,11 +100,16 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
           name={screens.AddLabelForm}
           options={{
             title:
-              appLanguageProvider.translate('general.add') +
+              labelsLanguageProvider.translate('general.add') +
               ' ' +
-              appLanguageProvider.translate('category.name.single'),
+              labelsLanguageProvider.translate('category.name.single'),
           }}>
-          {props => <AddLabelForm {...props} onSubmit={handleLabelAdd} />}
+          {props => (
+            <AddLabelFormWithLanguageProvider
+              {...props}
+              onSubmit={handleLabelAdd}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </>
@@ -89,7 +119,7 @@ const LabelsModule: ModuleComponent<LabelsModuleData, LabelsModuleActions> = ({
 export default asModule<LabelsModuleData, LabelsModuleActions>(
   LabelsModule,
   {
-    title: appLanguageProvider.translate('category.name.multiple'),
+    title: labelsLanguageProvider.translate('category.name.multiple'),
     name: 'LabelsModule',
   },
   labelsDataSource,

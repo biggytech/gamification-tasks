@@ -1,1 +1,1 @@
-export { default } from './AddSubtaskForm';
+export { default, type IAddSubtaskFormProps } from './AddSubtaskForm';

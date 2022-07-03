@@ -1,15 +1,17 @@
 import React from 'react';
 import { Button } from '@react-native-material/core';
-import appLanguageProvider from '../../data/appLanguageProvider';
+import { IWithLanguageProviderProps } from '../../lib/types';
 
-interface IDrawerButtonProps {
+export interface IDrawerButtonProps {
   onPress: () => void;
 }
 
-const DrawerButton: React.FC<IDrawerButtonProps> = ({ onPress }) => {
+const DrawerButton: React.FC<
+  IWithLanguageProviderProps<IDrawerButtonProps>
+> = ({ onPress, languageProvider }) => {
   return (
     <Button
-      title={appLanguageProvider.translate('general.menu')}
+      title={languageProvider.translate('general.menu')}
       variant="text"
       onPress={onPress}
     />

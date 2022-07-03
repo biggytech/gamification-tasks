@@ -26,6 +26,8 @@ import appLanguageProvider from '../../appLanguageProvider';
 
 SQLite.enablePromise(true);
 
+const SQLiteLanguageProvider = appLanguageProvider;
+
 class SQLiteProvider {
   db: any = null;
 
@@ -48,7 +50,7 @@ class SQLiteProvider {
         }
       } else {
         reject(
-          new Error(appLanguageProvider.translate('error.dbNotInitialized')),
+          new Error(SQLiteLanguageProvider.translate('error.dbNotInitialized')),
         );
       }
     });

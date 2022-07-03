@@ -1,1 +1,1 @@
-export { default } from './AddLabelForm';
+export { default, type IAddLabelFormProps } from './AddLabelForm';

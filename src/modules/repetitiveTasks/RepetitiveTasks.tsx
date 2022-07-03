@@ -4,14 +4,40 @@ import { IRepetitiveTaskData, Key, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
-import DrawerButton from '../../components/common/DrawerButton';
-import RepetitiveTasksList from '../../components/RepetitiveTasksList';
-import AddRepetitiveTaskForm from '../../components/AddRepetitiveTaskForm';
+import DrawerButton, {
+  IDrawerButtonProps,
+} from '../../components/common/DrawerButton';
+import RepetitiveTasksList, {
+  IRepetitiveTasksListProps,
+} from '../../components/RepetitiveTasksList';
+import AddRepetitiveTaskForm, {
+  IAddRepetitiveTaskFormProps,
+} from '../../components/AddRepetitiveTaskForm';
 import appLanguageProvider from '../../data/appLanguageProvider';
+import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
 const repetitiveTasksDataSource = appDataSource;
+const repetitiveTasksLanguageProvider = appLanguageProvider;
+
+const DrawerButtonWithLanguageProvider =
+  withLanguageProvider<IDrawerButtonProps>(
+    DrawerButton,
+    repetitiveTasksLanguageProvider,
+  );
+
+const AddRepetitiveTaskFormWithLanguageProvider =
+  withLanguageProvider<IAddRepetitiveTaskFormProps>(
+    AddRepetitiveTaskForm,
+    repetitiveTasksLanguageProvider,
+  );
+
+const RepetitiveTasksListWithLanguageProvider =
+  withLanguageProvider<IRepetitiveTasksListProps>(
+    RepetitiveTasksList,
+    repetitiveTasksLanguageProvider,
+  );
 
 const screens = {
   RepetitiveTasksList: 'RepetitiveTasksList',
@@ -68,14 +94,16 @@ const RepetitiveTasksModule: ModuleComponent<
           name={screens.RepetitiveTasksList}
           options={{
             headerLeft: () => (
-              <DrawerButton onPress={() => navigation.openDrawer()} />
+              <DrawerButtonWithLanguageProvider
+                onPress={() => navigation.openDrawer()}
+              />
             ),
-            title: appLanguageProvider.translate(
+            title: repetitiveTasksLanguageProvider.translate(
               'repetitiveTask.name.multiple',
             ),
           }}>
           {props => (
-            <RepetitiveTasksList
+            <RepetitiveTasksListWithLanguageProvider
               {...props}
               error={error}
               items={repetitiveTasks}
@@ -88,12 +116,14 @@ const RepetitiveTasksModule: ModuleComponent<
           name={screens.AddRepetitiveTaskForm}
           options={{
             title:
-              appLanguageProvider.translate('general.add') +
+              repetitiveTasksLanguageProvider.translate('general.add') +
               ' ' +
-              appLanguageProvider.translate('repetitiveTask.name.single'),
+              repetitiveTasksLanguageProvider.translate(
+                'repetitiveTask.name.single',
+              ),
           }}>
           {props => (
-            <AddRepetitiveTaskForm
+            <AddRepetitiveTaskFormWithLanguageProvider
               {...props}
               onSubmit={handleRepetitiveTaskAdd}
             />
@@ -110,7 +140,9 @@ export default asModule<
 >(
   RepetitiveTasksModule,
   {
-    title: appLanguageProvider.translate('repetitiveTask.name.multiple'),
+    title: repetitiveTasksLanguageProvider.translate(
+      'repetitiveTask.name.multiple',
+    ),
     name: 'RepetitiveTasksModule',
   },
   repetitiveTasksDataSource,

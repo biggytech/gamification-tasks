@@ -7,14 +7,19 @@ import {
 } from '@react-native-material/core';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import { ILabel, ISubtask, ITaskWithAdditions, Key } from '../../lib/types';
+import {
+  ILabel,
+  ISubtask,
+  ITaskWithAdditions,
+  IWithLanguageProviderProps,
+  Key,
+} from '../../lib/types';
 import DraggableFlatList, {
   OpacityDecorator,
 } from 'react-native-draggable-flatlist';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import appLanguageProvider from '../../data/appLanguageProvider';
 
-interface ISingleTaskProps {
+export interface ISingleTaskProps {
   task: ITaskWithAdditions | null;
   error: string | null;
   labels: ILabel[];
@@ -32,7 +37,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const SingleTask: React.FC<ISingleTaskProps> = ({
+const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
   task,
   error,
   labels,
@@ -40,6 +45,7 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
   onSubtasksOrderChange,
   onSubtaskCompletePress,
   onCompletePress,
+  languageProvider,
 }) => {
   // internal state to avoid blinking subtasks when reordering
   const [internalTask, setInternalTask] = useState<ITaskWithAdditions | null>(
@@ -69,16 +75,16 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
       {!error && internalTask ? (
         <Stack spacing={4} m={4}>
           <ListItem
-            title={appLanguageProvider.translate('general.title')}
+            title={languageProvider.translate('general.title')}
             secondaryText={internalTask.title}
           />
           <ListItem
-            title={appLanguageProvider.translate('general.xpValue')}
+            title={languageProvider.translate('general.xpValue')}
             secondaryText={internalTask.value.toString()}
           />
           {label ? (
             <ListItem
-              title={appLanguageProvider.translate('category.name.single')}
+              title={languageProvider.translate('category.name.single')}
               trailing={
                 <View
                   style={[styles.labelColor, { backgroundColor: label.color }]}
@@ -89,13 +95,13 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
           ) : null}
           {!internalTask.completed ? (
             <Button
-              title={appLanguageProvider.translate('task.complete')}
+              title={languageProvider.translate('task.complete')}
               onPress={onCompletePress}
             />
           ) : null}
 
           <Text variant="h4">
-            {appLanguageProvider.translate('subtask.name.multiple')}
+            {languageProvider.translate('subtask.name.multiple')}
           </Text>
 
           {internalTask.completed ? (
@@ -162,9 +168,9 @@ const SingleTask: React.FC<ISingleTaskProps> = ({
 
               <Button
                 title={
-                  appLanguageProvider.translate('general.add') +
+                  languageProvider.translate('general.add') +
                   ' ' +
-                  appLanguageProvider
+                  languageProvider
                     .translate('subtask.name.single')
                     .toLowerCase()
                 }

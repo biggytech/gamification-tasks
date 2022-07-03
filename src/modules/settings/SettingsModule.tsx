@@ -4,15 +4,38 @@ import { LevelSize, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
-import DrawerButton from '../../components/common/DrawerButton';
-import Settings from '../../components/Settings';
-import EditLevelSizeForm from '../../components/EditLevelSizeForm';
+import DrawerButton, {
+  IDrawerButtonProps,
+} from '../../components/common/DrawerButton';
+import Settings, { ISettingsProps } from '../../components/Settings';
+import EditLevelSizeForm, {
+  IEditLevelSizeFormProps,
+} from '../../components/EditLevelSizeForm';
 import { Alert } from 'react-native';
 import appLanguageProvider from '../../data/appLanguageProvider';
+import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
 const settingsDataSource = appDataSource;
+const settingsLanguageProvider = appLanguageProvider;
+
+const DrawerButtonWithLanguageProvider =
+  withLanguageProvider<IDrawerButtonProps>(
+    DrawerButton,
+    settingsLanguageProvider,
+  );
+
+const EditLevelSizeFormWithLanguageProvider =
+  withLanguageProvider<IEditLevelSizeFormProps>(
+    EditLevelSizeForm,
+    settingsLanguageProvider,
+  );
+
+const SettingsWithLanguageProvider = withLanguageProvider<ISettingsProps>(
+  Settings,
+  settingsLanguageProvider,
+);
 
 const screens = {
   Settings: 'Settings',
@@ -44,16 +67,16 @@ const SettingsModule: ModuleComponent<
 
   const handleLevelSizePress = useCallback(() => {
     Alert.alert(
-      appLanguageProvider.translate('general.caution') + '!',
-      appLanguageProvider.translate('settings.changeLevelSizeWarning'),
+      settingsLanguageProvider.translate('general.caution') + '!',
+      settingsLanguageProvider.translate('settings.changeLevelSizeWarning'),
       [
         {
-          text: appLanguageProvider.translate('general.cancel'),
+          text: settingsLanguageProvider.translate('general.cancel'),
           onPress: () => {},
           style: 'cancel',
         },
         {
-          text: appLanguageProvider.translate('general.ok'),
+          text: settingsLanguageProvider.translate('general.ok'),
           onPress: () => navigation.navigate(screens.EditLevelSizeForm),
         },
       ],
@@ -67,12 +90,14 @@ const SettingsModule: ModuleComponent<
           name={screens.Settings}
           options={{
             headerLeft: () => (
-              <DrawerButton onPress={() => navigation.openDrawer()} />
+              <DrawerButtonWithLanguageProvider
+                onPress={() => navigation.openDrawer()}
+              />
             ),
-            title: appLanguageProvider.translate('settings.name'),
+            title: settingsLanguageProvider.translate('settings.name'),
           }}>
           {props => (
-            <Settings
+            <SettingsWithLanguageProvider
               {...props}
               settings={settings}
               onLevelSizePress={handleLevelSizePress}
@@ -82,10 +107,10 @@ const SettingsModule: ModuleComponent<
         <Stack.Screen
           name={screens.EditLevelSizeForm}
           options={{
-            title: appLanguageProvider.translate('settings.editLevelSize'),
+            title: settingsLanguageProvider.translate('settings.editLevelSize'),
           }}>
           {props => (
-            <EditLevelSizeForm
+            <EditLevelSizeFormWithLanguageProvider
               {...props}
               levelSize={settings.levelSize}
               onSubmit={handleLevelSizeChange}
@@ -100,7 +125,7 @@ const SettingsModule: ModuleComponent<
 export default asModule<SettingsModuleData, SettingsModuleActions>(
   SettingsModule,
   {
-    title: appLanguageProvider.translate('settings.name'),
+    title: settingsLanguageProvider.translate('settings.name'),
     name: 'SettingsModule',
   },
   settingsDataSource,

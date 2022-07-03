@@ -1,1 +1,1 @@
-export { default } from './AddRewardForm';
+export { default, type IAddRewardFormProps } from './AddRewardForm';

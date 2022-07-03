@@ -1,1 +1,1 @@
-export { default } from './AddTaskForm';
+export { default, type IAddTaskFormProps } from './AddTaskForm';

@@ -4,16 +4,46 @@ import { ISubtaskData, ITaskData, Key, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
-import DrawerButton from '../../components/common/DrawerButton';
-import TasksList from '../../components/TasksList';
-import AddTaskForm from '../../components/AddTaskForm';
-import SingleTask from '../../components/SingleTask';
-import AddSubtaskForm from '../../components/AddSubtaskForm';
+import DrawerButton, {
+  IDrawerButtonProps,
+} from '../../components/common/DrawerButton';
+import TasksList, { ITasksListProps } from '../../components/TasksList';
+import AddTaskForm, { IAddTaskFormProps } from '../../components/AddTaskForm';
+import SingleTask, { ISingleTaskProps } from '../../components/SingleTask';
+import AddSubtaskForm, {
+  IAddSubtaskFormProps,
+} from '../../components/AddSubtaskForm';
 import appLanguageProvider from '../../data/appLanguageProvider';
+import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
 const tasksDataSource = appDataSource;
+const tasksLanguageProvider = appLanguageProvider;
+
+const AddSubtaskFormWithLanguageProvider =
+  withLanguageProvider<IAddSubtaskFormProps>(
+    AddSubtaskForm,
+    tasksLanguageProvider,
+  );
+
+const AddTaskFormWithLanguageProvider = withLanguageProvider<IAddTaskFormProps>(
+  AddTaskForm,
+  tasksLanguageProvider,
+);
+
+const DrawerButtonWithLanguageProvider =
+  withLanguageProvider<IDrawerButtonProps>(DrawerButton, tasksLanguageProvider);
+
+const SingleTaskWithLanguageProvider = withLanguageProvider<ISingleTaskProps>(
+  SingleTask,
+  tasksLanguageProvider,
+);
+
+const TasksListWithLanguageProvider = withLanguageProvider<ITasksListProps>(
+  TasksList,
+  tasksLanguageProvider,
+);
 
 const screens = {
   TasksList: 'TasksList',
@@ -132,17 +162,19 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
           name={screens.TasksList}
           options={{
             headerLeft: () => (
-              <DrawerButton onPress={() => navigation.openDrawer()} />
+              <DrawerButtonWithLanguageProvider
+                onPress={() => navigation.openDrawer()}
+              />
             ),
-            title: appLanguageProvider.translate('task.name.multiple'),
+            title: tasksLanguageProvider.translate('task.name.multiple'),
           }}>
           {props => (
-            <TasksList
+            <TasksListWithLanguageProvider
               {...props}
               error={
                 error ??
                 (labels.length === 0
-                  ? appLanguageProvider.translate('task.addCategoriesFirst')
+                  ? tasksLanguageProvider.translate('task.addCategoriesFirst')
                   : null)
               }
               items={tasks}
@@ -157,12 +189,12 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
           name={screens.AddTaskForm}
           options={{
             title:
-              appLanguageProvider.translate('general.add') +
+              tasksLanguageProvider.translate('general.add') +
               ' ' +
-              appLanguageProvider.translate('task.name.single'),
+              tasksLanguageProvider.translate('task.name.single'),
           }}>
           {props => (
-            <AddTaskForm
+            <AddTaskFormWithLanguageProvider
               {...props}
               onSubmit={handleTaskAdd}
               labels={unusedLabels}
@@ -174,16 +206,16 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
           options={{
             title:
               selectedTask?.title ??
-              appLanguageProvider.translate('general.notFound'),
+              tasksLanguageProvider.translate('general.notFound'),
           }}>
           {props => (
-            <SingleTask
+            <SingleTaskWithLanguageProvider
               {...props}
               task={selectedTask}
               error={
                 selectedTask
                   ? null
-                  : appLanguageProvider.translate('general.notFound')
+                  : tasksLanguageProvider.translate('general.notFound')
               }
               labels={labels}
               onAddSubtaskPress={handleAddSubtaskPress}
@@ -197,17 +229,17 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
           name={screens.AssSubtaskForm}
           options={{
             title:
-              appLanguageProvider.translate('general.add') +
+              tasksLanguageProvider.translate('general.add') +
               ' ' +
-              appLanguageProvider.translate('subtask.name.single'),
+              tasksLanguageProvider.translate('subtask.name.single'),
           }}>
           {props => (
-            <AddSubtaskForm
+            <AddSubtaskFormWithLanguageProvider
               {...props}
               error={
                 selectedTask
                   ? null
-                  : appLanguageProvider.translate('general.notFound')
+                  : tasksLanguageProvider.translate('general.notFound')
               }
               taskId={selectedTask?.id ?? null}
               onSubmit={subtask =>
@@ -224,7 +256,7 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
 export default asModule<TasksModuleData, TasksModuleActions>(
   TasksModule,
   {
-    title: appLanguageProvider.translate('task.name.multiple'),
+    title: tasksLanguageProvider.translate('task.name.multiple'),
     name: 'TasksModule',
   },
   tasksDataSource,

@@ -1,1 +1,1 @@
-export { default } from './RewardsList';
+export { default, type IRewardsListProps } from './RewardsList';

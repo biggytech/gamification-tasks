@@ -1,1 +1,1 @@
-export { default } from './TasksList';
+export { default, type ITasksListProps } from './TasksList';

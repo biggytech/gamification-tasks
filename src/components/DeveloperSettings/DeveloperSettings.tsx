@@ -2,26 +2,25 @@ import React, { memo } from 'react';
 import { Text } from 'react-native';
 import { ListItem } from '@react-native-material/core';
 import { IconButton } from '@react-native-material/core';
-import appLanguageProvider from '../../data/appLanguageProvider';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { IWithLanguageProviderProps } from '../../lib/types';
 
-interface IDeveloperSettingsProps {
+export interface IDeveloperSettingsProps {
   dbSize: number;
   onDeleteDatabase: () => void;
 }
 
-const DeveloperSettings: React.FC<IDeveloperSettingsProps> = ({
-  dbSize,
-  onDeleteDatabase,
-}) => {
+const DeveloperSettings: React.FC<
+  IWithLanguageProviderProps<IDeveloperSettingsProps>
+> = ({ dbSize, onDeleteDatabase, languageProvider }) => {
   return (
     <>
       <ListItem
-        title={appLanguageProvider.translate('settings.databaseSize')}
+        title={languageProvider.translate('settings.databaseSize')}
         trailing={() => <Text>{dbSize}</Text>}
       />
       <ListItem
-        title={appLanguageProvider.translate('settings.deleteDatabase')}
+        title={languageProvider.translate('settings.deleteDatabase')}
         trailing={() => (
           <IconButton
             onPress={onDeleteDatabase}

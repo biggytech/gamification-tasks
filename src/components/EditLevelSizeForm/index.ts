@@ -1,1 +1,1 @@
-export { default } from './EditLevelSizeForm';
+export { default, type IEditLevelSizeFormProps } from './EditLevelSizeForm';

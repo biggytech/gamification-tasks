@@ -1,11 +1,10 @@
 import React, { memo } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { IReward, Key } from '../../lib/types';
+import { IReward, IWithLanguageProviderProps, Key } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
-import appLanguageProvider from '../../data/appLanguageProvider';
 
-interface RewardsListProps {
+export interface IRewardsListProps {
   items: IReward[];
   error: null | string;
   onAddPress: () => void;
@@ -13,12 +12,13 @@ interface RewardsListProps {
   onRewardPickPress: (id: Key) => void;
 }
 
-const RewardsList: React.FC<RewardsListProps> = ({
+const RewardsList: React.FC<IWithLanguageProviderProps<IRewardsListProps>> = ({
   error,
   items,
   onAddPress,
   maxLevelPickEnabled,
   onRewardPickPress,
+  languageProvider,
 }) => {
   return (
     <>
@@ -27,9 +27,9 @@ const RewardsList: React.FC<RewardsListProps> = ({
         <>
           <Button
             title={
-              appLanguageProvider.translate('general.add') +
+              languageProvider.translate('general.add') +
               ' ' +
-              appLanguageProvider.translate('reward.name.single').toLowerCase()
+              languageProvider.translate('reward.name.single').toLowerCase()
             }
             onPress={onAddPress}
           />
@@ -43,7 +43,7 @@ const RewardsList: React.FC<RewardsListProps> = ({
               } else if (item.level <= maxLevelPickEnabled) {
                 trailingNode = (
                   <Button
-                    title={appLanguageProvider.translate('reward.pick')}
+                    title={languageProvider.translate('reward.pick')}
                     onPress={() => onRewardPickPress(item.id)}
                   />
                 );

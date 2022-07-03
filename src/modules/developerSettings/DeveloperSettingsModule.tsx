@@ -3,14 +3,32 @@ import asModule from '../../lib/utils/asModule';
 import { ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import DeveloperSettings from '../../components/DeveloperSettings';
+import DeveloperSettings, {
+  IDeveloperSettingsProps,
+} from '../../components/DeveloperSettings';
 import { useFocusEffect } from '@react-navigation/native';
-import DrawerButton from '../../components/common/DrawerButton';
+import DrawerButton, {
+  IDrawerButtonProps,
+} from '../../components/common/DrawerButton';
 import appLanguageProvider from '../../data/appLanguageProvider';
+import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
 const developerSettingsDataSource = appDataSource;
+const developerSettingsLanguageProvider = appLanguageProvider;
+
+const DrawerButtonWithLanguageProvider =
+  withLanguageProvider<IDrawerButtonProps>(
+    DrawerButton,
+    developerSettingsLanguageProvider,
+  );
+
+const DeveloperSettingsWithLanguageProvider =
+  withLanguageProvider<IDeveloperSettingsProps>(
+    DeveloperSettings,
+    developerSettingsLanguageProvider,
+  );
 
 const screens = {
   DeveloperSettings: 'DeveloperSettings',
@@ -43,12 +61,16 @@ const DeveloperSettingsModule: ModuleComponent<
           name={screens.DeveloperSettings}
           options={{
             headerLeft: () => (
-              <DrawerButton onPress={() => navigation.openDrawer()} />
+              <DrawerButtonWithLanguageProvider
+                onPress={() => navigation.openDrawer()}
+              />
             ),
-            title: appLanguageProvider.translate('developerSettings.name'),
+            title: developerSettingsLanguageProvider.translate(
+              'developerSettings.name',
+            ),
           }}>
           {props => (
-            <DeveloperSettings
+            <DeveloperSettingsWithLanguageProvider
               {...props}
               dbSize={dbSize}
               onDeleteDatabase={handleDeleteDatabase}
@@ -66,7 +88,9 @@ export default asModule<
 >(
   DeveloperSettingsModule,
   {
-    title: appLanguageProvider.translate('developerSettings.name'),
+    title: developerSettingsLanguageProvider.translate(
+      'developerSettings.name',
+    ),
     name: 'DeveloperSettingsModule',
   },
   developerSettingsDataSource,

@@ -1,1 +1,1 @@
-export { default } from './RepetitiveTasksList';
+export { default, type IRepetitiveTasksListProps } from './RepetitiveTasksList';

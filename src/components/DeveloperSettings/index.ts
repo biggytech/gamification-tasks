@@ -1,1 +1,1 @@
-export { default } from './DeveloperSettings';
+export { default, type IDeveloperSettingsProps } from './DeveloperSettings';

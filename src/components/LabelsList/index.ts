@@ -1,1 +1,1 @@
-export { default } from './LabelsList';
+export { default, type ILabelsListProps } from './LabelsList';

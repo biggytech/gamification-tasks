@@ -1,1 +1,1 @@
-export { default } from './Settings';
+export { default, type ISettingsProps } from './Settings';

@@ -1,24 +1,24 @@
 import React, { memo } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { IRepetitiveTask, Key } from '../../lib/types';
+import {
+  IRepetitiveTask,
+  IWithLanguageProviderProps,
+  Key,
+} from '../../lib/types';
 import { IconButton, ListItem, Stack } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import appLanguageProvider from '../../data/appLanguageProvider';
 
-interface RepetitiveTasksListProps {
+export interface IRepetitiveTasksListProps {
   items: IRepetitiveTask[];
   onAddPress: () => void;
   error: null | string;
   onItemCheckPress: (id: Key) => void;
 }
 
-const RepetitiveTasksList: React.FC<RepetitiveTasksListProps> = ({
-  items,
-  onAddPress,
-  error,
-  onItemCheckPress,
-}) => {
+const RepetitiveTasksList: React.FC<
+  IWithLanguageProviderProps<IRepetitiveTasksListProps>
+> = ({ items, onAddPress, error, onItemCheckPress, languageProvider }) => {
   return (
     <>
       {error ? <Text>{error}</Text> : null}
@@ -26,9 +26,9 @@ const RepetitiveTasksList: React.FC<RepetitiveTasksListProps> = ({
         <>
           <Button
             title={
-              appLanguageProvider.translate('general.add') +
+              languageProvider.translate('general.add') +
               ' ' +
-              appLanguageProvider
+              languageProvider
                 .translate('repetitiveTask.name.single')
                 .toLowerCase()
             }

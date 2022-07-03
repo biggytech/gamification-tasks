@@ -1,10 +1,14 @@
 import React, { memo } from 'react';
 import { FlatList, Text, View, StyleSheet } from 'react-native';
-import { ILabel, ITask, Key } from '../../lib/types';
+import {
+  ILabel,
+  ITask,
+  IWithLanguageProviderProps,
+  Key,
+} from '../../lib/types';
 import { IconButton, ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import appLanguageProvider from '../../data/appLanguageProvider';
 
 const styles = StyleSheet.create({
   labelColor: {
@@ -14,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface TasksListProps {
+export interface ITasksListProps {
   items: ITask[];
   onAddPress: () => void;
   error: null | string;
@@ -23,13 +27,14 @@ interface TasksListProps {
   onTaskItemPress: (id: Key) => void;
 }
 
-const TasksList: React.FC<TasksListProps> = ({
+const TasksList: React.FC<IWithLanguageProviderProps<ITasksListProps>> = ({
   items,
   onAddPress,
   error,
   labels,
   canAdd,
   onTaskItemPress,
+  languageProvider,
 }) => {
   return (
     <>
@@ -39,9 +44,9 @@ const TasksList: React.FC<TasksListProps> = ({
           {canAdd ? (
             <Button
               title={
-                appLanguageProvider.translate('general.add') +
+                languageProvider.translate('general.add') +
                 ' ' +
-                appLanguageProvider.translate('task.name.single').toLowerCase()
+                languageProvider.translate('task.name.single').toLowerCase()
               }
               onPress={onAddPress}
             />
@@ -72,7 +77,7 @@ const TasksList: React.FC<TasksListProps> = ({
                       <Text>{item.value}</Text>
                     )
                   }
-                  secondaryText={`${appLanguageProvider.translate(
+                  secondaryText={`${languageProvider.translate(
                     'category.name.single',
                   )}: ${label?.name}`}
                   onPress={() => onTaskItemPress(item.id)}

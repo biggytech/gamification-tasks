@@ -1,9 +1,8 @@
 import React, { memo, useCallback, useState } from 'react';
 import { Stack, TextInput, Button } from '@react-native-material/core';
-import { LevelSize } from '../../lib/types';
-import appLanguageProvider from '../../data/appLanguageProvider';
+import { IWithLanguageProviderProps, LevelSize } from '../../lib/types';
 
-interface IEditLevelSizeFormProps {
+export interface IEditLevelSizeFormProps {
   levelSize: LevelSize;
   onSubmit: (levelSize: LevelSize) => void;
 }
@@ -12,10 +11,9 @@ interface IEditLevelSizeFormInternalState {
   levelSize: LevelSize;
 }
 
-const EditLevelSizeForm: React.FC<IEditLevelSizeFormProps> = ({
-  levelSize,
-  onSubmit,
-}) => {
+const EditLevelSizeForm: React.FC<
+  IWithLanguageProviderProps<IEditLevelSizeFormProps>
+> = ({ levelSize, onSubmit, languageProvider }) => {
   const [state, setState] = useState<IEditLevelSizeFormInternalState>({
     levelSize,
   });
@@ -33,14 +31,14 @@ const EditLevelSizeForm: React.FC<IEditLevelSizeFormProps> = ({
       <TextInput
         value={state.levelSize.toString()}
         keyboardType="number-pad"
-        label={appLanguageProvider.translate('general.xpValue')}
+        label={languageProvider.translate('general.xpValue')}
         variant="standard"
         onChangeText={handleLevelSizeChange}
         autoFocus
       />
 
       <Button
-        title={appLanguageProvider.translate('general.submit')}
+        title={languageProvider.translate('general.submit')}
         onPress={handleSubmitPress}
       />
     </Stack>

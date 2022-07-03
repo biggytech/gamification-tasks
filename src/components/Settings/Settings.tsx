@@ -1,25 +1,28 @@
 import React, { memo } from 'react';
 import { Text } from 'react-native';
 import { ListItem } from '@react-native-material/core';
-import { LevelSize } from '../../lib/types';
-import appLanguageProvider from '../../data/appLanguageProvider';
+import { IWithLanguageProviderProps, LevelSize } from '../../lib/types';
 
-interface ISettingsProps {
+export interface ISettingsProps {
   settings: {
     levelSize: LevelSize;
   };
   onLevelSizePress: () => void;
 }
 
-const Settings: React.FC<ISettingsProps> = ({ settings, onLevelSizePress }) => {
+const Settings: React.FC<IWithLanguageProviderProps<ISettingsProps>> = ({
+  settings,
+  onLevelSizePress,
+  languageProvider,
+}) => {
   return (
     <>
       <ListItem
-        title={appLanguageProvider.translate('general.language')}
-        secondaryText={appLanguageProvider.locale}
+        title={languageProvider.translate('general.language')}
+        secondaryText={languageProvider.locale}
       />
       <ListItem
-        title={appLanguageProvider.translate('settings.levelSize')}
+        title={languageProvider.translate('settings.levelSize')}
         trailing={() => <Text>{settings.levelSize}</Text>}
         onPress={onLevelSizePress}
       />

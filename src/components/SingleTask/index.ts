@@ -1,1 +1,1 @@
-export { default } from './SingleTask';
+export { default, type ISingleTaskProps } from './SingleTask';

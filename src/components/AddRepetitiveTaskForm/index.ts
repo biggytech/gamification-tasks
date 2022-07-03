@@ -1,1 +1,4 @@
-export { default } from './AddRepetitiveTaskForm';
+export {
+  default,
+  type IAddRepetitiveTaskFormProps,
+} from './AddRepetitiveTaskForm';

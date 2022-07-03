@@ -127,3 +127,12 @@ export interface IAchievementData {
 export interface IAchievement extends IAchievementData {
   id: Key;
 }
+
+export interface ILanguageProvider {
+  locale: string;
+  translate: (path: string) => string;
+}
+
+export type IWithLanguageProviderProps<TComponentProps> = TComponentProps & {
+  languageProvider: ILanguageProvider;
+};

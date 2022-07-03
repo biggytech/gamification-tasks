@@ -1,11 +1,10 @@
 import { Flex, ListItem, Stack, Text } from '@react-native-material/core';
 import React, { memo } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import appLanguageProvider from '../../data/appLanguageProvider';
-import { IHistory, IStats } from '../../lib/types';
+import { IHistory, IStats, IWithLanguageProviderProps } from '../../lib/types';
 import formatDate from '../../lib/utils/formatDate';
 
-interface IProgressProps {
+export interface IProgressProps {
   error: string | null;
   stats: IStats;
   history: IHistory[];
@@ -30,7 +29,12 @@ const styles = StyleSheet.create({
 
 const PROGRESS_BAR_DIVIDERS = [10, 20, 30, 40, 50, 60, 70, 80, 90];
 
-const Progress: React.FC<IProgressProps> = ({ error, stats, history }) => {
+const Progress: React.FC<IWithLanguageProviderProps<IProgressProps>> = ({
+  error,
+  stats,
+  history,
+  languageProvider,
+}) => {
   const levelProgress =
     ((stats.points - stats.prevLevelSize) /
       (stats.nextLevelSize - stats.prevLevelSize)) *
@@ -43,11 +47,11 @@ const Progress: React.FC<IProgressProps> = ({ error, stats, history }) => {
         <>
           <Stack spacing={4} m={4}>
             <ListItem
-              title={appLanguageProvider.translate('level.name')}
+              title={languageProvider.translate('level.name')}
               secondaryText={stats.level.toString()}
             />
             <ListItem
-              title={appLanguageProvider.translate('level.xp')}
+              title={languageProvider.translate('level.xp')}
               secondaryText={stats.points.toString()}
             />
             <View style={styles.progressBar}>

@@ -4,13 +4,25 @@ import { ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
-import DrawerButton from '../../components/common/DrawerButton';
-import Progress from '../../components/Progress';
+import DrawerButton, {
+  IDrawerButtonProps,
+} from '../../components/common/DrawerButton';
+import Progress, { IProgressProps } from '../../components/Progress';
 import appLanguageProvider from '../../data/appLanguageProvider';
+import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
 
 const Stack = createNativeStackNavigator();
 
 const statsDataSource = appDataSource;
+const statsLanguageProvider = appLanguageProvider;
+
+const DrawerButtonWithLanguageProvider =
+  withLanguageProvider<IDrawerButtonProps>(DrawerButton, statsLanguageProvider);
+
+const ProgressWithLanguageProvider = withLanguageProvider<IProgressProps>(
+  Progress,
+  statsLanguageProvider,
+);
 
 const screens = {
   StatsScreen: 'StatsScreen',
@@ -45,12 +57,14 @@ const StatsModule: ModuleComponent<StatsModuleData, StatsModuleActions> = ({
           name={screens.StatsScreen}
           options={{
             headerLeft: () => (
-              <DrawerButton onPress={() => navigation.openDrawer()} />
+              <DrawerButtonWithLanguageProvider
+                onPress={() => navigation.openDrawer()}
+              />
             ),
-            title: appLanguageProvider.translate('progress.name'),
+            title: statsLanguageProvider.translate('progress.name'),
           }}>
           {props => (
-            <Progress
+            <ProgressWithLanguageProvider
               {...props}
               error={error}
               stats={stats}
@@ -66,7 +80,7 @@ const StatsModule: ModuleComponent<StatsModuleData, StatsModuleActions> = ({
 export default asModule<StatsModuleData, StatsModuleActions>(
   StatsModule,
   {
-    title: appLanguageProvider.translate('progress.name'),
+    title: statsLanguageProvider.translate('progress.name'),
     name: 'StatsModule',
   },
   statsDataSource,

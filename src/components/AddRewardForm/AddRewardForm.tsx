@@ -1,23 +1,24 @@
 import React, { memo, useCallback, useState } from 'react';
-import { IRewardData } from '../../lib/types';
+import { IRewardData, IWithLanguageProviderProps } from '../../lib/types';
 import {
   Stack,
   TextInput,
   Button,
   ListItem,
 } from '@react-native-material/core';
-import appLanguageProvider from '../../data/appLanguageProvider';
 
-interface IAddRewardFormProps {
+export interface IAddRewardFormProps {
   onSubmit: (label: IRewardData) => void;
   level: number;
 }
 
 interface IAddRewardFormInternalState extends IRewardData {}
 
-const AddRewardForm: React.FC<IAddRewardFormProps> = ({ onSubmit, level }) => {
+const AddRewardForm: React.FC<
+  IWithLanguageProviderProps<IAddRewardFormProps>
+> = ({ onSubmit, level, languageProvider }) => {
   const [state, setState] = useState<IAddRewardFormInternalState>({
-    title: appLanguageProvider.translate('reward.name.single'),
+    title: languageProvider.translate('reward.name.single'),
     level,
     picked: false,
   });
@@ -35,14 +36,14 @@ const AddRewardForm: React.FC<IAddRewardFormProps> = ({ onSubmit, level }) => {
       <ListItem title="Level" secondaryText={state.level.toString()} />
       <TextInput
         value={state.title}
-        label={appLanguageProvider.translate('general.title')}
+        label={languageProvider.translate('general.title')}
         variant="standard"
         onChangeText={handleTitleChange}
         autoFocus
       />
 
       <Button
-        title={appLanguageProvider.translate('general.submit')}
+        title={languageProvider.translate('general.submit')}
         onPress={handleSubmitPress}
       />
     </Stack>

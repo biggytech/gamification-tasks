@@ -4,8 +4,9 @@ import dot from 'dot-object';
 import ITranslation from '../../../config/locales/ITranslation';
 import enTranslation from '../../../config/locales/en';
 import ruTranslation from '../../../config/locales/ru';
+import { ILanguageProvider } from '../../../lib/types';
 
-class LanguageProvider {
+class LanguageProvider implements ILanguageProvider {
   locale: keyof typeof LOCALES;
   private translation: ITranslation = enTranslation;
 
