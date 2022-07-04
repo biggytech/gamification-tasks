@@ -106,8 +106,6 @@ class DatabaseProvider {
         `PRAGMA table_info(${tableName})`,
       );
 
-      // console.log('columns', columns);
-
       const dataLength = (
         await this.executeQuery(
           `SELECT ${columns
@@ -115,7 +113,6 @@ class DatabaseProvider {
             .join(',')} FROM ${tableName}`,
         )
       ).reduce((sum, row) => {
-        console.log('row', row);
         let rowSum = 0;
 
         for (const columnName in row) {
@@ -123,7 +120,6 @@ class DatabaseProvider {
             const columnType = columns.find(
               column => column.name === columnName,
             );
-            // console.log('columnType', columnType)
 
             // convert length size to bytes
             switch (columnType?.type) {
@@ -142,7 +138,6 @@ class DatabaseProvider {
         return sum + rowSum;
       }, 0);
 
-      // console.log('DATA LENGTH', tableName, dataLength);
       sizeInBytes += dataLength;
     }
     return sizeInBytes;
@@ -169,7 +164,19 @@ class DatabaseProvider {
     )[0];
   }
 
-  async changeLevelSize(levelSize: LevelSize) {
+  async changeSettings(settings: ISettings): Promise<ISettings> {
+    return (
+      await this.executeQuery(
+        `UPDATE settings
+        SET levelSize = ?
+        WHERE
+            id = ? RETURNING *`,
+        [settings.levelSize, defaults.settings.id],
+      )
+    )[0];
+  }
+
+  async changeLevelSize(levelSize: LevelSize): Promise<ISettings> {
     return (
       await this.executeQuery(
         `UPDATE settings
@@ -499,6 +506,114 @@ class DatabaseProvider {
       history,
       achievements,
     };
+  }
+
+  async restoreFromBackup(backup: IBackupData) {
+    const {
+      labels,
+      tasks,
+      subtasks,
+      repetitiveTasks,
+      settings,
+      rewards,
+      stats,
+      history,
+      achievements,
+    } = backup;
+
+    await this.executeQuery('DELETE FROM labels');
+    await Promise.all(
+      labels.map(
+        async label =>
+          await this.executeQuery(
+            'INSERT INTO labels (id, name, color) VALUES (?, ?, ?)',
+            [label.id, label.name, label.color],
+          ),
+      ),
+    );
+
+    await this.executeQuery('DELETE FROM tasks');
+    await Promise.all(
+      tasks.map(
+        async task =>
+          await this.executeQuery(
+            'INSERT INTO tasks (id, title, value, labelId, completed) VALUES (?, ?, ?, ?, ?)',
+            [
+              task.id,
+              task.title,
+              task.value,
+              task.labelId,
+              Number(task.completed),
+            ],
+          ),
+      ),
+    );
+
+    await this.executeQuery('DELETE FROM subtasks');
+    await Promise.all(
+      subtasks.map(
+        async subtask =>
+          await this.executeQuery(
+            'INSERT INTO subtasks (id, title, value, taskId, position, completed) VALUES (?, ?, ?, ?, ?, ?)',
+            [
+              subtask.id,
+              subtask.title,
+              subtask.value,
+              subtask.taskId,
+              subtask.position,
+              Number(subtask.completed),
+            ],
+          ),
+      ),
+    );
+
+    await this.executeQuery('DELETE FROM repetitiveTasks');
+    await Promise.all(
+      repetitiveTasks.map(
+        async task =>
+          await this.executeQuery(
+            'INSERT INTO repetitiveTasks (id, title, value) VALUES (?, ?, ?)',
+            [task.id, task.title, task.value],
+          ),
+      ),
+    );
+
+    await this.changeSettings(settings);
+
+    await this.executeQuery('DELETE FROM rewards');
+    await Promise.all(
+      rewards.map(
+        async reward =>
+          await this.executeQuery(
+            'INSERT INTO rewards (id, title, level, picked) VALUES (?, ?, ?, ?)',
+            [reward.id, reward.title, reward.level, Number(reward.picked)],
+          ),
+      ),
+    );
+
+    await this.changeStats(stats);
+
+    await this.executeQuery('DELETE FROM history');
+    await Promise.all(
+      history.map(
+        async _history =>
+          await this.executeQuery(
+            'INSERT INTO history (id, message, points, timestamp) VALUES (?, ?, ?, ?)',
+            [
+              _history.id,
+              _history.message,
+              _history.points,
+              _history.timestamp,
+            ],
+          ),
+      ),
+    );
+
+    await Promise.all(
+      achievements.map(
+        async achievement => await this.changeAchievement(achievement),
+      ),
+    );
   }
 }
 

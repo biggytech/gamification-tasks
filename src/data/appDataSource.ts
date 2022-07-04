@@ -80,6 +80,7 @@ async function appActionHandler(
 ): Promise<IAppData> {
   try {
     let dataToReturn = data;
+    let isUpdateAchievements = false;
 
     switch (action) {
       case ACTIONS.LOAD_LABELS: {
@@ -314,6 +315,8 @@ async function appActionHandler(
                   soundFile: appSoundProvider.soundFiles.notification_1,
                 },
           );
+
+          isUpdateAchievements = true;
         }
 
         dataToReturn = data;
@@ -416,6 +419,8 @@ async function appActionHandler(
                     soundFile: appSoundProvider.soundFiles.notification_1,
                   },
             );
+
+            isUpdateAchievements = true;
           }
 
           dataToReturn = {
@@ -477,6 +482,8 @@ async function appActionHandler(
                   },
             );
 
+            isUpdateAchievements = true;
+
             dataToReturn = {
               ...data,
               selectedTask: task,
@@ -514,11 +521,25 @@ async function appActionHandler(
           dbSize,
         };
         break;
+      case ACTIONS.RESTORE_FROM_BACKUP:
+        await appRepository.restoreFromBackup(value);
+        showGlobalMessage({
+          type: 'success',
+          title:
+            appLanguageProvider.translate('settings.restoredSuccess') + '!',
+          soundFile: appSoundProvider.soundFiles.notification_1,
+        });
+        break;
+      case ACTIONS.SHOW_GLOBAL_MESSAGE:
+        showGlobalMessage(value);
+        break;
       default:
         dataToReturn = data;
     }
 
-    await updateAchievements();
+    if (isUpdateAchievements) {
+      await updateAchievements();
+    }
 
     return dataToReturn;
   } catch (err: any) {

@@ -14,6 +14,7 @@ interface ITranslation {
       cancel: string;
       ok: string;
       notFound: string;
+      error: string;
     };
     category: {
       name: {
@@ -57,6 +58,9 @@ interface ITranslation {
       backupSavedMessage: string;
       backupNotSaved: string;
       backupNotSavedMessage: string;
+      restoreFromBackup: string;
+      restoreFromBackupMessage: string;
+      restoredSuccess: string;
     };
     level: {
       name: string;

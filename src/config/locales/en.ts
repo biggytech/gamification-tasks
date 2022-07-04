@@ -16,6 +16,7 @@ const enTranslation: ITranslation = {
       cancel: 'Cancel',
       ok: 'OK',
       notFound: 'Not Found',
+      error: 'Error',
     },
     category: {
       name: {
@@ -60,6 +61,10 @@ const enTranslation: ITranslation = {
       backupSavedMessage: 'Backup file was saved in Documents directory',
       backupNotSaved: 'Backup was not saved',
       backupNotSavedMessage: 'An error occured during saving process',
+      restoreFromBackup: 'Restore from backup',
+      restoreFromBackupMessage:
+        'Backup will override existing values. Are you sure to proceed?',
+      restoredSuccess: 'Restored successfully',
     },
     level: {
       name: 'Level',

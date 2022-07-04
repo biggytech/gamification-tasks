@@ -16,6 +16,7 @@ const ruTranslation: ITranslation = {
       cancel: 'Отменить',
       ok: 'ОК',
       notFound: 'Не найдено',
+      error: 'Ошибка',
     },
     category: {
       name: {
@@ -60,6 +61,10 @@ const ruTranslation: ITranslation = {
       backupSavedMessage: 'Файл бэкапа был сохранен в папку Документы',
       backupNotSaved: 'Бэкап не был сохранен',
       backupNotSavedMessage: 'Произошла ошибка во время сохранения файла',
+      restoreFromBackup: 'Восстановить из бэкапа',
+      restoreFromBackupMessage:
+        'Бэкап перезапишет текущие значения. Вы уверены, что хотите продолжить?',
+      restoredSuccess: 'Успешно восстановлено',
     },
     level: {
       name: 'Уровень',

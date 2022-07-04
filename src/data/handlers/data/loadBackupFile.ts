@@ -1,3 +1,4 @@
+import BACKUP_FILE_EXTENSION from '../../../config/backupFileExtension';
 import appFileSystemProvider from '../../appFileSystemProvider';
 import appLanguageProvider from '../../appLanguageProvider';
 import appRepository from '../../appRepository';
@@ -9,7 +10,7 @@ async function loadBackupFile() {
   const isSuccessfullySaved =
     await appFileSystemProvider.saveFileToSharedDirectory(
       appFileSystemProvider.locations.documents,
-      `gamification_bkp_${Date.now()}.json`,
+      `gamification_bkp_${Date.now()}.${BACKUP_FILE_EXTENSION}`,
       JSON.stringify(backupData),
     );
   if (isSuccessfullySaved) {

@@ -1,8 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Text } from 'react-native';
 import { ListItem, IconButton } from '@react-native-material/core';
 import { IWithLanguageProviderProps, LevelSize } from '../../lib/types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Alert } from 'react-native';
 
 export interface ISettingsProps {
   settings: {
@@ -10,6 +11,7 @@ export interface ISettingsProps {
   };
   onLevelSizePress: () => void;
   onDownloadBackupPress: () => void;
+  onRestoreFromBackupPress: () => void;
 }
 
 const Settings: React.FC<IWithLanguageProviderProps<ISettingsProps>> = ({
@@ -17,7 +19,26 @@ const Settings: React.FC<IWithLanguageProviderProps<ISettingsProps>> = ({
   onLevelSizePress,
   languageProvider,
   onDownloadBackupPress,
+  onRestoreFromBackupPress,
 }) => {
+  const handleRestoreFromBackupPress = useCallback(() => {
+    Alert.alert(
+      languageProvider.translate('general.caution'),
+      languageProvider.translate('settings.restoreFromBackupMessage'),
+      [
+        {
+          text: languageProvider.translate('general.cancel'),
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: languageProvider.translate('general.ok'),
+          onPress: () => onRestoreFromBackupPress(),
+        },
+      ],
+    );
+  }, [languageProvider, onRestoreFromBackupPress]);
+
   return (
     <>
       <ListItem
@@ -35,6 +56,15 @@ const Settings: React.FC<IWithLanguageProviderProps<ISettingsProps>> = ({
           <IconButton
             onPress={onDownloadBackupPress}
             icon={props => <Icon name="download" {...props} />}
+          />
+        }
+      />
+      <ListItem
+        title={languageProvider.translate('settings.restoreFromBackup')}
+        trailing={
+          <IconButton
+            onPress={handleRestoreFromBackupPress}
+            icon={props => <Icon name="upload" {...props} />}
           />
         }
       />

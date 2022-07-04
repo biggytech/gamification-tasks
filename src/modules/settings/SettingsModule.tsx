@@ -14,11 +14,16 @@ import EditLevelSizeForm, {
 import { Alert } from 'react-native';
 import appLanguageProvider from '../../data/appLanguageProvider';
 import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
+import appFileSystemProvider from '../../data/appFileSystemProvider';
+import BACKUP_FILE_EXTENSION from '../../config/backupFileExtension';
+import appSoundProvider from '../../data/appSoundProvider';
 
 const Stack = createNativeStackNavigator();
 
 const settingsDataSource = appDataSource;
 const settingsLanguageProvider = appLanguageProvider;
+const settingsFileSystemProvider = appFileSystemProvider;
+const settingsSoundProvider = appSoundProvider;
 
 const DrawerButtonWithLanguageProvider =
   withLanguageProvider<IDrawerButtonProps>(
@@ -87,6 +92,22 @@ const SettingsModule: ModuleComponent<
     callDispatch(actions.DOWNLOAD_BACKUP_FILE);
   }, [actions.DOWNLOAD_BACKUP_FILE, callDispatch]);
 
+  const handleRestoreFromBackupPress = useCallback(async () => {
+    try {
+      const fileContents = await settingsFileSystemProvider.pickFile(
+        BACKUP_FILE_EXTENSION,
+      );
+      callDispatch(actions.RESTORE_FROM_BACKUP, JSON.parse(fileContents));
+    } catch (err) {
+      callDispatch(actions.SHOW_GLOBAL_MESSAGE, {
+        type: 'error',
+        title: settingsLanguageProvider.translate('general.error') + '!',
+        message: (err as Error)?.message,
+        soundFile: settingsSoundProvider.soundFiles.notification_4,
+      });
+    }
+  }, [actions.RESTORE_FROM_BACKUP, actions.SHOW_GLOBAL_MESSAGE, callDispatch]);
+
   return (
     <>
       <Stack.Navigator>
@@ -106,6 +127,7 @@ const SettingsModule: ModuleComponent<
               settings={settings}
               onLevelSizePress={handleLevelSizePress}
               onDownloadBackupPress={handleDownloadBackupPress}
+              onRestoreFromBackupPress={handleRestoreFromBackupPress}
             />
           )}
         </Stack.Screen>

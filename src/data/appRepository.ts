@@ -90,6 +90,8 @@ const appRepository = {
     await appDatabaseProvider.getCompletedTasks(),
   getBackupData: async (): Promise<IBackupData> =>
     await appDatabaseProvider.getBackupData(),
+  restoreFromBackup: async (backup: IBackupData) =>
+    await appDatabaseProvider.restoreFromBackup(backup),
 };
 
 export default appRepository;
