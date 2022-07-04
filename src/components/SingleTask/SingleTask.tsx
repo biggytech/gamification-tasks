@@ -6,7 +6,7 @@ import {
   Text,
 } from '@react-native-material/core';
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, SafeAreaView } from 'react-native';
 import {
   ILabel,
   ISubtask,
@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderWidth: 1,
+  },
+  view: {
+    height: '100%',
+  },
+  listView: {
+    flexShrink: 1,
   },
 });
 
@@ -89,10 +95,10 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
   }, [onCompletePress, languageProvider]);
 
   return (
-    <>
+    <SafeAreaView>
       {error ? <Text>{error}</Text> : null}
       {!error && internalTask ? (
-        <Stack spacing={4} m={4}>
+        <Stack spacing={4} m={4} style={styles.view}>
           <ListItem
             title={languageProvider.translate('general.title')}
             secondaryText={internalTask.title}
@@ -151,39 +157,41 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
             />
           ) : (
             <>
-              <DraggableFlatList
-                data={internalTask.subtasks}
-                keyExtractor={item => item.id.toString()}
-                onDragEnd={handleSubtasksReorder}
-                renderItem={({ item, drag, isActive }) => (
-                  <OpacityDecorator>
-                    <ListItem
-                      key={item.id}
-                      title={item.title}
-                      leading={
-                        <View>
-                          <Text>{item.value}</Text>
-                        </View>
-                      }
-                      trailing={
-                        <IconButton
-                          disabled={item.completed}
-                          onPress={() => onSubtaskCompletePress(item.id)}
-                          icon={props =>
-                            item.completed ? (
-                              <Icon name="check-outline" {...props} />
-                            ) : (
-                              <Icon name="check-bold" {...props} />
-                            )
-                          }
-                        />
-                      }
-                      onLongPress={drag}
-                      disabled={isActive}
-                    />
-                  </OpacityDecorator>
-                )}
-              />
+              <View style={styles.listView}>
+                <DraggableFlatList
+                  data={internalTask.subtasks}
+                  keyExtractor={item => item.id.toString()}
+                  onDragEnd={handleSubtasksReorder}
+                  renderItem={({ item, drag, isActive }) => (
+                    <OpacityDecorator>
+                      <ListItem
+                        key={item.id}
+                        title={item.title}
+                        leading={
+                          <View>
+                            <Text>{item.value}</Text>
+                          </View>
+                        }
+                        trailing={
+                          <IconButton
+                            disabled={item.completed}
+                            onPress={() => onSubtaskCompletePress(item.id)}
+                            icon={props =>
+                              item.completed ? (
+                                <Icon name="check-outline" {...props} />
+                              ) : (
+                                <Icon name="check-bold" {...props} />
+                              )
+                            }
+                          />
+                        }
+                        onLongPress={drag}
+                        disabled={isActive}
+                      />
+                    </OpacityDecorator>
+                  )}
+                />
+              </View>
 
               <Button
                 title={
@@ -199,7 +207,7 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
           )}
         </Stack>
       ) : null}
-    </>
+    </SafeAreaView>
   );
 };
 
