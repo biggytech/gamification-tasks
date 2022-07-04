@@ -21,7 +21,7 @@ class SoundProvider<TSoundFiles> {
       });
     });
 
-    whoosh.setVolume(0.5);
+    whoosh.setVolume(1);
     whoosh.release();
   }
 }

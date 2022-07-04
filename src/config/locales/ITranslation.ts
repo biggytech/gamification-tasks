@@ -28,6 +28,8 @@ interface ITranslation {
       };
       complete: string;
       addCategoriesFirst: string;
+      completeWarning: string;
+      completeWarningMessage: string;
     };
     reward: {
       name: {

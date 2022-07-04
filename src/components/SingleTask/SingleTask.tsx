@@ -18,6 +18,7 @@ import DraggableFlatList, {
   OpacityDecorator,
 } from 'react-native-draggable-flatlist';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Alert } from 'react-native';
 
 export interface ISingleTaskProps {
   task: ITaskWithAdditions | null;
@@ -69,6 +70,24 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
     [onSubtasksOrderChange],
   );
 
+  const handleCompletePress = useCallback(() => {
+    Alert.alert(
+      languageProvider.translate('task.completeWarning'),
+      languageProvider.translate('task.completeWarningMessage'),
+      [
+        {
+          text: languageProvider.translate('general.cancel'),
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: languageProvider.translate('general.ok'),
+          onPress: () => onCompletePress(),
+        },
+      ],
+    );
+  }, [onCompletePress, languageProvider]);
+
   return (
     <>
       {error ? <Text>{error}</Text> : null}
@@ -96,7 +115,7 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
           {!internalTask.completed ? (
             <Button
               title={languageProvider.translate('task.complete')}
-              onPress={onCompletePress}
+              onPress={handleCompletePress}
             />
           ) : null}
 

@@ -30,6 +30,8 @@ const ruTranslation: ITranslation = {
       },
       complete: 'Завершить',
       addCategoriesFirst: 'Сперва добавьте категории',
+      completeWarning: 'Вы уверены, что хотите завершить задание?',
+      completeWarningMessage: 'Это действие невозможно отменить',
     },
     reward: {
       name: {
