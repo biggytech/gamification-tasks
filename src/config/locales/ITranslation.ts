@@ -15,6 +15,8 @@ interface ITranslation {
       ok: string;
       notFound: string;
       error: string;
+      today: string;
+      yesterday: string;
     };
     category: {
       name: {

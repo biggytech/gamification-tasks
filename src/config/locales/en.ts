@@ -17,6 +17,8 @@ const enTranslation: ITranslation = {
       ok: 'OK',
       notFound: 'Not Found',
       error: 'Error',
+      today: 'Today',
+      yesterday: 'Yesterday',
     },
     category: {
       name: {

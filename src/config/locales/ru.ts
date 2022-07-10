@@ -17,6 +17,8 @@ const ruTranslation: ITranslation = {
       ok: 'ОК',
       notFound: 'Не найдено',
       error: 'Ошибка',
+      today: 'Сегодня',
+      yesterday: 'Вчера',
     },
     category: {
       name: {

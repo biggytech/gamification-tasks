@@ -79,7 +79,7 @@ const Progress: React.FC<IWithLanguageProviderProps<IProgressProps>> = ({
                       <Text>{item.points}</Text>
                     </View>
                   }
-                  secondaryText={formatDate(item.timestamp)}
+                  secondaryText={formatDate(item.timestamp, languageProvider)}
                 />
               )}
             />

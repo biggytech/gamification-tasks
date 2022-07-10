@@ -28,7 +28,7 @@ const AchievementsList: React.FC<
                     item.completed && item.timestamp !== null
                       ? `${item.message}\n${languageProvider.translate(
                           'general.completedAt',
-                        )}: ${formatDate(item.timestamp)}`
+                        )}: ${formatDate(item.timestamp, languageProvider)}`
                       : item.message
                   }
                   trailing={
