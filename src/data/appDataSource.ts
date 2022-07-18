@@ -5,12 +5,17 @@ import {
   IGlobalMessage,
   IHistory,
   ILabel,
+  ILabelData,
   IRepetitiveTask,
+  IRepetitiveTaskData,
   IReward,
+  IRewardData,
   ISettings,
   IStats,
   ISubtask,
+  ISubtaskData,
   ITask,
+  ITaskData,
   ITaskWithAdditions,
 } from '../lib/types';
 import ACTIONS from './actions';
@@ -99,7 +104,11 @@ async function appActionHandler(
         break;
       }
       case ACTIONS.ADD_LABEL: {
-        const label = await appRepository.addLabel(value);
+        const labelToAdd: ILabelData = {
+          ...value,
+          name: value.name.trim(),
+        };
+        const label = await appRepository.addLabel(labelToAdd);
 
         dataToReturn = {
           ...data,
@@ -158,7 +167,13 @@ async function appActionHandler(
         break;
       }
       case ACTIONS.ADD_REPETITIVE_TASK: {
-        const repetitiveTask = await appRepository.addRepetitiveTask(value);
+        const repetitiveTaskToAdd: IRepetitiveTaskData = {
+          ...value,
+          title: value.title.trim(),
+        };
+        const repetitiveTask = await appRepository.addRepetitiveTask(
+          repetitiveTaskToAdd,
+        );
 
         dataToReturn = {
           ...data,
@@ -182,7 +197,11 @@ async function appActionHandler(
         break;
       }
       case ACTIONS.ADD_TASK: {
-        const task = await appRepository.addTask(value);
+        const taskToAdd: ITaskData = {
+          ...value,
+          title: value.title.trim(),
+        };
+        const task = await appRepository.addTask(taskToAdd);
 
         dataToReturn = {
           ...data,
@@ -210,8 +229,9 @@ async function appActionHandler(
         const prevPosition = await appRepository.getMaxSubtasksPosition(
           value.taskId,
         );
-        const subtask = await appRepository.addSubtask({
+        const subtask: ISubtaskData = await appRepository.addSubtask({
           ...value,
+          title: value.title.trim(),
           position: prevPosition
             ? prevPosition + 1
             : defaults.subtasks.position,
@@ -244,7 +264,11 @@ async function appActionHandler(
         break;
       }
       case ACTIONS.ADD_REWARD: {
-        const reward = await appRepository.addReward(value);
+        const rewardToAdd: IRewardData = {
+          ...value,
+          title: value.title.trim(),
+        };
+        const reward = await appRepository.addReward(rewardToAdd);
 
         dataToReturn = {
           ...data,
@@ -514,14 +538,15 @@ async function appActionHandler(
         await loadBackupFile();
         break;
       }
-      case ACTIONS.GET_DB_SIZE:
+      case ACTIONS.GET_DB_SIZE: {
         const dbSize = await appRepository.getDbSize();
         dataToReturn = {
           ...data,
           dbSize,
         };
         break;
-      case ACTIONS.RESTORE_FROM_BACKUP:
+      }
+      case ACTIONS.RESTORE_FROM_BACKUP: {
         await appRepository.restoreFromBackup(value);
         showGlobalMessage({
           type: 'success',
@@ -530,11 +555,14 @@ async function appActionHandler(
           soundFile: appSoundProvider.soundFiles.notification_1,
         });
         break;
-      case ACTIONS.SHOW_GLOBAL_MESSAGE:
+      }
+      case ACTIONS.SHOW_GLOBAL_MESSAGE: {
         showGlobalMessage(value);
         break;
-      default:
+      }
+      default: {
         dataToReturn = data;
+      }
     }
 
     if (isUpdateAchievements) {
