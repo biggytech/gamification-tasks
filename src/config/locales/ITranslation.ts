@@ -33,6 +33,7 @@ interface ITranslation {
       addCategoriesFirst: string;
       completeWarning: string;
       completeWarningMessage: string;
+      hasUncompletedSubtasksMessage: string;
     };
     reward: {
       name: {

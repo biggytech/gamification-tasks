@@ -77,9 +77,15 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
   );
 
   const handleCompletePress = useCallback(() => {
+    const hasUncompletedSubtasks = !!internalTask?.subtasks.find(
+      subtask => !subtask.completed,
+    );
+
     Alert.alert(
       languageProvider.translate('task.completeWarning'),
-      languageProvider.translate('task.completeWarningMessage'),
+      hasUncompletedSubtasks
+        ? languageProvider.translate('task.hasUncompletedSubtasksMessage')
+        : languageProvider.translate('task.completeWarningMessage'),
       [
         {
           text: languageProvider.translate('general.cancel'),
@@ -92,7 +98,7 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
         },
       ],
     );
-  }, [onCompletePress, languageProvider]);
+  }, [internalTask, languageProvider, onCompletePress]);
 
   return (
     <SafeAreaView>

@@ -35,6 +35,7 @@ const enTranslation: ITranslation = {
       addCategoriesFirst: 'Add categories first',
       completeWarning: 'Are you sure to complete the task?',
       completeWarningMessage: 'This action cannot be undone',
+      hasUncompletedSubtasksMessage: 'This task contains uncompleted subtasks',
     },
     reward: {
       name: {

@@ -35,6 +35,8 @@ const ruTranslation: ITranslation = {
       addCategoriesFirst: 'Сперва добавьте категории',
       completeWarning: 'Вы уверены, что хотите завершить задание?',
       completeWarningMessage: 'Это действие невозможно отменить',
+      hasUncompletedSubtasksMessage:
+        'У этого задания есть незавершенные подзадания',
     },
     reward: {
       name: {
