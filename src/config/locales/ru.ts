@@ -20,6 +20,15 @@ const ruTranslation: ITranslation = {
       today: 'Сегодня',
       yesterday: 'Вчера',
     },
+    days: {
+      mon: 'Пн',
+      tues: 'Вт',
+      wed: 'Ср',
+      thurs: 'Чт',
+      fri: 'Пт',
+      sat: 'Сб',
+      sun: 'Вс',
+    },
     category: {
       name: {
         single: 'Категория',

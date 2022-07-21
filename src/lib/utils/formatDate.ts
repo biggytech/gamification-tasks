@@ -25,22 +25,28 @@ function formatDate(
   timestamp: number,
   languageProvider: ILanguageProvider,
 ): string {
+  const weekDays = [
+    languageProvider.translate('days.sun'),
+    languageProvider.translate('days.mon'),
+    languageProvider.translate('days.tues'),
+    languageProvider.translate('days.wed'),
+    languageProvider.translate('days.thurs'),
+    languageProvider.translate('days.fri'),
+    languageProvider.translate('days.sat'),
+  ];
   const date = new Date(timestamp * 1000);
+  const weekDay = weekDays[date.getDay()];
 
   if (isToday(date)) {
-    return (
-      languageProvider.translate('general.today') +
-      ', ' +
-      date.toLocaleTimeString()
-    );
+    return `${languageProvider.translate(
+      'general.today',
+    )}, ${date.toLocaleTimeString()}, ${weekDay}.`;
   } else if (isYesterday(date)) {
-    return (
-      languageProvider.translate('general.yesterday') +
-      ', ' +
-      date.toLocaleTimeString()
-    );
+    return `${languageProvider.translate(
+      'general.yesterday',
+    )}, ${date.toLocaleTimeString()}, ${weekDay}.`;
   } else {
-    return date.toLocaleString();
+    return `${date.toLocaleString()}, ${weekDay}.`;
   }
 }
 

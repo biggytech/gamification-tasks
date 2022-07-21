@@ -18,6 +18,15 @@ interface ITranslation {
       today: string;
       yesterday: string;
     };
+    days: {
+      mon: string;
+      tues: string;
+      wed: string;
+      thurs: string;
+      fri: string;
+      sat: string;
+      sun: string;
+    };
     category: {
       name: {
         single: string;

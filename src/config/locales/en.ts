@@ -20,6 +20,15 @@ const enTranslation: ITranslation = {
       today: 'Today',
       yesterday: 'Yesterday',
     },
+    days: {
+      mon: 'Mon',
+      tues: 'Tues',
+      wed: 'Wed',
+      thurs: 'Thurs',
+      fri: 'Fri',
+      sat: 'Sat',
+      sun: 'Sun',
+    },
     category: {
       name: {
         single: 'Category',
