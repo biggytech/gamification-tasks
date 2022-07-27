@@ -18,7 +18,7 @@ const AddSubtaskForm: React.FC<
 > = ({ taskId, onSubmit, error, languageProvider }) => {
   const [state, setState] = useState<IAddSubtaskFormInternalState>({
     title: languageProvider.translate('subtask.name.single'),
-    value: 5,
+    value: 1,
     taskId,
     completed: false,
   });
