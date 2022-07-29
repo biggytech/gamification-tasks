@@ -35,6 +35,10 @@ const dbScripts: DbScripts = [
       'CREATE TABLE IF NOT EXISTS history (id integer PRIMARY KEY AUTOINCREMENT, message text NOT NULL, points integer NOT NULL, timestamp integer NOT NULL)',
       `CREATE TABLE IF NOT EXISTS achievements (id integer PRIMARY KEY, 
         title text NOT NULL, message text NOT NULL, completed integer NOT NULL, timestamp integer)`,
+      `CREATE TABLE IF NOT EXISTS repetitiveTasksHistory 
+      (id integer PRIMARY KEY AUTOINCREMENT, repetitiveTaskId integer NOT NULL, 
+      timestamp integer NOT NULL, FOREIGN KEY(repetitiveTaskId) REFERENCES repetitiveTasks(id))
+      `,
     ],
     upsertScripts: [
       {
