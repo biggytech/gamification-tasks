@@ -7,6 +7,9 @@ import {
   ILabelData,
   IRepetitiveTask,
   IRepetitiveTaskData,
+  IRepetitiveTaskHistory,
+  IRepetitiveTaskHistoryData,
+  IRepetitiveTaskWithAdditions,
   IReward,
   IRewardData,
   ISettings,
@@ -92,6 +95,16 @@ const appRepository = {
     await appDatabaseProvider.getBackupData(),
   restoreFromBackup: async (backup: IBackupData) =>
     await appDatabaseProvider.restoreFromBackup(backup),
+  addRepetitiveTaskHistory: async (
+    history: IRepetitiveTaskHistoryData,
+  ): Promise<IRepetitiveTaskHistory> =>
+    await appDatabaseProvider.addRepetitiveTaskHistory(history),
+  getRepetitiveTasksHistory: async (): Promise<IRepetitiveTaskHistory[]> =>
+    await appDatabaseProvider.getRepetitiveTasksHistory(),
+  getRepetitiveTasksWithAdditions: async (
+    fromTimestamp: number,
+  ): Promise<IRepetitiveTaskWithAdditions[]> =>
+    await appDatabaseProvider.getRepetitiveTasksWithAdditions(fromTimestamp),
 };
 
 export default appRepository;

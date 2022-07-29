@@ -7,6 +7,9 @@ import {
   ILabelData,
   IRepetitiveTask,
   IRepetitiveTaskData,
+  IRepetitiveTaskHistory,
+  IRepetitiveTaskHistoryData,
+  IRepetitiveTaskWithAdditions,
   IReward,
   IRewardData,
   ISettings,
@@ -192,13 +195,43 @@ class DatabaseProvider {
     return await this.executeQuery('SELECT * FROM repetitiveTasks');
   }
 
-  async addRepetitiveTask(task: IRepetitiveTaskData) {
+  async getRepetitiveTasksWithAdditions(
+    fromTimestamp: number,
+  ): Promise<IRepetitiveTaskWithAdditions[]> {
+    return await this.executeQuery(
+      `SELECT repetitiveTasks.id AS id, repetitiveTasks.title AS title, repetitiveTasks.value AS value, 
+      COALESCE(COUNT(repetitiveTasksHistory.id), 0) AS countCompletedToday from repetitiveTasks 
+      LEFT JOIN (
+        SELECT id, timestamp, repetitiveTaskId FROM repetitiveTasksHistory WHERE repetitiveTasksHistory.timestamp >= ?
+      ) AS repetitiveTasksHistory
+      ON repetitiveTasksHistory.repetitiveTaskId = repetitiveTasks.id
+      GROUP BY repetitiveTasks.id`,
+      [fromTimestamp],
+    );
+  }
+
+  async addRepetitiveTask(task: IRepetitiveTaskData): Promise<IRepetitiveTask> {
     return (
       await this.executeQuery(
         'INSERT INTO repetitiveTasks (title, value) VALUES (?, ?) RETURNING *',
         [task.title, task.value],
       )
     )[0];
+  }
+
+  async addRepetitiveTaskHistory(
+    history: IRepetitiveTaskHistoryData,
+  ): Promise<IRepetitiveTaskHistory> {
+    return (
+      await this.executeQuery(
+        'INSERT INTO repetitiveTasksHistory (repetitiveTaskId, timestamp) VALUES (?, ?) RETURNING *',
+        [history.repetitiveTaskId, history.timestamp],
+      )
+    )[0];
+  }
+
+  async getRepetitiveTasksHistory(): Promise<IRepetitiveTaskHistory[]> {
+    return await this.executeQuery('SELECT * FROM repetitiveTasksHistory');
   }
 
   async getTasks(): Promise<ITask[]> {
@@ -489,6 +522,7 @@ class DatabaseProvider {
     const tasks = await this.getTasks();
     const subtasks = await this.getSubtasks();
     const repetitiveTasks = await this.getRepetitiveTasks();
+    const repetitiveTasksHistory = await this.getRepetitiveTasksHistory();
     const settings = await this.getSettings();
     const rewards = await this.getRewards();
     const stats = await this.getStats();
@@ -500,6 +534,7 @@ class DatabaseProvider {
       tasks,
       subtasks,
       repetitiveTasks,
+      repetitiveTasksHistory,
       settings,
       rewards,
       stats,
@@ -514,6 +549,7 @@ class DatabaseProvider {
       tasks,
       subtasks,
       repetitiveTasks,
+      repetitiveTasksHistory,
       settings,
       rewards,
       stats,
@@ -574,6 +610,21 @@ class DatabaseProvider {
           await this.executeQuery(
             'INSERT INTO repetitiveTasks (id, title, value) VALUES (?, ?, ?)',
             [task.id, task.title, task.value],
+          ),
+      ),
+    );
+
+    await this.executeQuery('DELETE FROM repetitiveTasksHistory');
+    await Promise.all(
+      repetitiveTasksHistory.map(
+        async _repetitiveTasksHistory =>
+          await this.executeQuery(
+            'INSERT INTO repetitiveTasksHistory (id, repetitiveTaskId, timestamp) VALUES (?, ?, ?)',
+            [
+              _repetitiveTasksHistory.id,
+              _repetitiveTasksHistory.repetitiveTaskId,
+              _repetitiveTasksHistory.timestamp,
+            ],
           ),
       ),
     );
