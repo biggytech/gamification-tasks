@@ -52,6 +52,19 @@ export interface IRepetitiveTask extends IRepetitiveTaskData {
   id: Key;
 }
 
+export interface IRepetitiveTaskWithAdditions extends IRepetitiveTask {
+  countCompletedToday: number;
+}
+
+export interface IRepetitiveTaskHistoryData {
+  repetitiveTaskId: Key;
+  timestamp: number;
+}
+
+export interface IRepetitiveTaskHistory extends IRepetitiveTaskHistoryData {
+  id: Key;
+}
+
 export interface ITaskData {
   title: string;
   value: Point;
@@ -152,6 +165,7 @@ export interface IBackupData {
   tasks: ITask[];
   subtasks: ISubtask[];
   repetitiveTasks: IRepetitiveTask[];
+  repetitiveTasksHistory: IRepetitiveTaskHistory[];
   settings: ISettings;
   rewards: IReward[];
   stats: IStats;
