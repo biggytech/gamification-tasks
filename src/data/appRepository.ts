@@ -105,6 +105,10 @@ const appRepository = {
     fromTimestamp: number,
   ): Promise<IRepetitiveTaskWithAdditions[]> =>
     await appDatabaseProvider.getRepetitiveTasksWithAdditions(fromTimestamp),
+  clearOldestRepetitiveTasksHistory: async (
+    toTimestamp: number,
+  ): Promise<void> =>
+    await appDatabaseProvider.clearOldestRepetitiveTasksHistory(toTimestamp),
 };
 
 export default appRepository;

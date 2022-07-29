@@ -152,12 +152,12 @@ async function appActionHandler(
         break;
       }
       case ACTIONS.LOAD_REPETITIVE_TASKS: {
-        const now = new Date();
-        now.setHours(0, 0, 0, 0); // set to the beginning of the day
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // set to the beginning of the day
 
         const repetitiveTasks =
           await appRepository.getRepetitiveTasksWithAdditions(
-            getTimestamp(now),
+            getTimestamp(today),
           );
 
         dataToReturn = {
@@ -342,6 +342,12 @@ async function appActionHandler(
               0,
             );
           }
+
+          const today = new Date();
+          today.setHours(0, 0, 0, 0); // set to the beginning of the day
+          await appRepository.clearOldestRepetitiveTasksHistory(
+            getTimestamp(today),
+          );
 
           showGlobalMessage(
             shouldBumpLevel

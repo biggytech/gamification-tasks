@@ -234,6 +234,13 @@ class DatabaseProvider {
     return await this.executeQuery('SELECT * FROM repetitiveTasksHistory');
   }
 
+  async clearOldestRepetitiveTasksHistory(toTimestamp: number): Promise<void> {
+    await this.executeQuery(
+      'DELETE FROM repetitiveTasksHistory WHERE timestamp < ?',
+      [toTimestamp],
+    );
+  }
+
   async getTasks(): Promise<ITask[]> {
     const tasks = await this.executeQuery(
       'SELECT * from tasks ORDER BY completed ASC',
