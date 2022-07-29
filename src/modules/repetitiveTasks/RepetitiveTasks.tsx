@@ -83,8 +83,13 @@ const RepetitiveTasksModule: ModuleComponent<
   const handleRepetitiveTaskComplete = useCallback(
     async (taskId: Key) => {
       await callDispatch(actions.COMPLETE_REPETITIVE_TASK, taskId);
+      callDispatch(actions.LOAD_REPETITIVE_TASKS);
     },
-    [actions.COMPLETE_REPETITIVE_TASK, callDispatch],
+    [
+      actions.COMPLETE_REPETITIVE_TASK,
+      actions.LOAD_REPETITIVE_TASKS,
+      callDispatch,
+    ],
   );
 
   return (

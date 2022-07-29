@@ -6,14 +6,13 @@ import {
   IHistory,
   ILabel,
   ILabelData,
-  IRepetitiveTask,
   IRepetitiveTaskData,
+  IRepetitiveTaskWithAdditions,
   IReward,
   IRewardData,
   ISettings,
   IStats,
   ISubtask,
-  ISubtaskData,
   ITask,
   ITaskData,
   ITaskWithAdditions,
@@ -27,6 +26,7 @@ import writeToHistory from './handlers/common/writeToHistory';
 import appLanguageProvider from './appLanguageProvider';
 import appSoundProvider from './appSoundProvider';
 import loadBackupFile from './handlers/data/loadBackupFile';
+import getTimestamp from '../lib/utils/getTimestamp';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -35,7 +35,7 @@ export interface IAppData {
   labels: ILabel[];
   dbSize: number;
   settings: ISettings;
-  repetitiveTasks: IRepetitiveTask[];
+  repetitiveTasks: IRepetitiveTaskWithAdditions[];
   tasks: ITask[];
   unusedLabels: ILabel[];
   selectedTask: ITaskWithAdditions | null;
@@ -152,7 +152,14 @@ async function appActionHandler(
         break;
       }
       case ACTIONS.LOAD_REPETITIVE_TASKS: {
-        const repetitiveTasks = await appRepository.getRepetitiveTasks();
+        const now = new Date();
+        now.setHours(0, 0, 0, 0); // set to the beginning of the day
+
+        const repetitiveTasks =
+          await appRepository.getRepetitiveTasksWithAdditions(
+            getTimestamp(now),
+          );
+
         dataToReturn = {
           ...data,
           repetitiveTasks,
@@ -177,7 +184,10 @@ async function appActionHandler(
 
         dataToReturn = {
           ...data,
-          repetitiveTasks: data.repetitiveTasks.concat(repetitiveTask),
+          repetitiveTasks: data.repetitiveTasks.concat({
+            ...repetitiveTask,
+            countCompletedToday: 0,
+          }),
         };
         break;
       }
@@ -229,7 +239,7 @@ async function appActionHandler(
         const prevPosition = await appRepository.getMaxSubtasksPosition(
           value.taskId,
         );
-        const subtask: ISubtaskData = await appRepository.addSubtask({
+        const subtask: ISubtask = await appRepository.addSubtask({
           ...value,
           title: value.title.trim(),
           position: prevPosition
@@ -308,6 +318,10 @@ async function appActionHandler(
         const task = await appRepository.getRepetitiveTask(value);
         if (task) {
           const { shouldBumpLevel, level } = await updateStats(task.value);
+          await appRepository.addRepetitiveTaskHistory({
+            repetitiveTaskId: task.id,
+            timestamp: getTimestamp(),
+          });
 
           await writeToHistory(
             `${appLanguageProvider.translate(

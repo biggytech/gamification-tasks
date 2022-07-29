@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import {
-  IRepetitiveTask,
+  IRepetitiveTaskWithAdditions,
   IWithLanguageProviderProps,
   Key,
 } from '../../lib/types';
@@ -10,7 +10,7 @@ import { Button } from '@react-native-material/core';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export interface IRepetitiveTasksListProps {
-  items: IRepetitiveTask[];
+  items: IRepetitiveTaskWithAdditions[];
   onAddPress: () => void;
   error: null | string;
   onItemCheckPress: (id: Key) => void;
@@ -36,13 +36,19 @@ const RepetitiveTasksList: React.FC<
           />
           <FlatList
             data={items}
+            keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (
               <ListItem
                 title={item.title}
+                leading={
+                  <View>
+                    <Text>{item.value}</Text>
+                  </View>
+                }
                 trailing={
                   <Stack direction="row" spacing={4} m={4} center>
                     <View>
-                      <Text>{item.value}</Text>
+                      <Text>{item.countCompletedToday}</Text>
                     </View>
                     <IconButton
                       onPress={() => onItemCheckPress(item.id)}

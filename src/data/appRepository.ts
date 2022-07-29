@@ -54,7 +54,7 @@ const appRepository = {
   getUnusedLabels: async () => await appDatabaseProvider.getUnusedLabels(),
   getTaskWithAdditions: async (id: Key): Promise<ITaskWithAdditions | null> =>
     await appDatabaseProvider.getTaskWithAdditions(id),
-  addSubtask: async (subtask: ISubtaskData) =>
+  addSubtask: async (subtask: ISubtaskData): Promise<ISubtask> =>
     await appDatabaseProvider.addSubtask(subtask),
   getRewards: async (): Promise<IReward[]> =>
     await appDatabaseProvider.getRewards(),
