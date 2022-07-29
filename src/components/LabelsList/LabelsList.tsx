@@ -39,6 +39,7 @@ const LabelsList: React.FC<IWithLanguageProviderProps<ILabelsListProps>> = ({
           />
           <FlatList
             data={items}
+            keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (
               <ListItem
                 title={item.name}

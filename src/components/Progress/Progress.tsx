@@ -71,6 +71,7 @@ const Progress: React.FC<IWithLanguageProviderProps<IProgressProps>> = ({
           <Flex fill>
             <FlatList
               data={history}
+              keyExtractor={item => item.id.toString()}
               renderItem={({ item }) => (
                 <ListItem
                   title={item.message}

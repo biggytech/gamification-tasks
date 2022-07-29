@@ -53,6 +53,7 @@ const TasksList: React.FC<IWithLanguageProviderProps<ITasksListProps>> = ({
           ) : null}
           <FlatList
             data={items}
+            keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => {
               const label = labels.find(_label => _label.id === item.labelId);
 

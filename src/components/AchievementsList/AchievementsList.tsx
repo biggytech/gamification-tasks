@@ -20,6 +20,7 @@ const AchievementsList: React.FC<
         <>
           <FlatList
             data={items}
+            keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => {
               return (
                 <ListItem

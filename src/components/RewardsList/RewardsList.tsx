@@ -35,6 +35,7 @@ const RewardsList: React.FC<IWithLanguageProviderProps<IRewardsListProps>> = ({
           />
           <FlatList
             data={items}
+            keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => {
               let trailingNode = null;
 
