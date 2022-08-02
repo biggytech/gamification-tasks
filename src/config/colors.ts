@@ -1,5 +1,5 @@
 const COLORS = {
-  error: '#FFCAB1',
+  error: '#ef476f',
   warning: '#ECDCB0',
   lightSuccess: '#C1D7AE',
   success: '#8CC084',

@@ -3,7 +3,10 @@ import { Text } from 'react-native';
 import { ListItem } from '@react-native-material/core';
 import { IconButton } from '@react-native-material/core';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { IWithLanguageProviderProps } from '../../lib/types';
+import {
+  IWithColorsProviderProps,
+  IWithLanguageProviderProps,
+} from '../../lib/types';
 
 export interface IDeveloperSettingsProps {
   dbSize: number;
@@ -12,8 +15,8 @@ export interface IDeveloperSettingsProps {
 }
 
 const DeveloperSettings: React.FC<
-  IWithLanguageProviderProps<IDeveloperSettingsProps>
-> = ({ dbSize, onDeleteDatabase, languageProvider, error }) => {
+  IWithColorsProviderProps<IWithLanguageProviderProps<IDeveloperSettingsProps>>
+> = ({ dbSize, onDeleteDatabase, languageProvider, error, colorsProvider }) => {
   return (
     <>
       {error ? <Text>{error}</Text> : null}
@@ -28,7 +31,13 @@ const DeveloperSettings: React.FC<
             trailing={() => (
               <IconButton
                 onPress={onDeleteDatabase}
-                icon={props => <Icon name="trash-can" {...props} />}
+                icon={props => (
+                  <Icon
+                    name="trash-can"
+                    {...props}
+                    color={colorsProvider.error}
+                  />
+                )}
               />
             )}
           />

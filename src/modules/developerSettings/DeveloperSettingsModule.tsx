@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import { ModuleComponent } from '../../lib/types';
+import { IWithColorsProviderProps, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import DeveloperSettings, {
@@ -12,11 +12,14 @@ import DrawerButton, {
 } from '../../components/common/DrawerButton';
 import appLanguageProvider from '../../data/appLanguageProvider';
 import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
+import appColorsProvider from '../../data/appColorsProvider';
+import withColorsProvider from '../../lib/hoc/withColorsProvider';
 
 const Stack = createNativeStackNavigator();
 
 const developerSettingsDataSource = appDataSource;
 const developerSettingsLanguageProvider = appLanguageProvider;
+const developerSettingsColorsProvider = appColorsProvider;
 
 const DrawerButtonWithLanguageProvider =
   withLanguageProvider<IDrawerButtonProps>(
@@ -24,10 +27,13 @@ const DrawerButtonWithLanguageProvider =
     developerSettingsLanguageProvider,
   );
 
-const DeveloperSettingsWithLanguageProvider =
-  withLanguageProvider<IDeveloperSettingsProps>(
-    DeveloperSettings,
-    developerSettingsLanguageProvider,
+const DeveloperSettingsWithProviders =
+  withColorsProvider<IDeveloperSettingsProps>(
+    withLanguageProvider<IWithColorsProviderProps<IDeveloperSettingsProps>>(
+      DeveloperSettings,
+      developerSettingsLanguageProvider,
+    ),
+    developerSettingsColorsProvider,
   );
 
 const screens = {
@@ -70,7 +76,7 @@ const DeveloperSettingsModule: ModuleComponent<
             ),
           }}>
           {props => (
-            <DeveloperSettingsWithLanguageProvider
+            <DeveloperSettingsWithProviders
               {...props}
               dbSize={dbSize}
               onDeleteDatabase={handleDeleteDatabase}
