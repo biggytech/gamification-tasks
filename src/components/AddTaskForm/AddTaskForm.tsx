@@ -7,6 +7,7 @@ import {
 } from '../../lib/types';
 import { Stack, TextInput, Button } from '@react-native-material/core';
 import DropDownPicker from 'react-native-dropdown-picker';
+import LabelIcon from '../common/LabelIcon';
 
 export interface IAddTaskFormProps {
   onSubmit: (label: ITaskData) => void;
@@ -54,7 +55,12 @@ const AddTaskForm: React.FC<IWithLanguageProviderProps<IAddTaskFormProps>> = ({
   }, []);
 
   const labelsData = useMemo(
-    () => labels.map(label => ({ label: label.name, value: label.id })),
+    () =>
+      labels.map(label => ({
+        label: label.name,
+        value: label.id,
+        icon: () => <LabelIcon color={label.color} />,
+      })),
     [labels],
   );
 

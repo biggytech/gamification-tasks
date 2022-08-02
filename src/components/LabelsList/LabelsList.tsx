@@ -3,7 +3,7 @@ import { FlatList, Text } from 'react-native';
 import { ILabel, IWithLanguageProviderProps } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import LabelIcon from '../common/LabelIcon';
 
 export interface ILabelsListProps {
   items: ILabel[];
@@ -33,21 +33,12 @@ const LabelsList: React.FC<IWithLanguageProviderProps<ILabelsListProps>> = ({
           <FlatList
             data={items}
             keyExtractor={item => item.id.toString()}
-            renderItem={({ item }) => {
-              const isWhiteItem = item.color.toLowerCase() === '#ffffff';
-              return (
-                <ListItem
-                  title={item.name}
-                  leading={
-                    <Icon
-                      name={isWhiteItem ? 'label-outline' : 'label'}
-                      color={isWhiteItem ? undefined : item.color}
-                      size={20}
-                    />
-                  }
-                />
-              );
-            }}
+            renderItem={({ item }) => (
+              <ListItem
+                title={item.name}
+                leading={<LabelIcon color={item.color} />}
+              />
+            )}
           />
         </>
       ) : null}
