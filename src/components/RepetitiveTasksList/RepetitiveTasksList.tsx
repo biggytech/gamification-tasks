@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import {
   IRepetitiveTaskWithAdditions,
+  IWithColorsProviderProps,
   IWithLanguageProviderProps,
   Key,
 } from '../../lib/types';
@@ -17,8 +18,17 @@ export interface IRepetitiveTasksListProps {
 }
 
 const RepetitiveTasksList: React.FC<
-  IWithLanguageProviderProps<IRepetitiveTasksListProps>
-> = ({ items, onAddPress, error, onItemCheckPress, languageProvider }) => {
+  IWithColorsProviderProps<
+    IWithLanguageProviderProps<IRepetitiveTasksListProps>
+  >
+> = ({
+  items,
+  onAddPress,
+  error,
+  onItemCheckPress,
+  languageProvider,
+  colorsProvider,
+}) => {
   return (
     <>
       {error ? <Text>{error}</Text> : null}
@@ -52,7 +62,21 @@ const RepetitiveTasksList: React.FC<
                     </View>
                     <IconButton
                       onPress={() => onItemCheckPress(item.id)}
-                      icon={props => <Icon name="check-bold" {...props} />}
+                      icon={props => (
+                        <Icon
+                          name={
+                            item.countCompletedToday >= 2
+                              ? 'check-all'
+                              : 'check-bold'
+                          }
+                          {...props}
+                          color={
+                            item.countCompletedToday >= 1
+                              ? colorsProvider.success
+                              : undefined
+                          }
+                        />
+                      )}
                     />
                   </Stack>
                 }

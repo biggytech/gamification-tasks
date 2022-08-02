@@ -1,6 +1,11 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import { IRepetitiveTaskData, Key, ModuleComponent } from '../../lib/types';
+import {
+  IRepetitiveTaskData,
+  IWithColorsProviderProps,
+  Key,
+  ModuleComponent,
+} from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
@@ -15,11 +20,14 @@ import AddRepetitiveTaskForm, {
 } from '../../components/AddRepetitiveTaskForm';
 import appLanguageProvider from '../../data/appLanguageProvider';
 import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
+import appColorsProvider from '../../data/appColorsProvider';
+import withColorsProvider from '../../lib/hoc/withColorsProvider';
 
 const Stack = createNativeStackNavigator();
 
 const repetitiveTasksDataSource = appDataSource;
 const repetitiveTasksLanguageProvider = appLanguageProvider;
+const repetitiveTasksColorsProvider = appColorsProvider;
 
 const DrawerButtonWithLanguageProvider =
   withLanguageProvider<IDrawerButtonProps>(
@@ -33,10 +41,13 @@ const AddRepetitiveTaskFormWithLanguageProvider =
     repetitiveTasksLanguageProvider,
   );
 
-const RepetitiveTasksListWithLanguageProvider =
-  withLanguageProvider<IRepetitiveTasksListProps>(
-    RepetitiveTasksList,
-    repetitiveTasksLanguageProvider,
+const RepetitiveTasksListWithProviders =
+  withColorsProvider<IRepetitiveTasksListProps>(
+    withLanguageProvider<IWithColorsProviderProps<IRepetitiveTasksListProps>>(
+      RepetitiveTasksList,
+      repetitiveTasksLanguageProvider,
+    ),
+    repetitiveTasksColorsProvider,
   );
 
 const screens = {
@@ -108,7 +119,7 @@ const RepetitiveTasksModule: ModuleComponent<
             ),
           }}>
           {props => (
-            <RepetitiveTasksListWithLanguageProvider
+            <RepetitiveTasksListWithProviders
               {...props}
               error={error}
               items={repetitiveTasks}

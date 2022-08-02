@@ -172,3 +172,15 @@ export interface IBackupData {
   history: IHistory[];
   achievements: IAchievement[];
 }
+
+export interface IColorsProvider {
+  error: string;
+  warning: string;
+  lightSuccess: string;
+  success: string;
+  neutral: string;
+}
+
+export type IWithColorsProviderProps<TComponentProps> = TComponentProps & {
+  colorsProvider: IColorsProvider;
+};
