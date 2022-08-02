@@ -1,6 +1,12 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import { ISubtaskData, ITaskData, Key, ModuleComponent } from '../../lib/types';
+import {
+  ISubtaskData,
+  ITaskData,
+  IWithColorsProviderProps,
+  Key,
+  ModuleComponent,
+} from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
@@ -15,11 +21,14 @@ import AddSubtaskForm, {
 } from '../../components/AddSubtaskForm';
 import appLanguageProvider from '../../data/appLanguageProvider';
 import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
+import appColorsProvider from '../../data/appColorsProvider';
+import withColorsProvider from '../../lib/hoc/withColorsProvider';
 
 const Stack = createNativeStackNavigator();
 
 const tasksDataSource = appDataSource;
 const tasksLanguageProvider = appLanguageProvider;
+const tasksColorsProvider = appColorsProvider;
 
 const AddSubtaskFormWithLanguageProvider =
   withLanguageProvider<IAddSubtaskFormProps>(
@@ -35,9 +44,12 @@ const AddTaskFormWithLanguageProvider = withLanguageProvider<IAddTaskFormProps>(
 const DrawerButtonWithLanguageProvider =
   withLanguageProvider<IDrawerButtonProps>(DrawerButton, tasksLanguageProvider);
 
-const SingleTaskWithLanguageProvider = withLanguageProvider<ISingleTaskProps>(
-  SingleTask,
-  tasksLanguageProvider,
+const SingleTaskWithProviders = withColorsProvider<ISingleTaskProps>(
+  withLanguageProvider<IWithColorsProviderProps<ISingleTaskProps>>(
+    SingleTask,
+    tasksLanguageProvider,
+  ),
+  tasksColorsProvider,
 );
 
 const TasksListWithLanguageProvider = withLanguageProvider<ITasksListProps>(
@@ -209,7 +221,7 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
               tasksLanguageProvider.translate('general.notFound'),
           }}>
           {props => (
-            <SingleTaskWithLanguageProvider
+            <SingleTaskWithProviders
               {...props}
               task={selectedTask}
               error={

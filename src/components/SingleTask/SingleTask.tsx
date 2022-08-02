@@ -11,6 +11,7 @@ import {
   ILabel,
   ISubtask,
   ITaskWithAdditions,
+  IWithColorsProviderProps,
   IWithLanguageProviderProps,
   Key,
 } from '../../lib/types';
@@ -19,6 +20,7 @@ import DraggableFlatList, {
 } from 'react-native-draggable-flatlist';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Alert } from 'react-native';
+import LabelIcon from '../common/LabelIcon';
 
 export interface ISingleTaskProps {
   task: ITaskWithAdditions | null;
@@ -44,7 +46,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
+const SingleTask: React.FC<
+  IWithColorsProviderProps<IWithLanguageProviderProps<ISingleTaskProps>>
+> = ({
   task,
   error,
   labels,
@@ -53,6 +57,7 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
   onSubtaskCompletePress,
   onCompletePress,
   languageProvider,
+  colorsProvider,
 }) => {
   // internal state to avoid blinking subtasks when reordering
   const [internalTask, setInternalTask] = useState<ITaskWithAdditions | null>(
@@ -116,11 +121,7 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
           {label ? (
             <ListItem
               title={languageProvider.translate('category.name.single')}
-              trailing={
-                <View
-                  style={[styles.labelColor, { backgroundColor: label.color }]}
-                />
-              }
+              trailing={<LabelIcon color={label.color} />}
               secondaryText={label.name}
             />
           ) : null}
@@ -153,7 +154,11 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
                       disabled
                       icon={props =>
                         item.completed ? (
-                          <Icon name="check-outline" {...props} />
+                          <Icon
+                            name="check-circle"
+                            {...props}
+                            color={colorsProvider.success}
+                          />
                         ) : null
                       }
                     />
@@ -184,7 +189,11 @@ const SingleTask: React.FC<IWithLanguageProviderProps<ISingleTaskProps>> = ({
                             onPress={() => onSubtaskCompletePress(item.id)}
                             icon={props =>
                               item.completed ? (
-                                <Icon name="check-outline" {...props} />
+                                <Icon
+                                  name="check-circle"
+                                  {...props}
+                                  color={colorsProvider.success}
+                                />
                               ) : (
                                 <Icon name="check-bold" {...props} />
                               )
