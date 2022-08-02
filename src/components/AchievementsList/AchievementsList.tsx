@@ -1,18 +1,22 @@
 import React, { memo } from 'react';
 import { FlatList, Text } from 'react-native';
-import { IAchievement, IWithLanguageProviderProps } from '../../lib/types';
+import {
+  IAchievement,
+  IWithColorsProviderProps,
+  IWithLanguageProviderProps,
+} from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import formatDate from '../../lib/utils/formatDate';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export interface AchievementsListProps {
+export interface IAchievementsListProps {
   items: IAchievement[];
   error: null | string;
 }
 
 const AchievementsList: React.FC<
-  IWithLanguageProviderProps<AchievementsListProps>
-> = ({ error, items, languageProvider }) => {
+  IWithColorsProviderProps<IWithLanguageProviderProps<IAchievementsListProps>>
+> = ({ error, items, languageProvider, colorsProvider }) => {
   return (
     <>
       {error ? <Text>{error}</Text> : null}
@@ -33,7 +37,13 @@ const AchievementsList: React.FC<
                       : item.message
                   }
                   trailing={
-                    item.completed ? <Icon name="check-outline" /> : null
+                    item.completed ? (
+                      <Icon
+                        name="check-circle"
+                        color={colorsProvider.success}
+                        size={20}
+                      />
+                    ) : null
                   }
                 />
               );

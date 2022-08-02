@@ -1,1 +1,1 @@
-export { default, type AchievementsListProps } from './AchievementsList';
+export { default, type IAchievementsListProps } from './AchievementsList';

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import asModule from '../../lib/utils/asModule';
-import { ModuleComponent } from '../../lib/types';
+import { IWithColorsProviderProps, ModuleComponent } from '../../lib/types';
 import appDataSource, { IAppData } from '../../data/appDataSource';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFocusEffect } from '@react-navigation/native';
@@ -8,20 +8,26 @@ import DrawerButton, {
   IDrawerButtonProps,
 } from '../../components/common/DrawerButton';
 import AchievementsList, {
-  AchievementsListProps,
+  IAchievementsListProps,
 } from '../../components/AchievementsList';
 import appLanguageProvider from '../../data/appLanguageProvider';
 import withLanguageProvider from '../../lib/hoc/withLanguageProvider';
+import appColorsProvider from '../../data/appColorsProvider';
+import withColorsProvider from '../../lib/hoc/withColorsProvider';
 
 const Stack = createNativeStackNavigator();
 
 const achieventsModuleDataSource = appDataSource;
 const achievementsLanguageProvider = appLanguageProvider;
+const achievementsColorsProviders = appColorsProvider;
 
-const AchievementsListWithLanguageProvider =
-  withLanguageProvider<AchievementsListProps>(
-    AchievementsList,
-    achievementsLanguageProvider,
+const AchievementsListWithProviders =
+  withColorsProvider<IAchievementsListProps>(
+    withLanguageProvider<IWithColorsProviderProps<IAchievementsListProps>>(
+      AchievementsList,
+      achievementsLanguageProvider,
+    ),
+    achievementsColorsProviders,
   );
 
 const DrawerButtonWithLanguageProvider =
@@ -72,7 +78,7 @@ const AchievementsModule: ModuleComponent<
             ),
           }}>
           {props => (
-            <AchievementsListWithLanguageProvider
+            <AchievementsListWithProviders
               {...props}
               items={achievements}
               error={error}
