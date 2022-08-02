@@ -52,9 +52,12 @@ const SingleTaskWithProviders = withColorsProvider<ISingleTaskProps>(
   tasksColorsProvider,
 );
 
-const TasksListWithLanguageProvider = withLanguageProvider<ITasksListProps>(
-  TasksList,
-  tasksLanguageProvider,
+const TasksListWithProviders = withColorsProvider(
+  withLanguageProvider<IWithColorsProviderProps<ITasksListProps>>(
+    TasksList,
+    tasksLanguageProvider,
+  ),
+  tasksColorsProvider,
 );
 
 const screens = {
@@ -181,7 +184,7 @@ const TasksModule: ModuleComponent<TasksModuleData, TasksModuleActions> = ({
             title: tasksLanguageProvider.translate('task.name.multiple'),
           }}>
           {props => (
-            <TasksListWithLanguageProvider
+            <TasksListWithProviders
               {...props}
               error={
                 error ??

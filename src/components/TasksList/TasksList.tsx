@@ -3,6 +3,7 @@ import { FlatList, Text, View } from 'react-native';
 import {
   ILabel,
   ITask,
+  IWithColorsProviderProps,
   IWithLanguageProviderProps,
   Key,
 } from '../../lib/types';
@@ -20,7 +21,9 @@ export interface ITasksListProps {
   onTaskItemPress: (id: Key) => void;
 }
 
-const TasksList: React.FC<IWithLanguageProviderProps<ITasksListProps>> = ({
+const TasksList: React.FC<
+  IWithColorsProviderProps<IWithLanguageProviderProps<ITasksListProps>>
+> = ({
   items,
   onAddPress,
   error,
@@ -28,6 +31,7 @@ const TasksList: React.FC<IWithLanguageProviderProps<ITasksListProps>> = ({
   canAdd,
   onTaskItemPress,
   languageProvider,
+  colorsProvider,
 }) => {
   return (
     <>
@@ -60,7 +64,13 @@ const TasksList: React.FC<IWithLanguageProviderProps<ITasksListProps>> = ({
                     item.completed ? (
                       <IconButton
                         disabled
-                        icon={props => <Icon name="check-outline" {...props} />}
+                        icon={props => (
+                          <Icon
+                            name="check-circle"
+                            {...props}
+                            color={colorsProvider.success}
+                          />
+                        )}
                       />
                     ) : (
                       <Text>{item.value}</Text>
