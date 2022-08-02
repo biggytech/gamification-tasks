@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import {
   ILabel,
   ITask,
@@ -9,14 +9,7 @@ import {
 import { IconButton, ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-const styles = StyleSheet.create({
-  labelColor: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-  },
-});
+import LabelIcon from '../common/LabelIcon';
 
 export interface ITasksListProps {
   items: ITask[];
@@ -61,12 +54,7 @@ const TasksList: React.FC<IWithLanguageProviderProps<ITasksListProps>> = ({
                 <ListItem
                   title={item.title}
                   leading={
-                    <View
-                      style={[
-                        styles.labelColor,
-                        label?.color ? { backgroundColor: label.color } : {},
-                      ]}
-                    />
+                    label?.color ? <LabelIcon color={label.color} /> : <View />
                   }
                   trailing={
                     item.completed ? (
