@@ -1,16 +1,9 @@
 import React, { memo } from 'react';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
+import { FlatList, Text } from 'react-native';
 import { ILabel, IWithLanguageProviderProps } from '../../lib/types';
 import { ListItem } from '@react-native-material/core';
 import { Button } from '@react-native-material/core';
-
-const styles = StyleSheet.create({
-  color: {
-    width: 20,
-    height: 20,
-    borderWidth: 1,
-  },
-});
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export interface ILabelsListProps {
   items: ILabel[];
@@ -40,16 +33,21 @@ const LabelsList: React.FC<IWithLanguageProviderProps<ILabelsListProps>> = ({
           <FlatList
             data={items}
             keyExtractor={item => item.id.toString()}
-            renderItem={({ item }) => (
-              <ListItem
-                title={item.name}
-                leading={
-                  <View
-                    style={[styles.color, { backgroundColor: item.color }]}
-                  />
-                }
-              />
-            )}
+            renderItem={({ item }) => {
+              const isWhiteItem = item.color.toLowerCase() === '#ffffff';
+              return (
+                <ListItem
+                  title={item.name}
+                  leading={
+                    <Icon
+                      name={isWhiteItem ? 'label-outline' : 'label'}
+                      color={isWhiteItem ? undefined : item.color}
+                      size={20}
+                    />
+                  }
+                />
+              );
+            }}
           />
         </>
       ) : null}
