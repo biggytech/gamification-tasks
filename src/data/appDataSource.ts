@@ -27,6 +27,8 @@ import appLanguageProvider from './appLanguageProvider';
 import appSoundProvider from './appSoundProvider';
 import loadBackupFile from './handlers/data/loadBackupFile';
 import getTimestamp from '../lib/utils/getTimestamp';
+import completeRepetitiveTask from './handlers/data/completeRepetitiveTask';
+import getNewLevelMessage from './handlers/common/getNewLevelMessage';
 
 type AppActions = keyof typeof ACTIONS;
 
@@ -68,15 +70,6 @@ const initialData: IAppData = {
   history: [],
   achievements: [],
 };
-
-const getNewLevelMessage = (level: number): IGlobalMessage => ({
-  type: 'success',
-  title: `${appLanguageProvider.translate(
-    'level.name',
-  )} ${level} ${appLanguageProvider.translate('level.reached').toLowerCase()}!`,
-  message: appLanguageProvider.translate('reward.timeToPick'),
-  soundFile: appSoundProvider.soundFiles.notification_2,
-});
 
 async function appActionHandler(
   data: IAppData,
@@ -315,55 +308,8 @@ async function appActionHandler(
         break;
       }
       case ACTIONS.COMPLETE_REPETITIVE_TASK: {
-        const task = await appRepository.getRepetitiveTask(value);
-        if (task) {
-          const { shouldBumpLevel, level } = await updateStats(task.value);
-          await appRepository.addRepetitiveTaskHistory({
-            repetitiveTaskId: task.id,
-            timestamp: getTimestamp(),
-          });
-
-          await writeToHistory(
-            `${appLanguageProvider.translate(
-              'general.completed',
-            )} ${appLanguageProvider
-              .translate('repetitiveTask.name.single')
-              .toLowerCase()} "${task?.title}"`,
-            task.value,
-          );
-
-          if (shouldBumpLevel) {
-            await writeToHistory(
-              `${appLanguageProvider.translate(
-                'level.reached',
-              )} ${appLanguageProvider
-                .translate('level.name')
-                .toLowerCase()} ${level}`,
-              0,
-            );
-          }
-
-          const today = new Date();
-          today.setHours(0, 0, 0, 0); // set to the beginning of the day
-          await appRepository.clearOldestRepetitiveTasksHistory(
-            getTimestamp(today),
-          );
-
-          showGlobalMessage(
-            shouldBumpLevel
-              ? getNewLevelMessage(level)
-              : {
-                  type: 'success',
-                  title:
-                    appLanguageProvider.translate('general.completed') + '!',
-                  soundFile: appSoundProvider.soundFiles.notification_1,
-                },
-          );
-
-          isUpdateAchievements = true;
-        }
-
-        dataToReturn = data;
+        const isSuccessfull = await completeRepetitiveTask(value);
+        isUpdateAchievements = isSuccessfull;
         break;
       }
       case ACTIONS.CHANGE_SUBTASKS_ORDER: {

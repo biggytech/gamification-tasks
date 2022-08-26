@@ -123,13 +123,24 @@ export interface IHistory extends IHistoryData {
   id: Key;
 }
 
-export type IGlobalMessageType = 'success' | 'error';
+export type IGlobalMessageRevertableType = 'revertable';
+export type IGlobalMessageType =
+  | 'success'
+  | 'error'
+  | IGlobalMessageRevertableType;
 
 export interface IGlobalMessage {
   type: IGlobalMessageType;
   title: string;
   message?: string;
   soundFile: string;
+}
+
+export interface IGlobalMessageRevertable extends IGlobalMessage {
+  type: IGlobalMessageRevertableType;
+  onComplete: () => void;
+  onRevert: () => void;
+  revertSoundFile: string;
 }
 
 export interface IAchievementData {
@@ -179,6 +190,7 @@ export interface IColorsProvider {
   lightSuccess: string;
   success: string;
   neutral: string;
+  lightNeutral: string;
 }
 
 export type IWithColorsProviderProps<TComponentProps> = TComponentProps & {

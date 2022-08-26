@@ -7,6 +7,7 @@ const appColorsProvider: IColorsProvider = {
   lightSuccess: COLORS.lightSuccess,
   success: COLORS.success,
   neutral: COLORS.neutral,
+  lightNeutral: COLORS.lightNeutral,
 };
 
 export default appColorsProvider;

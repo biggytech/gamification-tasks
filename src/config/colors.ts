@@ -4,6 +4,7 @@ const COLORS = {
   lightSuccess: '#C1D7AE',
   success: '#8CC084',
   neutral: '#968E85',
+  lightNeutral: '#fafafa',
 };
 
 export default COLORS;
