@@ -474,6 +474,7 @@ class DatabaseProvider {
         `DELETE FROM history WHERE id NOT in (${newestHistoryIds
           .map(_ => '?')
           .join(',')})`,
+        newestHistoryIds,
       );
     }
   }
